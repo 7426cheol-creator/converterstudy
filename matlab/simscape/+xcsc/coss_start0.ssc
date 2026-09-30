@@ -1,0 +1,28 @@
+component coss_start0
+% Nonlinear device capacitance of textbook E02 (see coss.ssc) whose voltage
+% starts at 0 V (high-priority initial target): the device that is charged
+% from 0 V during the half-bridge transition.
+  nodes
+    p = foundation.electrical.electrical; % +:left
+    n = foundation.electrical.electrical; % -:right
+  end
+  parameters
+    C0 = {2e-9, 'F'};    % Capacitance at 0 V
+    V0 = {40, 'V'};      % Knee voltage
+  end
+  variables
+    i = {0, 'A'};        % Current
+    v = {value = {0, 'V'}, priority = priority.high};  % Voltage
+  end
+  branches
+    i : p.i -> n.i;
+  end
+  equations
+    v == p.v - n.v;
+    if v > 0
+      i == C0/sqrt(1 + v/V0)*v.der;
+    else
+      i == C0*v.der;
+    end
+  end
+end

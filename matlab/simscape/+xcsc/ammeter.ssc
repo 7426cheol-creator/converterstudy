@@ -1,0 +1,16 @@
+component ammeter
+% Ideal ammeter: zero voltage drop; logs the current i flowing from p to n.
+  nodes
+    p = foundation.electrical.electrical; % +:left
+    n = foundation.electrical.electrical; % -:right
+  end
+  variables
+    i = {0, 'A'};        % Current
+  end
+  branches
+    i : p.i -> n.i;
+  end
+  equations
+    p.v == n.v;
+  end
+end

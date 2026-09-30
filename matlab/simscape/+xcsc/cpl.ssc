@@ -1,0 +1,27 @@
+component cpl
+% Ideal constant-power load (textbook E07): i = P/v for v > v_min;
+% below v_min a resistor P/v_min^2 (outside the model's validity).
+  nodes
+    p = foundation.electrical.electrical; % +:left
+    n = foundation.electrical.electrical; % -:right
+  end
+  parameters
+    P = {10e3, 'W'};     % Power
+    v_min = {1, 'V'};    % Lowest voltage of the constant-power law
+  end
+  variables
+    i = {0, 'A'};        % Current
+    v = {0, 'V'};        % Voltage
+  end
+  branches
+    i : p.i -> n.i;
+  end
+  equations
+    v == p.v - n.v;
+    if v > v_min
+      i == P/v;
+    else
+      i == P/v_min*v/v_min;
+    end
+  end
+end
