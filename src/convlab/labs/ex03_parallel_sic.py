@@ -623,6 +623,10 @@ def run_dynamic(v: dict) -> Result:
     res.plots.sort(key=lambda pl: order.index(pl.key))
     res.circuit = {"diagram": _dyn_circuit(v).to_json(), "intervals": bands, "plot_group": ""}
     res.verdict("PASS_WITHIN_MODEL", "동적 분담을 실제 상태(branch 전류·gate loop·결합 inductance)로 풀었다: 에너지 원장·허용오차·단일 소자 등가 한계 경우 통과 (합성 D 수준, vendor fidelity 아님)")
+    dm_limit = v["dm_lim"] * I / 4.0
+    if dm_off > dm_limit:
+        res.verdict("FAIL_CONSTRAINT", f"turn-off 뒤 branch 차동 링잉 {dm_off:.3g} A가 합성 설계 기준 {dm_limit:.3g} A(branch 평균의 {v['dm_lim'] * 100:.3g} %, ASSUMED)를 넘는다 — 모듈 전류 합에는 보이지 않는 branch 사이 발진")
+        res.warnings.append("branch 사이 차동 링잉은 모듈 전류(합)·단일 전류 probe로는 보이지 않는다: branch-resolved 측정이 필요하다.")
     res.assumptions += [
         "4 branch 모두 같은 합성 die 모델(분산은 R_on·V_th·지연·layout 입력으로만)",
         "부하 인덕터 = 사건 동안 일정 전류원 I_total, 상측은 4 die 등가 하나",
@@ -917,6 +921,7 @@ EXPERIMENTS = [
             Param("Lcs", "공유 source L_cs", "H", 1e-9, "nH", vmin=0, vmax=20e-9, source="ASSUMED", group="power loop"),
             Param("t_gap", "두 펄스 사이 (환류) 시간", "s", 1e-6, "µs", vmin=0.5e-6, vmax=5e-6, source="ASSUMED", group="시뮬레이션"),
             Param("t_hold", "두 번째 펄스 관찰 시간", "s", 2e-6, "µs", vmin=0.5e-6, vmax=10e-6, source="ASSUMED", group="시뮬레이션"),
+            Param("dm_lim", "branch 차동 링잉 허용 (branch 평균 전류 대비)", "", 0.2, "", vmin=0.01, vmax=1.0, source="ASSUMED", source_note="합성 설계 기준 — 실제 한계는 소자·신뢰성 요구가 정한다", group="판정"),
         ],
         presets=[
             Preset("nominal", "공통 드라이버, branch L_s 2 nH, R_g 12 Ω", {}, "교재 2 kA/µs 영역", ("nominal", "reference")),

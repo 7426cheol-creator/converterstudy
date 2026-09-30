@@ -130,6 +130,10 @@ def test_fast_drive_shows_differential_ringing_hidden_in_the_sum():
     nom = run("dynamic_sharing", "nominal")
     fast = run("dynamic_sharing", "low_rg")
     assert metric(fast, "dm_off") > 5 * metric(nom, "dm_off")
+    assert nom["status"]["code"] == "PASS_WITHIN_MODEL" and metric(nom, "dm_off") < 0.2 * 100.0
+    assert fast["status"]["code"] == "FAIL_CONSTRAINT" and metric(fast, "dm_off") > 0.2 * 100.0
+    for c in fast["checks"]:
+        assert c["status"] == "PASS", c  # the model is verified; the design criterion fails
 
 
 def test_inputs_are_rejected_not_clamped():
