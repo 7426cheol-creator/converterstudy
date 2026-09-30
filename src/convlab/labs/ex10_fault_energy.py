@@ -497,7 +497,7 @@ def timeline_circuit(v: dict) -> Circuit:
     c.wire("w_drv", (440, 105), (406, 105))
     c.dot((150, 50), (150, 250))
     c.text(420, 210, "단락 (하측 소자 고장)", "node")
-    c.probe("pI", "i_f", 310, 38, "right", "i_f")
+    c.probe("pI", "i_typ", 310, 38, "right", "i_f (typ)")
     loop = ["Vdc", "Cdc", "Ls", "QH", "w_in", "w_c", "w_l", "w_q", "w_short", "w_ret", "w_ret2"]
     c.mode("rise", "포화 상승", loop, "Q_H가 포화 영역: 전류가 V_dc/L_f로 상승, V_DS는 낮아 DESAT가 아직 못 본다", dim=["DRV"])
     c.mode("desat", "desaturation", loop + ["DRV"], "전류가 합성 한계 I_sat에 도달해 V_DS가 V_dc로 상승 — 소자가 V_dc·I_sat를 소모 (blanking 후 검출)")
