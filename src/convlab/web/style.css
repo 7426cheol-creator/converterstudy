@@ -173,9 +173,9 @@ tr.hl td { background: var(--warn-bg); }
 table.trace td { min-width: 6rem; }
 .plot-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(460px, 1fr)); gap: 0.8rem; }
 figure.plot { margin: 0; border: 1px solid var(--line); border-radius: 8px; padding: 0.45rem 0.55rem 0.35rem; background: var(--panel); min-width: 0; }
-.plot-head { display: flex; justify-content: space-between; align-items: center; gap: 0.4rem; }
+.plot-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 0.4rem; }
 .plot-title { font-size: 13.5px; font-weight: 600; }
-.plot-tools { display: flex; gap: 0.25rem; align-items: center; }
+.plot-tools { display: flex; gap: 0.25rem; align-items: center; flex-shrink: 0; white-space: nowrap; }
 .plot-svg { width: 100%; }
 .plot-canvas { display: block; width: 100%; height: auto; user-select: none; }
 .plot-canvas .grid line { stroke: var(--grid); }

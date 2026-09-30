@@ -222,17 +222,29 @@ def first_guard_crossing(
     derivative points in the firing direction (the consistency rule for ideal
     diodes: a diode whose current is zero and falling turns off now; one whose
     current is zero and rising keeps conducting).  Otherwise it is armed and
-    fires when it later crosses in the firing direction.
+    fires when it later crosses in the firing direction.  When the first
+    derivative is itself zero to round-off (a diode that starts conducting at the
+    instant its blocking voltage reaches the clamp), the second derivative
+    decides; this keeps the event from ping-ponging between two states that are
+    both consistent to first order.
     """
     if not guards or hmax <= 0:
         return None
     C = np.array([g.c for g in guards])
     g_start = C @ z0
-    dg = C @ mode.derivative(z0)
+    F = mode.F
+    dz = F @ z0
+    dg = C @ dz
     on_bnd = [_on_boundary(g_start[k], C[k], z0) for k in range(len(guards))]
     for k, g in enumerate(guards):
         if on_bnd[k]:
-            if (g.direction > 0 and dg[k] > 0) or (g.direction < 0 and dg[k] < 0) or (g.direction == 0 and dg[k] != 0):
+            s = dg[k]
+            scale1 = float(np.abs(C[k]) @ (np.abs(F) @ np.abs(z0)))
+            if abs(s) <= 1e-9 * scale1:
+                d2 = float(C[k] @ (F @ dz))
+                scale2 = float(np.abs(C[k]) @ (np.abs(F) @ (np.abs(F) @ np.abs(z0))))
+                s = d2 if abs(d2) > 1e-9 * scale2 else 0.0
+            if (g.direction > 0 and s > 0) or (g.direction < 0 and s < 0) or (g.direction == 0 and s != 0):
                 return (0.0, k)
     N = _samples_needed(mode, hmax)
     dt = hmax / N
