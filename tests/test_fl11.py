@@ -147,7 +147,8 @@ def test_lk_tradeoff_directions():
     assert all(b > a for a, b in zip(dD, dD[1:]))
     assert all(b < a for a, b in zip(fmin, fmin[1:]))
     assert all(b < a for a, b in zip(nmax, nmax[1:]))
-    assert js["status"]["code"] == "SCREEN_ONLY"
+    assert js["status"]["code"] == "PASS_WITHIN_MODEL"
+    assert "SCREEN_ONLY" in {v["code"] for v in js["verdicts"]}
     assert 20.0 < metric(js, "Lk_full") < 30.0  # 20 uH is marginal at full load
 
 

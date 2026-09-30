@@ -124,3 +124,17 @@ def test_curve_peak_moves_below_fha_peak():
     assert metric(js, "F_peak_td") < metric(js, "F_peak_fha")
     assert metric(js, "max_diff_near") < 0.05
     assert math.isfinite(metric(js, "max_diff"))
+
+
+def test_zin_boundary_is_per_q_and_matches_an_independent_root():
+    # values from Octave fzero on Im Z_in (matlab/xc_llc.m) and by hand from the quadratic in F^2;
+    # a table that repeats one Q's boundary on every row (the earlier bug) fails here
+    js = run("fha_gain", "textbook")
+    rows = {r[0]: r[-1] for r in next(t for t in js["tables"] if t["key"] == "t_gain")["rows"]}
+    assert rows["0.2"] == "F < 0.4388 capacitive (범위 안 전부 inductive)"
+    assert rows["0.8"] == "F < 0.8442 capacitive"
+    assert rows["1.5"] == "F < 0.9554 capacitive"
+    for q, f in ((0.2, 0.43884), (0.8, 0.84421), (1.5, 0.95541)):
+        assert ref.llc_zin_boundary(5.0, q) == pytest.approx(f, abs=1e-5)
+    chk = next(c for c in js["checks"] if c["name"].startswith("∠Z_in 경계"))
+    assert chk["status"] == "PASS" and chk["independent"]

@@ -28,6 +28,20 @@ def llc_gain(F: float, k: float, Q: float) -> float:
     return 1.0 / math.sqrt(re * re + im * im)
 
 
+def llc_zin_boundary(k: float, Q: float) -> float:
+    """F where Im Z_in changes sign (capacitive below, inductive above), in closed form.
+
+    Im(Z_in)/Z0 = F - 1/F + kF/(1 + k^2 Q^2 F^2) = 0, multiplied by F(1 + k^2 Q^2 F^2), is a quadratic in y = F^2:
+    k^2 Q^2 y^2 + (1 + k - k^2 Q^2) y - 1 = 0, with exactly one positive root. Q -> 0 gives F = 1/sqrt(1 + k).
+    """
+    a = (k * Q) ** 2
+    b = 1.0 + k - a
+    if a == 0.0:
+        return 1.0 / math.sqrt(1.0 + k)
+    y = 2.0 / (b + math.sqrt(b * b + 4.0 * a))  # the positive root, written without cancellation
+    return math.sqrt(y)
+
+
 def llc_zin(f: float, Lr: float, Cr: float, Lm: float, Rac: float) -> complex:
     w = 2 * PI * f
     Zm = 1j * w * Lm

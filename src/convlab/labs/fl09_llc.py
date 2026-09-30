@@ -14,6 +14,7 @@ from __future__ import annotations
 import math
 
 import numpy as np
+from scipy.optimize import brentq
 
 from ..engine.switched import simulate
 from ..model.labspec import Experiment, Lab, Prediction, Question, TextbookRef
@@ -108,13 +109,15 @@ def run_fha(v: dict) -> Result:
         lab = f"Q = {q:g}" + (" (선택)" if q == Q else "")
         res.add_series(f"g_{q:g}", lab, "", Fs.tolist(), g, dash=(q != Q and Q not in Q_SET and False))
         res.add_series(f"ph_{q:g}", lab, "deg", Fs.tolist(), ph)
-        # inductive/capacitive boundary inside the range
-        b = None
+        # inductive/capacitive boundary: closed form (reference) and, independently, a root of Im Z_in from the
+        # phasor impedance; both are kept so the table shows the exact value even when it lies outside the range
+        b_ref = ref.llc_zin_boundary(k, q)
+        b_num = None
         for a0, a1, p0, p1 in zip(Fs[:-1], Fs[1:], ph[:-1], ph[1:]):
             if p0 < 0 <= p1:
-                b = float(a0 + (a1 - a0) * (0 - p0) / (p1 - p0))
+                b_num = float(brentq(lambda F, q=q: fha(tank, F * fr, Z0 / q).Zin.imag, float(a0), float(a1), xtol=1e-14, rtol=1e-14))
                 break
-        bounds.append((q, b))
+        bounds.append((q, b_ref, b_num))
     res.add_plot(
         "p_gain",
         "FHA gain |H| — Q가 크면(부하가 무거우면) peak가 낮아지고 f_r 쪽으로 온다",
@@ -127,7 +130,7 @@ def run_fha(v: dict) -> Result:
         level="A",
         hlines=[{"y": 1.0, "label": "|H| = 1"}],
         vlines=[{"x": 1.0, "label": "f_r"}],
-        markers=[{"x": b, "y": fha(tank, b * fr, Z0 / q).gain, "label": f"Q {q:g} 경계"} for q, b in bounds if b is not None],
+        markers=[{"x": b, "y": fha(tank, b * fr, Z0 / q).gain, "label": f"Q {q:g} 경계"} for q, b, _ in bounds if v["F_min"] <= b <= v["F_max"]],
         proved="교재 정규화식·페이저 절점해석·FHA 회로의 시간영역 해가 같은 |H|를 준다 (FHA 대수 검산).",
         not_yet="실제 정류기(다이오드 도통/차단)와 사각파 고조파는 없다 → ‘switching vs FHA’ 실험에서 비교한다.",
     )
@@ -146,10 +149,16 @@ def run_fha(v: dict) -> Result:
         not_yet="inductive라도 dead time 동안의 전하가 부족하면 ZVS가 아니다 (ZVS·L_m 실험).",
     )
     rows = []
-    for q in qs:
-        rows.append([f"{q:g}"] + [f"{fha(tank, F * fr, Z0 / q).gain:.4f}" for F in (0.7, 0.8, 0.9, 1.0, 1.1, 1.3, 1.5)] + [("범위 안 전부 inductive" if b is None else f"F < {b:.3f} capacitive")])
+    for q, b, _ in bounds:
+        where = "범위 안 전부 inductive" if b < v["F_min"] else ("범위 안 전부 capacitive" if b > v["F_max"] else "")
+        rows.append([f"{q:g}"] + [f"{fha(tank, F * fr, Z0 / q).gain:.4f}" for F in (0.7, 0.8, 0.9, 1.0, 1.1, 1.3, 1.5)] + [f"F < {b:.4f} capacitive" + (f" ({where})" if where else "")])
     res.tables.append(Table("t_gain", "|H| 표 (FHA, 합성 tank)", ["Q", "F=0.7", "0.8", "0.9", "1.0", "1.1", "1.3", "1.5", "∠Z_in 경계"], rows, note="Q = Z₀/R_ac: 이 교재 정의에서는 부하가 무거울수록 Q가 크다. 다른 문헌의 reciprocal Q나 m = (L_m+L_r)/L_r와 섞지 않는다."))
     res.add_check(Check("교재 정규화식 vs 페이저 절점해석", "PASS" if max_dev < 1e-12 else "FAIL", max_dev, "", 1e-12, path="1/H = 1 + (1−F⁻²)/k + jQ(F−1/F) (reference) vs 절점 전압 방정식 (Z_r, Z_m, R_ac)", independent=True, detail=f"{len(qs)}개 Q × {len(Fs)}점의 최대 |Δ|H||"))
+    b_dev = max((abs(bn - br) for _, br, bn in bounds if bn is not None), default=0.0)
+    n_num = sum(1 for *_, bn in bounds if bn is not None)
+    n_in = sum(1 for _, br, _ in bounds if v["F_min"] < br < v["F_max"])
+    b_ok = b_dev < 1e-9 and n_num == n_in
+    res.add_check(Check("∠Z_in 경계: 닫힌 식 vs 페이저 Im Z_in의 근", "PASS" if b_ok else "FAIL", b_dev, "", 1e-9, path="k²Q²y² + (1+k−k²Q²)y − 1 = 0 (y = F²) vs brentq(Im Z_in(F)) on the nodal phasor", independent=True, detail=f"범위 안 경계 {n_in}개 중 {n_num}개를 수치로 찾음; Q마다 경계가 다르다"))
     td_dev = 0.0
     for F in (0.7, 1.0, 1.5):
         td_dev = max(td_dev, abs(fha_time_domain_gain(tank, F * fr, Rac) - fha(tank, F * fr, Rac).gain))
