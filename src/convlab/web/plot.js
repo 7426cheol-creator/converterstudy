@@ -49,6 +49,36 @@ function edges(centres) {
   return e;
 }
 
+// Marker labels: every marker circle is an obstacle; each label takes the first offset that stays inside the
+// frame and overlaps neither a circle nor an earlier label (width estimated per glyph: Hangul/symbols wider).
+function placeLabels(parent, items, frame, r, circleClass, textClass, wAscii, wWide) {
+  const boxes = items.map((it) => ({ x: it.cx - r - 1, y: it.cy - r - 1, w: 2 * r + 2, h: 2 * r + 2 }));
+  const textW = (s) => [...s].reduce((a, ch) => a + (ch.codePointAt(0) > 0x2000 ? wWide : wAscii), 0);
+  for (const it of items) {
+    const w = textW(it.text), hgt = 13;
+    const tries = [[r + 3, -r - 2, "start"], [r + 3, r + 11, "start"], [-r - 3, -r - 2, "end"], [-r - 3, r + 11, "end"], [r + 3, -r - 16, "start"], [-r - 3, -r - 16, "end"], [r + 3, r + 25, "start"], [-r - 3, r + 25, "end"], [0, -r - 6, "middle"], [0, r + 16, "middle"]];
+    const boxOf = (tr) => ({ x: tr[2] === "end" ? it.cx + tr[0] - w : tr[2] === "middle" ? it.cx - w / 2 : it.cx + tr[0], y: it.cy + tr[1] - 10, w, h: hgt });
+    const ok = (b) => b.x >= frame.l - 2 && b.x + b.w <= frame.l + frame.w + 2 && b.y >= frame.t - 2 && b.y + b.h <= frame.t + frame.h + 2 &&
+      !boxes.some((o) => b.x < o.x + o.w && b.x + b.w > o.x && b.y < o.y + o.h && b.y + b.h > o.y);
+    const pick = tries.find((tr) => ok(boxOf(tr))) || tries[0];
+    boxes.push(boxOf(pick));
+    parent.append(svgEl("circle", { cx: it.cx, cy: it.cy, r, class: circleClass }));
+    const t = svgEl("text", { x: it.cx + pick[0], y: it.cy + pick[1], "text-anchor": pick[2], class: textClass });
+    t.textContent = it.text;
+    parent.append(t);
+  }
+}
+
+// Markers with a short in-plot tag are spelled out under the plot, with their coordinates.
+function markerLegend(markers, spec = {}) {
+  const lg = h("div", { class: "plot-legend map-legend" });
+  for (const mk of markers) {
+    const coord = spec.kind === "map" ? `(${fmtNum(mk.x, 3)}, ${fmtNum(mk.y, 3)})` : "";
+    lg.append(h("span", { class: "lg-item" }, h("b", {}, mk.short || mk.label), mk.short ? ` ${mk.label} ` : " ", h("span", { class: "muted" }, coord)));
+  }
+  return lg;
+}
+
 // Heatmap: one series with z[iy][ix]; null cells are infeasible and show their note.
 export function renderMap(host, spec, seriesByKey) {
   const s = seriesByKey[spec.series[0]];
@@ -61,12 +91,7 @@ export function renderMap(host, spec, seriesByKey) {
   const svgHost = h("div", { class: "plot-svg" });
   const readout = h("div", { class: "plot-readout" }, "셀 위에 마우스를 올리면 값과 판정 이유가 표시됩니다");
   wrap.append(svgHost);
-  // markers with a short in-plot tag are spelled out under the map, with their coordinates
-  if ((spec.markers || []).some((mk) => mk.short)) {
-    const lg = h("div", { class: "plot-legend map-legend" });
-    for (const mk of spec.markers) lg.append(h("span", { class: "lg-item" }, h("b", {}, mk.short || mk.label), mk.short ? ` ${mk.label} ` : " ", h("span", { class: "muted" }, `(${fmtNum(mk.x, 3)}, ${fmtNum(mk.y, 3)})`)));
-    wrap.append(lg);
-  }
+  if ((spec.markers || []).some((mk) => mk.short)) wrap.append(markerLegend(spec.markers, spec));
   wrap.append(readout);
   if (spec.proved || spec.not_yet) {
     const note = h("div", { class: "plot-note" });
@@ -126,25 +151,7 @@ export function renderMap(host, spec, seriesByKey) {
     const yl = svgEl("text", { x: 12, y: m.t + ih / 2, "text-anchor": "middle", class: "axis-label", transform: `rotate(-90 12 ${m.t + ih / 2})` });
     yl.textContent = `${spec.y_label}${spec.y_unit ? ` [${spec.y_unit}]` : ""}`;
     svg.append(xl, yl);
-    // marker labels: every marker circle is an obstacle; each label takes the first offset that stays in the
-    // frame and overlaps neither a circle nor an earlier label (width estimated per glyph: Hangul/symbols wider)
-    const mks = (spec.markers || []).map((mk) => ({ ...mk, cx: X(mk.x), cy: Y(mk.y) }));
-    const boxes = mks.map((mk) => ({ x: mk.cx - 7, y: mk.cy - 7, w: 14, h: 14 }));
-    const textW = (s) => [...s].reduce((a, ch) => a + (ch.codePointAt(0) > 0x2000 ? 11.2 : 6.8), 0);
-    for (const mk of mks) {
-      const label = mk.short || mk.label || "";
-      const w = textW(label), hgt = 13;
-      const tries = [[9, -8, "start"], [9, 17, "start"], [-9, -8, "end"], [-9, 17, "end"], [9, -22, "start"], [-9, -22, "end"], [9, 31, "start"], [-9, 31, "end"], [0, -12, "middle"], [0, 22, "middle"]];
-      const boxOf = (tr) => ({ x: tr[2] === "end" ? mk.cx + tr[0] - w : tr[2] === "middle" ? mk.cx - w / 2 : mk.cx + tr[0], y: mk.cy + tr[1] - 10, w, h: hgt });
-      const ok = (b) => b.x >= m.l - 2 && b.x + b.w <= m.l + iw + 2 && b.y >= m.t - 2 && b.y + b.h <= m.t + ih + 2 &&
-        !boxes.some((o) => b.x < o.x + o.w && b.x + b.w > o.x && b.y < o.y + o.h && b.y + b.h > o.y);
-      const pick = tries.find((tr) => ok(boxOf(tr))) || tries[0];
-      boxes.push(boxOf(pick));
-      const c = svgEl("circle", { cx: mk.cx, cy: mk.cy, r: 6, class: "map-marker" });
-      const t = svgEl("text", { x: mk.cx + pick[0], y: mk.cy + pick[1], "text-anchor": pick[2], class: "map-label" });
-      t.textContent = label;
-      svg.append(c, t);
-    }
+    placeLabels(svg, (spec.markers || []).map((mk) => ({ cx: X(mk.x), cy: Y(mk.y), text: mk.short || mk.label || "" })), { l: m.l, t: m.t, w: iw, h: ih }, 6, "map-marker", "map-label", 6.8, 11.2);
     // colour bar
     const cbx = m.l + iw + 16, cbw = 12;
     for (let k = 0; k < 40; k++) svg.append(svgEl("rect", { x: cbx, y: m.t + (ih * k) / 40, width: cbw, height: ih / 40 + 0.5, fill: lerpColor(1 - k / 39) }));
@@ -188,7 +195,9 @@ export function renderPlot(host, spec, seriesByKey, opts = {}) {
   const svgHost = h("div", { class: "plot-svg" });
   const legend = h("div", { class: "plot-legend" });
   const readout = h("div", { class: "plot-readout" }, " ");
-  wrap.append(head, svgHost, legend, readout);
+  wrap.append(head, svgHost, legend);
+  if ((spec.markers || []).some((mk) => mk.short)) wrap.append(markerLegend(spec.markers));
+  wrap.append(readout);
   if (spec.proved || spec.not_yet) {
     const note = h("div", { class: "plot-note" });
     if (spec.proved) note.append(h("p", {}, h("b", {}, "입증한 것: "), spec.proved));
@@ -352,14 +361,9 @@ export function renderPlot(host, spec, seriesByKey, opts = {}) {
       }
       gs.append(svgEl("path", { d, fill: "none", stroke: color, "stroke-width": s.dash ? 1.6 : 1.7, "stroke-dasharray": s.dash ? "6 4" : null, "vector-effect": "non-scaling-stroke", class: "series" }));
     });
-    for (const mk of spec.markers || []) {
-      if (!isFinite(mk.x) || !isFinite(mk.y)) continue;
-      if (mk.x < dom[0] || mk.x > dom[1]) continue;
-      gs.append(svgEl("circle", { cx: X(mk.x), cy: Y(mk.y), r: 4.5, class: "marker" }));
-      const t = svgEl("text", { x: X(mk.x) + 6, y: Y(mk.y) - 6, class: "ref-label" });
-      t.textContent = mk.label || "";
-      gs.append(t);
-    }
+    // markers: circles are obstacles; each label (its short tag if given) takes the first free offset
+    const vis = (spec.markers || []).filter((mk) => isFinite(mk.x) && isFinite(mk.y) && mk.x >= dom[0] && mk.x <= dom[1]);
+    placeLabels(gs, vis.map((mk) => ({ cx: X(mk.x), cy: Y(mk.y), text: mk.short || mk.label || "" })), { l: m.l, t: m.t, w: iw, h: ih }, 4.5, "marker", "ref-label", 6.2, 10.2);
     svg.append(gs);
     // cursor + zoom interaction
     const cur = svgEl("line", { x1: 0, x2: 0, y1: m.t, y2: m.t + ih, class: "cursor", visibility: "hidden" });

@@ -501,7 +501,7 @@ def run_cycles(sys: ResonantSystem, x, n: int, t0: float = 0.0):
     return x, q
 
 
-def periodic(sys: ResonantSystem, x_guess, pre_cycles: int = 12, tol: float = 1e-10, max_iter: int = 25) -> Periodic:
+def periodic(sys: ResonantSystem, x_guess, pre_cycles: int = 12, tol: float = 1e-10, max_iter: int = 25, diverge: float = np.inf) -> Periodic:
     """Periodic orbit through t = 0: a few physical cycles from the guess, then Newton shooting.
 
     The shooting Jacobian is a finite difference of the full event-driven cycle map, so it
@@ -511,9 +511,60 @@ def periodic(sys: ResonantSystem, x_guess, pre_cycles: int = 12, tol: float = 1e
     if pre_cycles:
         x, _ = run_cycles(sys, x, pre_cycles)
     q0 = sys.q_start(x)
-    sol = shoot(sys, q0, x, sys.T, scales_for(sys), tol=tol, max_iter=max_iter, fd_eps=1e-6)
+    sol = shoot(sys, q0, x, sys.T, scales_for(sys), tol=tol, max_iter=max_iter, fd_eps=1e-6, diverge=diverge)
     q0 = sys.q_start(sol.x0)
     return Periodic(sol.x0, q0, sol.trajectory, sol.residual, sol.iterations, sol.converged, sol.multipliers, sol.monodromy, pre_cycles, sol.note)
+
+
+def cycle_end(sys: ResonantSystem, x, t0: float = 0.0):
+    """One period of the constant-frequency drive from x; the rectifier state follows the state."""
+    x = np.asarray(x, dtype=float)
+    tr = simulate(sys, sys.q_start(x), x, t0, t0 + sys.T)
+    return tr.z_end[:-1].copy(), tr
+
+
+def fd_monodromy(sys: ResonantSystem, x, eps: float = 1e-6) -> np.ndarray:
+    """Central-difference Jacobian of the event-driven cycle map (includes event-time sensitivity)."""
+    sc = scales_for(sys)
+    x = np.asarray(x, dtype=float)
+    M = np.zeros((sys.ns, sys.ns))
+    for i in range(sys.ns):
+        d = eps * sc[i]
+        xp, xm = x.copy(), x.copy()
+        xp[i] += d
+        xm[i] -= d
+        M[:, i] = (cycle_end(sys, xp)[0] - cycle_end(sys, xm)[0]) / (2 * d)
+    return M
+
+
+def periodic_warm(sys: ResonantSystem, x_guess, M: np.ndarray | None = None, tol: float = 1e-10, max_iter: int = 30, diverge: float = 5.0):
+    """Chord-Newton shooting for continuation: reuse the Jacobian M of a nearby orbit and refresh it only
+    when the residual stops shrinking fast.  Returns (x0, traj, residual, converged, M)."""
+    sc = scales_for(sys)
+    x = np.asarray(x_guess, dtype=float).copy()
+    if M is None:
+        M = fd_monodromy(sys, x)
+    res_prev = np.inf
+    fresh = True
+    tr = None
+    for _ in range(max_iter):
+        fx, tr = cycle_end(sys, x)
+        r = fx - x
+        res = float(np.max(np.abs(r) / sc))
+        if res < tol:
+            return x, tr, res, True, M
+        if res > diverge or not np.isfinite(res):
+            return x, tr, res, False, M
+        if res > 0.3 * res_prev and not fresh:
+            M = fd_monodromy(sys, x)
+            fresh = True
+        else:
+            fresh = False
+        J = (M - np.eye(sys.ns)) * sc[None, :] / sc[:, None]
+        step, *_ = np.linalg.lstsq(J, -r / sc, rcond=1e-12)
+        x = x + step * sc
+        res_prev = res
+    return x, tr, res_prev, False, M
 
 
 def cycle_map(sys: ResonantSystem, x, T: float, t0: float = 0.0):
