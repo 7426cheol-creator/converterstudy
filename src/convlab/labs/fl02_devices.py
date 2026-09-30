@@ -158,8 +158,8 @@ class DevArrays:
 TOPOLOGIES = {
     "individual_kelvin": "개별 드라이버 · 각 Kelvin source 기준 (게이트 루프에 L_s 없음)",
     "common_kelvin_star": "공통 드라이버 · 반환선을 각 Kelvin에 R_e로 연결 (Kelvin 순환전류 포함)",
-    "common_source_node": "공통 드라이버 · 반환 = 공통 source 노드 (개별 L_s,k가 게이트 루프에)",
-    "power_ground": "공통 드라이버 · 반환 = DC− (L_s,k + 공통 L_cs가 게이트 루프에)",
+    "common_source_node": "드라이버 반환 = 공통 source 노드 (개별 L_s,k가 게이트 루프에 = common-source inductance)",
+    "power_ground": "드라이버 반환 = DC− (L_s,k + 공통 L_cs가 게이트 루프에)",
 }
 
 
@@ -332,7 +332,7 @@ class Cell:
     def _build_drive(self):
         s, n = self.s, self.n
         lvl = {"on": s.Von, "off": s.Voff}
-        tau = s.delay if s.topology == "individual_kelvin" else np.zeros(n)
+        tau = s.delay if s.topology != "common_kelvin_star" else np.zeros(n)
         self._tk, self._vk, self._on_t, self._on_v = [], [], [], []
         for k in range(n):
             tk, vk = [-1.0], [lvl[self.start]]
@@ -359,7 +359,7 @@ class Cell:
 
     def breakpoints(self) -> list[float]:
         s = self.s
-        tau = s.delay if s.topology == "individual_kelvin" else np.zeros(self.n)
+        tau = s.delay if s.topology != "common_kelvin_star" else np.zeros(self.n)
         bp = set()
         for te, _ in self.edges:
             for tk in tau:
@@ -395,8 +395,7 @@ class Cell:
             vd = vdrv[0]
             r = np.vstack([W - vds, W - vds - s.Re.reshape(-1, 1) * ie, vd - s.Rcom * sig - Rgp * ig - vgs - (W - vds), np.zeros((1, X.shape[1]))])
         else:
-            vd = vdrv[0]
-            r = np.vstack([W - vds, vd - s.Rcom * sig - Rgp * ig - vgs])
+            r = np.vstack([W - vds, vdrv - s.Rcom * sig - Rgp * ig - vgs])
         y = self.Minv @ r
         a = y[:n]
         g = y[n : 2 * n]
@@ -474,8 +473,7 @@ class Cell:
             vd = vdrv[0]
             r = [W - vds[k] for k in range(n)] + [W - vds[k] - Re[k] * ie[k] for k in range(n)] + [vd - s.Rcom * sig - Rgp[k] * ig[k] - vgs[k] - (W - vds[k]) for k in range(n)] + [0.0]
         else:
-            vd = vdrv[0]
-            r = [W - vds[k] for k in range(n)] + [vd - s.Rcom * sig - Rgp[k] * ig[k] - vgs[k] for k in range(n)]
+            r = [W - vds[k] for k in range(n)] + [vdrv[k] - s.Rcom * sig - Rgp[k] * ig[k] - vgs[k] for k in range(n)]
         y = (self._Minv_np @ np.array(r)).tolist()
         A = sum(y[:n])
         dx = [0.0] * (self.n_core + self.n_q)
@@ -519,7 +517,7 @@ class Cell:
         dx[k0 + 2] = (s.VoffH - RgH * igH - vgsH) / s.LgH
         dx[k0 + 3] = s.Rp * (idc - ib) / s.Lb
         q0 = self.n_core
-        if topo == "individual_kelvin":
+        if topo != "common_kelvin_star":
             p_drv = sum(vdrv[k] * ig[k] for k in range(n))
         else:
             p_drv = vdrv[0] * sig
@@ -545,7 +543,7 @@ class Cell:
         s, n = self.s, self.n
         i, ig, vds = z["i"], z["ig"], z["vds"]
         idc, sig = z["idc"], z["sig"]
-        if s.topology == "individual_kelvin":
+        if s.topology != "common_kelvin_star":
             p_drv = (z["vdrv"] * ig).sum(axis=0)
         else:
             p_drv = z["vdrv"][0] * sig
