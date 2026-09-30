@@ -271,7 +271,7 @@ def run_pf_thd(v: dict) -> Result:
     res.add_series("v", "v (V/10)", "V", t2.tolist(), (vt[: t2.size] / 10).tolist())
     res.add_series("i", "i", "A", t2.tolist(), it[: t2.size].tolist())
     res.add_plot("p_wave", "전압(1/10)과 전류 파형", ["v", "i"], y_label="v/10, i", y_unit="", level="A",
-                 proved="전류의 기본파 위상·고조파·DC offset이 파형에서 어떻게 보이는지 확인한다.", not_yet="")
+                 proved="전류의 기본파 위상·고조파·DC offset이 파형에서 어떻게 보이는지 확인한다.", not_yet="파형 모양만으로 THD·PF를 읽지 않는다 — 정의된 창의 DFT와 시간영역 평균으로 계산한다.")
     res.tables.append(
         Table(
             "t_win",
