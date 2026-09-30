@@ -1,0 +1,5 @@
+# runtime (tested versions in docs/run_manifest.json)
+numpy>=1.24
+scipy>=1.10
+# tests
+pytest>=7

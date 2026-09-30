@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "converter-fae-lab"
+version = "4.0.0"
+description = "Converter FAE Lab: textbook v4.0-aligned learning simulator for OBC/DC-DC power conversion (FL01-FL12, EX01-EX12)"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+dependencies = [
+    "numpy>=1.24",
+    "scipy>=1.10",
+]
+
+[project.optional-dependencies]
+test = ["pytest>=7"]
+
+[project.scripts]
+convlab = "convlab.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+convlab = ["web/*", "web/**/*", "data/*", "data/**/*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
+markers = [
+    "slow: long-running simulation checks (run in CI and by `convlab verify`)",
+    "octave: needs GNU Octave on PATH",
+]
