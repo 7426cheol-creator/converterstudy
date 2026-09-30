@@ -1,0 +1,28 @@
+component diode
+% Piecewise-linear diode, anode p, cathode n:
+% i = (v - Vf)/Ron + Vf*Goff for v > Vf, i = v*Goff otherwise.
+  nodes
+    p = foundation.electrical.electrical; % anode:left
+    n = foundation.electrical.electrical; % cathode:right
+  end
+  parameters
+    Vf = {0, 'V'};           % Forward voltage
+    Ron = {1e-3, 'Ohm'};     % On resistance
+    Goff = {1e-8, '1/Ohm'};  % Off conductance
+  end
+  variables
+    i = {0, 'A'};        % Current
+    v = {0, 'V'};        % Voltage
+  end
+  branches
+    i : p.i -> n.i;
+  end
+  equations
+    v == p.v - n.v;
+    if v > Vf
+      i == (v - Vf)/Ron + Vf*Goff;
+    else
+      i == v*Goff;
+    end
+  end
+end

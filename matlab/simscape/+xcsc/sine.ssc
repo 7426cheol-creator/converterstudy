@@ -1,0 +1,23 @@
+component sine
+% Ideal sinusoidal source, v(p) - v(n) = Vpk*sin(2*pi*f*time)
+% (first-harmonic source of the FHA circuit, textbook ch.12/13).
+  nodes
+    p = foundation.electrical.electrical; % +:left
+    n = foundation.electrical.electrical; % -:right
+  end
+  parameters
+    Vpk = {1000, 'V'};   % Peak voltage
+    f = {150e3, 'Hz'};   % Frequency
+  end
+  variables
+    i = {0, 'A'};        % Current from p to n through the source
+    v = {0, 'V'};        % Voltage
+  end
+  branches
+    i : p.i -> n.i;
+  end
+  equations
+    v == p.v - n.v;
+    v == Vpk*sin(2*pi*f*time);
+  end
+end

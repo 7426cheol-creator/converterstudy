@@ -1,0 +1,22 @@
+component idc
+% Ideal DC current source: drives the current I out of node p into the
+% external circuit (and back into node n).
+  nodes
+    p = foundation.electrical.electrical; % +:left
+    n = foundation.electrical.electrical; % -:right
+  end
+  parameters
+    I = {4, 'A'};        % Current
+  end
+  variables
+    i = {0, 'A'};        % Current from p to n through the source
+    v = {0, 'V'};        % Voltage
+  end
+  branches
+    i : p.i -> n.i;
+  end
+  equations
+    v == p.v - n.v;
+    i == -I;
+  end
+end
