@@ -192,6 +192,11 @@ figure.plot { margin: 0; border: 1px solid var(--line); border-radius: 8px; padd
 .plot-canvas .band-0 { fill: #3b82f6; } .plot-canvas .band-1 { fill: #f59e0b; } .plot-canvas .band-2 { fill: #10b981; } .plot-canvas .band-3 { fill: #a855f7; }
 .plot-canvas .band-label { fill: var(--muted); font-size: 10px; }
 .plot-canvas .marker { fill: none; stroke: var(--fg); stroke-width: 1.5; }
+.plot-canvas .cell { stroke: none; }
+.plot-canvas .hatch-bg { fill: var(--bg); }
+.plot-canvas .hatch-line { stroke: var(--muted); stroke-width: 1.2; }
+.plot-canvas .map-marker { fill: none; stroke: #fff; stroke-width: 2.4; }
+.plot-canvas .map-label { fill: var(--fg); font-size: 11px; font-weight: 600; paint-order: stroke; stroke: var(--panel); stroke-width: 3px; }
 .plot-legend { display: flex; flex-wrap: wrap; gap: 0.2rem 0.7rem; margin-top: 0.2rem; }
 .legend-item { font: inherit; font-size: 12px; background: none; border: 0; color: var(--fg); cursor: pointer; display: flex; align-items: center; gap: 0.3rem; padding: 0; }
 .legend-item.off { opacity: 0.35; text-decoration: line-through; }

@@ -10,6 +10,9 @@ import numpy as np
 
 from .status import status_info, worst
 
+# statuses that describe what a model can or cannot say (shown as chips) rather than the outcome of the question
+SCOPE_NOTES = {"NOT_EVALUABLE", "SCREEN_ONLY", "MISSING_INPUT", "NOT_RUN_ENVIRONMENT", "INFO"}
+
 __all__ = ["Metric", "Series", "Plot", "Check", "Table", "Result", "rel_err", "check_close"]
 
 
@@ -77,14 +80,21 @@ class Series:
     unit: str
     x: list[float]
     y: list[float]
-    style: str = "line"  # line | step | points | area
+    style: str = "line"  # line | step | points | area | map
     color: str | None = None
     dash: bool = False
+    z: list[list[float]] | None = None  # map: z[iy][ix] over x (columns) and y (rows) centres
+    notes: list[list[str]] | None = None  # map: per-cell reason text (e.g. why infeasible)
 
     def to_json(self) -> dict:
         x = [(_num(v)) for v in self.x]
         y = [(_num(v)) for v in self.y]
-        return {"key": self.key, "label": self.label, "unit": self.unit, "x": x, "y": y, "style": self.style, "color": self.color, "dash": self.dash}
+        d = {"key": self.key, "label": self.label, "unit": self.unit, "x": x, "y": y, "style": self.style, "color": self.color, "dash": self.dash}
+        if self.z is not None:
+            d["z"] = [[_num(v) for v in row] for row in self.z]
+        if self.notes is not None:
+            d["notes"] = self.notes
+        return d
 
 
 @dataclass
@@ -229,7 +239,10 @@ class Result:
 
     @property
     def status(self) -> str:
-        return worst([c for c, _ in self.verdicts])
+        """Headline = worst *outcome*; scope notes (NOT_EVALUABLE, SCREEN_ONLY, ...) lead only when alone."""
+        codes = [c for c, _ in self.verdicts]
+        outcomes = [c for c in codes if c not in SCOPE_NOTES]
+        return worst(outcomes) if outcomes else worst(codes)
 
     @property
     def checks_ok(self) -> bool:

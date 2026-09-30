@@ -29,7 +29,128 @@ function hashMode(s) {
   return x % 4;
 }
 
+const VIRIDIS = ["#440154", "#472d7b", "#3b528b", "#2c728e", "#21918c", "#28ae80", "#5ec962", "#addc30", "#fde725"];
+
+function lerpColor(t) {
+  const x = Math.max(0, Math.min(1, t)) * (VIRIDIS.length - 1);
+  const i = Math.min(VIRIDIS.length - 2, Math.floor(x));
+  const f = x - i;
+  const a = VIRIDIS[i], b = VIRIDIS[i + 1];
+  const c = (k) => Math.round(parseInt(a.slice(k, k + 2), 16) * (1 - f) + parseInt(b.slice(k, k + 2), 16) * f);
+  return `rgb(${c(1)},${c(3)},${c(5)})`;
+}
+
+function edges(centres) {
+  const n = centres.length;
+  if (n === 1) return [centres[0] - 0.5, centres[0] + 0.5];
+  const e = [centres[0] - (centres[1] - centres[0]) / 2];
+  for (let i = 0; i < n - 1; i++) e.push((centres[i] + centres[i + 1]) / 2);
+  e.push(centres[n - 1] + (centres[n - 1] - centres[n - 2]) / 2);
+  return e;
+}
+
+// Heatmap: one series with z[iy][ix]; null cells are infeasible and show their note.
+export function renderMap(host, spec, seriesByKey) {
+  const s = seriesByKey[spec.series[0]];
+  const wrap = h("figure", { class: "plot map", "data-plot": spec.key });
+  const tools = h("div", { class: "plot-tools" });
+  if (spec.level) tools.append(h("span", { class: "chip level" }, "모델 " + spec.level));
+  const btnPng = h("button", { class: "mini" }, "PNG");
+  tools.append(btnPng);
+  wrap.append(h("div", { class: "plot-head" }, h("figcaption", { class: "plot-title" }, spec.title), tools));
+  const svgHost = h("div", { class: "plot-svg" });
+  const readout = h("div", { class: "plot-readout" }, "셀 위에 마우스를 올리면 값과 판정 이유가 표시됩니다");
+  wrap.append(svgHost, readout);
+  if (spec.proved || spec.not_yet) {
+    const note = h("div", { class: "plot-note" });
+    if (spec.proved) note.append(h("p", {}, h("b", {}, "입증한 것: "), spec.proved));
+    if (spec.not_yet) note.append(h("p", {}, h("b", {}, "아직 아닌 것: "), spec.not_yet));
+    wrap.append(note);
+  }
+  host.append(wrap);
+  if (!s || !s.z) {
+    svgHost.textContent = "데이터 없음";
+    return { el: wrap };
+  }
+  let zmin = Infinity, zmax = -Infinity;
+  for (const row of s.z) for (const v of row) if (v !== null && isFinite(v)) { zmin = Math.min(zmin, v); zmax = Math.max(zmax, v); }
+  if (!isFinite(zmin)) { zmin = 0; zmax = 1; }
+  if (zmax === zmin) zmax = zmin + Math.abs(zmin || 1) * 1e-6;
+  const ex = edges(s.x), ey = edges(s.y);
+  function draw() {
+    svgHost.innerHTML = "";
+    const W = Math.max(320, svgHost.clientWidth || 560);
+    const H = opts_h(W);
+    const m = { l: 62, r: 76, t: 10, b: 40 };
+    const iw = W - m.l - m.r, ih = H - m.t - m.b;
+    const X = (v) => m.l + ((v - ex[0]) / (ex[ex.length - 1] - ex[0])) * iw;
+    const Y = (v) => m.t + ih - ((v - ey[0]) / (ey[ey.length - 1] - ey[0])) * ih;
+    const svg = svgEl("svg", { width: W, height: H, viewBox: `0 0 ${W} ${H}`, class: "plot-canvas", role: "img", "aria-label": spec.title });
+    const defs = svgEl("defs");
+    const pat = svgEl("pattern", { id: "hatch-" + spec.key, width: 6, height: 6, patternUnits: "userSpaceOnUse", patternTransform: "rotate(45)" });
+    pat.append(svgEl("rect", { width: 6, height: 6, class: "hatch-bg" }), svgEl("line", { x1: 0, y1: 0, x2: 0, y2: 6, class: "hatch-line" }));
+    defs.append(pat);
+    svg.append(defs);
+    for (let iy = 0; iy < s.y.length; iy++) for (let ix = 0; ix < s.x.length; ix++) {
+      const v = s.z[iy][ix];
+      const x0 = X(ex[ix]), x1 = X(ex[ix + 1]), y0 = Y(ey[iy + 1]), y1 = Y(ey[iy]);
+      const r = svgEl("rect", { x: x0, y: y0, width: Math.max(0, x1 - x0 + 0.3), height: Math.max(0, y1 - y0 + 0.3), fill: v === null || !isFinite(v) ? `url(#hatch-${spec.key})` : lerpColor((v - zmin) / (zmax - zmin)), class: "cell" });
+      r.addEventListener("mousemove", () => {
+        const note = s.notes && s.notes[iy] ? s.notes[iy][ix] : "";
+        readout.textContent = `${spec.x_label} = ${fmtSI(s.x[ix], spec.x_unit)} · ${spec.y_label} = ${fmtSI(s.y[iy], spec.y_unit)} · ${s.label}: ${v === null ? "해 없음/제외" : fmtSI(v, s.unit)}${note ? " · " + note : ""}`;
+      });
+      svg.append(r);
+    }
+    const gx = svgEl("g", { class: "grid" });
+    for (const v of niceTicks(ex[0], ex[ex.length - 1], 6)) {
+      const t = svgEl("text", { x: X(v), y: m.t + ih + 15, "text-anchor": "middle", class: "tick" });
+      t.textContent = fmtNum(v, 3);
+      if (X(v) >= m.l - 1 && X(v) <= m.l + iw + 1) gx.append(t);
+    }
+    for (const v of niceTicks(ey[0], ey[ey.length - 1], 6)) {
+      const t = svgEl("text", { x: m.l - 6, y: Y(v) + 4, "text-anchor": "end", class: "tick" });
+      t.textContent = fmtNum(v, 3);
+      if (Y(v) >= m.t - 1 && Y(v) <= m.t + ih + 1) gx.append(t);
+    }
+    svg.append(gx);
+    svg.append(svgEl("rect", { x: m.l, y: m.t, width: iw, height: ih, class: "frame" }));
+    const xl = svgEl("text", { x: m.l + iw / 2, y: H - 4, "text-anchor": "middle", class: "axis-label" });
+    xl.textContent = `${spec.x_label}${spec.x_unit ? ` [${spec.x_unit}]` : ""}`;
+    const yl = svgEl("text", { x: 12, y: m.t + ih / 2, "text-anchor": "middle", class: "axis-label", transform: `rotate(-90 12 ${m.t + ih / 2})` });
+    yl.textContent = `${spec.y_label}${spec.y_unit ? ` [${spec.y_unit}]` : ""}`;
+    svg.append(xl, yl);
+    for (const mk of spec.markers || []) {
+      const c = svgEl("circle", { cx: X(mk.x), cy: Y(mk.y), r: 6, class: "map-marker" });
+      const t = svgEl("text", { x: X(mk.x) + 8, y: Y(mk.y) - 7, class: "map-label" });
+      t.textContent = mk.label || "";
+      svg.append(c, t);
+    }
+    // colour bar
+    const cbx = m.l + iw + 16, cbw = 12;
+    for (let k = 0; k < 40; k++) svg.append(svgEl("rect", { x: cbx, y: m.t + (ih * k) / 40, width: cbw, height: ih / 40 + 0.5, fill: lerpColor(1 - k / 39) }));
+    const [cs, cp] = prefixFor(Math.max(Math.abs(zmin), Math.abs(zmax)), s.unit);
+    for (const [v, y] of [[zmax, m.t + 8], [zmin, m.t + ih]]) {
+      const t = svgEl("text", { x: cbx + cbw + 3, y, class: "tick" });
+      t.textContent = fmtNum(v / cs, 4);
+      svg.append(t);
+    }
+    const ul = svgEl("text", { x: cbx, y: m.t + ih + 15, class: "tick" });
+    ul.textContent = `[${cp}${s.unit}]`;
+    svg.append(ul);
+    svgHost.append(svg);
+  }
+  function opts_h(W) {
+    return Math.min(360, Math.max(240, W * 0.55));
+  }
+  btnPng.addEventListener("click", () => exportPng(svgHost.querySelector("svg"), spec.key + ".png"));
+  let rt;
+  new ResizeObserver(() => { clearTimeout(rt); rt = setTimeout(draw, 60); }).observe(svgHost);
+  draw();
+  return { el: wrap };
+}
+
 export function renderPlot(host, spec, seriesByKey, opts = {}) {
+  if (spec.kind === "map") return renderMap(host, spec, seriesByKey, opts);
   const bus = opts.bus;
   const group = spec.group || spec.key;
   const series = spec.series.map((k) => seriesByKey[k]).filter(Boolean);
