@@ -119,7 +119,9 @@ def test_discharge_resistor_textbook_numbers_and_tolerance():
     js = run("discharge_resistor", "worst_case")
     assert metric(js, "R_used") == pytest.approx(R / 1.10 / 1.05, rel=1e-12)
     assert metric(js, "t_slow") == pytest.approx(2.0, rel=1e-12)
-    assert js["status"]["code"] == "MISSING_INPUT"  # numbers fine, final part selection blocked by missing data
+    # numbers fine (headline), final part selection blocked by missing data (scope note)
+    assert js["status"]["code"] == "PASS_WITHIN_MODEL"
+    assert "MISSING_INPUT" in {v["code"] for v in js["verdicts"]}
 
 
 def test_asc_steady_state_formula_and_transient():

@@ -1,0 +1,36 @@
+component bridge
+% Ideal bridge output (textbook E06): v = V*b(theta; w, phi), theta = 2*pi*fs*time
+%   b = +1 while cos(theta - phi) >  cos(w/2)
+%   b = -1 while cos(theta - phi) < -cos(w/2)
+%   b =  0 otherwise
+% which equals b(theta; w, phi) = (s(theta-phi+w/2) - s(theta-phi-w/2))/2 of E06
+% for 0 < w <= pi (w = pi: bipolar square wave). An ideal full bridge with
+% complementary gating and a stiff DC link; no dead time, no device model.
+  nodes
+    p = foundation.electrical.electrical; % +:left
+    n = foundation.electrical.electrical; % -:right
+  end
+  parameters
+    V = {800, 'V'};      % DC voltage
+    fs = {100e3, 'Hz'};  % Switching frequency
+    w = {3.141592653589793, '1'};  % Pulse width in rad
+    phi = {0, '1'};      % Pulse centre in rad
+  end
+  variables
+    i = {0, 'A'};        % Current
+    v = {0, 'V'};        % Voltage
+  end
+  branches
+    i : p.i -> n.i;
+  end
+  equations
+    v == p.v - n.v;
+    if cos(2*pi*fs*time - phi) > cos(w/2)
+      v == V;
+    elseif cos(2*pi*fs*time - phi) < -cos(w/2)
+      v == -V;
+    else
+      v == 0;
+    end
+  end
+end

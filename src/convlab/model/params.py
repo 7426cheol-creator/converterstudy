@@ -56,6 +56,11 @@ class Param:
             raise ValueError(f"param {self.key}: bad source {self.source}")
         if self.display_unit is None:
             self.display_unit = self.unit
+        if self.choices is not None:
+            # accept plain values as (value, value); a bare string would otherwise be split into characters
+            self.choices = [c if isinstance(c, (tuple, list)) else (c, str(c)) for c in self.choices]
+        if self.kind == "choice" and self.default not in [c[0] for c in (self.choices or [])]:
+            raise ValueError(f"param {self.key}: default {self.default!r} is not one of its choices")
 
     @property
     def scale(self) -> float:

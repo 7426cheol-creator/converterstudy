@@ -217,9 +217,9 @@ function homePage(main) {
         h(
           "ul",
           {},
-          h("li", {}, h("b", {}, "EX02"), " dead time 200 → 300 ns: 부분 ZVS가 완전 전환으로 바뀌는가?"),
-          h("li", {}, h("b", {}, "EX06"), " 900/600 V, 1.5 kW에서 SPS와 width candidate(w₁/π=0.7)의 RMS·peak 비교"),
-          h("li", {}, h("b", {}, "EX07"), " CPL 입력필터 C 100 µF → 1 mF: 극점이 좌반면으로 가는가?")
+          h("li", {}, h("a", { href: "#/lab/EX02/hb_constant_current" }, h("b", {}, "EX02")), " dead time 200 → 300 ns: 부분 전환이 완전 전환으로 바뀌는가? (‘제안된 변경 적용’)"),
+          h("li", {}, h("a", { href: "#/lab/EX06/general_modulation" }, h("b", {}, "EX06")), " 900/600 V, 1.5 kW에서 SPS와 width candidate(w₁/π = 0.7)의 RMS·peak 비교"),
+          h("li", {}, h("a", { href: "#/lab/EX07/cpl_exact" }, h("b", {}, "EX07")), " CPL 입력필터 C 100 µF → 1 mF: 극점이 좌반면으로 가는가?")
         ),
         h("p", { class: "muted small" }, "각 실험은 ‘예측 → 실행 → 파형 → 왜 → 고객 문장’ 순서로 진행됩니다.")
       )

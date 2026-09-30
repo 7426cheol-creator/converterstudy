@@ -112,7 +112,9 @@ def test_dowell_and_round_wire_limits():
 
 def test_core_loss_screen_is_synthetic_and_flags_definitions():
     js = run("loss_screen", "nominal")
-    assert js["status"]["code"] == "MISSING_INPUT"
+    # headline = worst outcome; the missing material data is a scope note next to it
+    assert js["status"]["code"] == "PASS_WITHIN_MODEL"
+    assert "MISSING_INPUT" in {v["code"] for v in js["verdicts"]}
     assert metric(js, "ratio") == pytest.approx(0.9321, abs=2e-4)  # iGSE triangle vs sine, alpha 1.4, beta 2.6
     assert metric(js, "P_wrongB") / metric(js, "P_sine") == pytest.approx(2**2.6, rel=1e-9)
 

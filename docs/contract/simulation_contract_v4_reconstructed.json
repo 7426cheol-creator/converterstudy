@@ -1,0 +1,2152 @@
+{
+ "contract_version": "4.0-reconstructed",
+ "note": "원본 simulation_contract_v4.json이 제공되지 않아 구현된 실습과 실제 실행에서 재구성했다 (docs/ERRATA.md E-000).",
+ "generated": "2026-09-30T19:46:57",
+ "labs": [
+  {
+   "id": "FL01",
+   "title": "Buck와 Boost — 컨버터의 문법",
+   "title_en": "Buck and Boost: the grammar of converters",
+   "minimum_scope": "Buck/Boost 상태식·평균·스위칭·DCM; 전류 slope·리플·에너지·RHP 응답 (교재 19장 표)",
+   "claim_limits": [
+    "이상 스위치(C) 파형과 평균모델(B); 스위칭 손실·ZVS·링잉 미포함",
+    "RHP 응답은 저항부하·CCM·duty 입력 조건에서만",
+    "Boost 출력 C는 교재에 값이 없어 ASSUMED"
+   ],
+   "experiments": [
+    {
+     "key": "buck_ccm",
+     "title": "Buck 48→12 V: 두 상태를 평균하고 스위칭 파형으로 확인",
+     "model_level": "C (+B 평균모델, 기동 과도)",
+     "presets": [
+      {
+       "key": "nominal",
+       "label": "교재 기준점 48→12 V, 5 A",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference"
+       ]
+      },
+      {
+       "key": "half_L",
+       "label": "L = 50 µH",
+       "values": {
+        "L": 5e-05
+       },
+       "tags": [
+        "variant"
+       ]
+      },
+      {
+       "key": "half_fs",
+       "label": "f_s = 50 kHz",
+       "values": {
+        "fs": 50000.0
+       },
+       "tags": [
+        "variant"
+       ]
+      },
+      {
+       "key": "lossy",
+       "label": "DCR 30 mΩ, R_DS(on) 20 mΩ",
+       "values": {
+        "dcr": 0.03,
+        "rds_hi": 0.02,
+        "rds_lo": 0.02
+       },
+       "tags": [
+        "variant"
+       ]
+      },
+      {
+       "key": "light",
+       "label": "경부하 0.3 A (diode-emulation)",
+       "values": {
+        "Io": 0.3,
+        "rect": "diode_emulation"
+       },
+       "tags": [
+        "variant"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "nominal",
+      "half_fs",
+      "lossy"
+     ],
+     "status_of_reference": "PASS_WITHIN_MODEL",
+     "claim_limit": "이상 스위치 수준(C)의 파형·RMS·리플. 스위칭 손실·ZVS·링잉·포화는 주장하지 않는다."
+    },
+    {
+     "key": "buck_light_load",
+     "title": "경부하: diode-emulation DCM vs 강제 동기정류의 음전류",
+     "model_level": "C (+A DCM 해석식)",
+     "presets": [
+      {
+       "key": "nominal",
+       "label": "I_o = 5 A (CCM 기준)",
+       "values": {},
+       "tags": [
+        "nominal"
+       ]
+      },
+      {
+       "key": "light",
+       "label": "I_o = 0.3 A",
+       "values": {
+        "Io": 0.3
+       },
+       "tags": [
+        "reference"
+       ]
+      },
+      {
+       "key": "boundary",
+       "label": "I_o = 0.45 A (경계)",
+       "values": {
+        "Io": 0.45
+       },
+       "tags": [
+        "variant"
+       ]
+      },
+      {
+       "key": "very_light",
+       "label": "I_o = 0.05 A",
+       "values": {
+        "Io": 0.05
+       },
+       "tags": [
+        "corner"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "light"
+     ],
+     "status_of_reference": "PASS_WITHIN_MODEL",
+     "claim_limit": "DCM 변환비와 전류 파형(C). 링잉·경부하 효율 정밀값은 주장하지 않는다."
+    },
+    {
+     "key": "buck_ripple",
+     "title": "출력 리플: 커패시턴스 성분과 ESR 성분은 위상이 다르다",
+     "model_level": "C (+A 손계산)",
+     "presets": [
+      {
+       "key": "nominal",
+       "label": "교재 C 100 µF, ESR 10 mΩ",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference"
+       ]
+      },
+      {
+       "key": "esr_high",
+       "label": "ESR 50 mΩ",
+       "values": {
+        "esr": 0.05
+       },
+       "tags": [
+        "variant"
+       ]
+      },
+      {
+       "key": "c_small",
+       "label": "C 22 µF",
+       "values": {
+        "C": 2.2e-05
+       },
+       "tags": [
+        "variant"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "nominal"
+     ],
+     "status_of_reference": "PASS_WITHIN_MODEL",
+     "claim_limit": "상수 ESR·ESL 없음 가정의 리플 파형."
+    },
+    {
+     "key": "boost_rhpz",
+     "title": "Boost: duty를 늘렸는데 출력이 먼저 떨어진다 (RHP zero)",
+     "model_level": "A+B+C",
+     "presets": [
+      {
+       "key": "nominal",
+       "label": "교재 200→400 V 1 kW, ΔD +0.02",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference"
+       ]
+      },
+      {
+       "key": "light",
+       "label": "250 W (R 640 Ω)",
+       "values": {
+        "P": 250.0
+       },
+       "tags": [
+        "variant"
+       ]
+      },
+      {
+       "key": "down",
+       "label": "ΔD −0.02",
+       "values": {
+        "dD": -0.02
+       },
+       "tags": [
+        "variant"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "nominal",
+      "light"
+     ],
+     "status_of_reference": "PASS_WITHIN_MODEL",
+     "claim_limit": "개루프 duty step의 역응답과 이상 CCM 소신호 영점. 폐루프 안정성은 주장하지 않는다."
+    }
+   ]
+  },
+  {
+   "id": "FL05",
+   "title": "OBC·PFC — 전력품질을 설계 변수로 바꾸기",
+   "title_en": "OBC and PFC: power quality as a design variable",
+   "minimum_scope": "단상/3상 PFC·DC-link sizing; 16.450 A·10.699 kW·PF/THD 정의·energy (교재 19장 표); 3상 상/선간전압과 단상 2ω 커패시터 문제 분리; 강제 정현파 THD = 0을 PFC 성능으로 주장하지 않음",
+   "claim_limits": [
+    "η·PF 고정의 해석 경계(A)",
+    "THD/PF는 이상 소자·합성 제어기·정의된 창의 모델 결과 — 규격 적합성·EMI 판정 아님",
+    "강제 정현파 모델의 THD = 0은 구성의 결과이며 PFC 성능이 아님",
+    "스위칭 파형에 임의 사인 리플을 더한 값을 측정 THD처럼 보고하지 않음",
+    "DC-link 수명·ESR 발열은 데이터 필요 (MISSING_INPUT)"
+   ],
+   "experiments": [
+    {
+     "key": "grid_boundary",
+     "title": "11 kW와 16 A가 동시에 안 되는 조건: 입력 경계와 변조지수",
+     "model_level": "A (+ 시간영역 3상 전력 경로)",
+     "presets": [
+      {
+       "key": "nominal",
+       "label": "교재 조건 (SPWM)",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference"
+       ]
+      },
+      {
+       "key": "svpwm",
+       "label": "SVPWM으로 코너 확인",
+       "values": {
+        "mod": "svpwm"
+       },
+       "tags": [
+        "variant",
+        "reference"
+       ]
+      },
+      {
+       "key": "limit20",
+       "label": "전류 한계 20 A",
+       "values": {
+        "I_lim": 20.0
+       },
+       "tags": [
+        "variant"
+       ]
+      },
+      {
+       "key": "low_line",
+       "label": "공칭을 360 V로",
+       "values": {
+        "V_LL": 360.0
+       },
+       "tags": [
+        "corner"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "nominal",
+      "svpwm"
+     ],
+     "status_of_reference": "FAIL_CONSTRAINT",
+     "claim_limit": "η·PF 고정의 해석 경계(A). 실제 효율·PF 곡선과 과변조 특성은 주장하지 않는다."
+    },
+    {
+     "key": "pf_thd",
+     "title": "PF·변위역률·THD: 정의와 측정 창",
+     "model_level": "A (합성 파형, DFT)",
+     "presets": [
+      {
+       "key": "nominal",
+       "label": "φ₁ 10°, 5·7차 4/3 %",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference"
+       ]
+      },
+      {
+       "key": "offset",
+       "label": "센서 offset 0.5 A",
+       "values": {
+        "idc": 0.5
+       },
+       "tags": [
+        "variant",
+        "reference"
+       ]
+      },
+      {
+       "key": "vdist",
+       "label": "전압 5차 3 %",
+       "values": {
+        "v5": 3.0,
+        "h5": 8.0
+       },
+       "tags": [
+        "variant"
+       ]
+      },
+      {
+       "key": "unsync",
+       "label": "계통 49 Hz, 분석기 50 Hz",
+       "values": {
+        "f": 49.0
+       },
+       "tags": [
+        "failure",
+        "reference"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "nominal",
+      "offset",
+      "unsync"
+     ],
+     "status_of_reference": "PASS_WITHIN_MODEL",
+     "claim_limit": "합성 파형의 정의 계산(A). 규격 적합성·실측 THD는 주장하지 않는다."
+    },
+    {
+     "key": "boost_pfc",
+     "title": "단상 boost PFC 스위칭 모델: THD는 폐루프 전류에서 계산한다",
+     "model_level": "C (정확 스위칭) + B 평균모델 + A 강제 정현파",
+     "presets": [
+      {
+       "key": "nominal",
+       "label": "3.3 kW, 전압 루프 5 Hz",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference"
+       ]
+      },
+      {
+       "key": "fast_v",
+       "label": "전압 루프 20 Hz",
+       "values": {
+        "fcv": 20.0
+       },
+       "tags": [
+        "variant",
+        "reference"
+       ]
+      },
+      {
+       "key": "light",
+       "label": "600 W (경부하)",
+       "values": {
+        "P": 600.0
+       },
+       "tags": [
+        "corner",
+        "reference"
+       ]
+      },
+      {
+       "key": "small_C",
+       "label": "C = 470 µF",
+       "values": {
+        "C": 0.00047
+       },
+       "tags": [
+        "variant"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "nominal",
+      "fast_v",
+      "light"
+     ],
+     "status_of_reference": "PASS_WITHIN_MODEL",
+     "claim_limit": "이상 소자·합성 제어기의 스위칭 모델(C) THD/PF. 규격 적합성·EMI·소자 손실은 주장하지 않는다."
+    },
+    {
+     "key": "dclink_power",
+     "title": "단상 2ω 전력과 3상 순시전력, 그리고 DC-link를 정하는 서로 다른 이유",
+     "model_level": "A (+ B 에너지 ODE)",
+     "presets": [
+      {
+       "key": "nominal",
+       "label": "교재 수치",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference"
+       ]
+      },
+      {
+       "key": "unbalance",
+       "label": "3상 불평형 10 %",
+       "values": {
+        "unb": 10.0
+       },
+       "tags": [
+        "variant",
+        "reference"
+       ]
+      },
+      {
+       "key": "small_c",
+       "label": "C = 470 µF로 hold-up",
+       "values": {
+        "C_given": 0.00047
+       },
+       "tags": [
+        "failure",
+        "reference"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "nominal",
+      "unbalance",
+      "small_c"
+     ],
+     "status_of_reference": "PASS_WITHIN_MODEL",
+     "claim_limit": "이상 정현파·정전력 에너지 모델(A/B). 커패시터 수명·ESR 발열은 주장하지 않는다."
+    }
+   ]
+  },
+  {
+   "id": "FL06",
+   "title": "제어 — PI보다 plant와 부호가 먼저다",
+   "title_en": "Control: the plant and the sign come before the PI",
+   "minimum_scope": "RL/current loop·PI 단위(V vs duty)·delay·saturation·anti-windup·step·dq 부호 (교재 19장 표); Kp 5.026548 V/A, Ki 628.318531 V/(A·s), 37.5 µs → 13.5°",
+   "claim_limits": [
+    "이상 평균 변조기의 선형·샘플링 루프 결과(A/B). PWM 리플·센서 필터·양자화 미포함",
+    "위상여유·overshoot 기준은 학습용이며 고객 사양이 아님",
+    "dq 결과는 평형 계통·이상 PLL 가정",
+    "성공 기준과 모델의 물리 한계를 섞지 않음"
+   ],
+   "experiments": [
+    {
+     "key": "pi_design",
+     "title": "단위를 가진 PI: V 출력 vs duty 출력, 그리고 지연이 먹는 위상",
+     "model_level": "A (+ 샘플링 루프 B)",
+     "presets": [
+      {
+       "key": "nominal",
+       "label": "교재 L/R/f_c, 전압 출력",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference"
+       ]
+      },
+      {
+       "key": "duty",
+       "label": "duty 출력 (K_PWM 환산)",
+       "values": {
+        "out": "duty"
+       },
+       "tags": [
+        "variant",
+        "reference"
+       ]
+      },
+      {
+       "key": "unit_error",
+       "label": "duty 출력에 V/A 숫자 그대로",
+       "values": {
+        "out": "duty_raw"
+       },
+       "tags": [
+        "failure",
+        "reference"
+       ]
+      },
+      {
+       "key": "fc5k",
+       "label": "f_c = 5 kHz",
+       "values": {
+        "fc": 5000.0
+       },
+       "tags": [
+        "corner"
+       ]
+      },
+      {
+       "key": "L_low",
+       "label": "실제 L이 설계값의 50 %",
+       "values": {
+        "L_ratio": 0.5
+       },
+       "tags": [
+        "corner"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "nominal",
+      "duty",
+      "unit_error"
+     ],
+     "status_of_reference": "PASS_WITHIN_MODEL",
+     "claim_limit": "선형 루프 해석(A)과 이상 변조기의 샘플링 루프(B). 실측 루프이득·센서 필터·공진은 주장하지 않는다."
+    },
+    {
+     "key": "discrete_loop",
+     "title": "샘플링 전류 루프: 포화·anti-windup·교재의 다섯 가지 사건",
+     "model_level": "B (정확 ZOH plant + 샘플링 PI)",
+     "presets": [
+      {
+       "key": "load_step",
+       "label": "부하 20→80 % (V_dc 600 V라 포화)",
+       "values": {
+        "scenario": "load_step"
+       },
+       "tags": [
+        "nominal",
+        "reference"
+       ]
+      },
+      {
+       "key": "input_dip",
+       "label": "입력 전압 −10 % (e 피드포워드)",
+       "values": {
+        "scenario": "input_dip"
+       },
+       "tags": [
+        "variant",
+        "reference"
+       ]
+      },
+      {
+       "key": "input_dip_noff",
+       "label": "입력 −10 %, 피드포워드 없음",
+       "values": {
+        "scenario": "input_dip",
+        "e_ff": false
+       },
+       "tags": [
+        "corner"
+       ]
+      },
+      {
+       "key": "current_limit",
+       "label": "전류 제한 50 %",
+       "values": {
+        "scenario": "current_limit"
+       },
+       "tags": [
+        "variant",
+        "reference"
+       ]
+      },
+      {
+       "key": "sensor_offset",
+       "label": "센서 offset +0.5 A",
+       "values": {
+        "scenario": "sensor_offset"
+       },
+       "tags": [
+        "failure",
+        "reference"
+       ]
+      },
+      {
+       "key": "extra_delay",
+       "label": "한 주기 추가 지연",
+       "values": {
+        "scenario": "extra_delay"
+       },
+       "tags": [
+        "corner",
+        "reference"
+       ]
+      },
+      {
+       "key": "aw_aggressive",
+       "label": "K_aw 과대 (K_aw·T_i = 50)",
+       "values": {
+        "Kaw_ratio": 50.0
+       },
+       "tags": [
+        "failure"
+       ]
+      },
+      {
+       "key": "zero_wc5",
+       "label": "PI 영점 ω_c/5, 부하 step",
+       "values": {
+        "zero": "wc5"
+       },
+       "tags": [
+        "variant"
+       ]
+      },
+      {
+       "key": "big_vmax",
+       "label": "V_max 여유 큼 (V_dc 800 V)",
+       "values": {
+        "V_max": 461.88021535170066
+       },
+       "tags": [
+        "variant"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "load_step",
+      "input_dip",
+      "current_limit",
+      "sensor_offset",
+      "extra_delay"
+     ],
+     "status_of_reference": "PASS_WITHIN_MODEL",
+     "claim_limit": "이상 평균 변조기의 샘플링 루프(B). PWM 리플·센서 필터·하드웨어 OCP는 주장하지 않는다."
+    },
+    {
+     "key": "dq_sign",
+     "title": "dq PFC 전류 제어: 부호가 맞아야 PI가 의미가 있다",
+     "model_level": "B (dq 평균모델 + 독립 abc 모델)",
+     "presets": [
+      {
+       "key": "correct",
+       "label": "올바른 부호, i_d 0→20 A",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference"
+       ]
+      },
+      {
+       "key": "reversed",
+       "label": "뒤집힌 부호",
+       "values": {
+        "sign": "reversed"
+       },
+       "tags": [
+        "failure",
+        "reference"
+       ]
+      },
+      {
+       "key": "reactive",
+       "label": "i_q = +5 A 추가",
+       "values": {
+        "iq_ref": 5.0
+       },
+       "tags": [
+        "variant",
+        "reference"
+       ]
+      },
+      {
+       "key": "no_decouple",
+       "label": "디커플링 없음",
+       "values": {
+        "decouple": false
+       },
+       "tags": [
+        "variant"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "correct",
+      "reversed",
+      "reactive"
+     ],
+     "status_of_reference": "PASS_WITHIN_MODEL",
+     "claim_limit": "평형 계통·이상 PLL·평균 변조기의 dq 전류 루프(B). 불평형·약계통·PWM 리플은 주장하지 않는다."
+    }
+   ]
+  },
+  {
+   "id": "FL08",
+   "title": "DAB — 식에서 파형, 파형에서 설계 판단으로",
+   "title_en": "Dual active bridge: equations, waveforms, design judgement",
+   "minimum_scope": "DAB analytical·piecewise·switching; 1.5 kW·2.01988 Arms·mismatch (교재 19장); zero-DC 기준해, L_m 분리, 0/90/180° 포트 전류, ZVS NOT_EVALUABLE/SCREEN_ONLY",
+   "claim_limits": [
+    "이상 스위치 모델: ZVS는 NOT_EVALUABLE, 부호·전하는 SCREEN_ONLY",
+    "손실은 후처리 추정 또는 결합 R만",
+    "모듈당/합계를 분리해 표시"
+   ],
+   "experiments": [
+    {
+     "key": "sps_nominal",
+     "title": "SPS 4구간: 닫힌 식·구간 적분·스위칭 해로 같은 숫자 얻기",
+     "model_level": "A + C",
+     "presets": [
+      {
+       "key": "nominal",
+       "label": "교재: 800↔48 V, 1.5 kW/모듈",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference"
+       ]
+      },
+      {
+       "key": "reverse",
+       "label": "역방향 −1.5 kW (LV→HV)",
+       "values": {
+        "P": -1500.0
+       },
+       "tags": [
+        "variant",
+        "reference"
+       ]
+      },
+      {
+       "key": "with_lm",
+       "label": "L_m = 2 mH 포함",
+       "values": {
+        "Lm": 0.002
+       },
+       "tags": [
+        "variant"
+       ]
+      },
+      {
+       "key": "low_corner",
+       "label": "550 V / 36 V corner",
+       "values": {
+        "VH": 550.0,
+        "VL": 36.0
+       },
+       "tags": [
+        "corner"
+       ]
+      },
+      {
+       "key": "over",
+       "label": "5 kW 요청 (Pmax 초과)",
+       "values": {
+        "P": 5000.0
+       },
+       "tags": [
+        "failure"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "nominal",
+      "reverse",
+      "over"
+     ],
+     "status_of_reference": "PASS_WITHIN_MODEL",
+     "claim_limit": "이상 스위치(C)·선형 L의 전력·RMS·peak. ZVS·손실 주장 없음."
+    },
+    {
+     "key": "zero_power_mismatch",
+     "title": "0 W인데도 왜 뜨거운가: 순환전류와 여자전류",
+     "model_level": "A + C",
+     "presets": [
+      {
+       "key": "mismatch",
+       "label": "교재: 900 V / 36 V (V₂′ = 600 V), φ = 0",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference"
+       ]
+      },
+      {
+       "key": "matched",
+       "label": "전압비 일치 800 V / 48 V",
+       "values": {
+        "VH": 800.0,
+        "VL": 48.0
+       },
+       "tags": [
+        "variant",
+        "reference"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "mismatch",
+      "matched"
+     ],
+     "status_of_reference": "PASS_WITHIN_MODEL",
+     "claim_limit": "이상 bridge의 순환·여자전류. 무부하 손실 정밀값 아님."
+    },
+    {
+     "key": "voltage_corners",
+     "title": "9개 voltage corner: 해가 있는 것과 통과하는 것은 다르다",
+     "model_level": "A (+C 교차검증)",
+     "presets": [
+      {
+       "key": "textbook",
+       "label": "교재 corner, 1.5 kW",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference"
+       ]
+      },
+      {
+       "key": "light",
+       "label": "300 W",
+       "values": {
+        "P": 300.0
+       },
+       "tags": [
+        "corner",
+        "reference"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "textbook",
+      "light"
+     ],
+     "status_of_reference": "SCREEN_ONLY",
+     "claim_limit": "해 존재·RMS·부호 screen (SCREEN_ONLY)."
+    },
+    {
+     "key": "offset_startup",
+     "title": "DC offset·기동·비대칭 volt-second: 이상 L은 offset을 없애지 않는다",
+     "model_level": "C",
+     "presets": [
+      {
+       "key": "lossless",
+       "label": "무손실 (offset 유지)",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference"
+       ]
+      },
+      {
+       "key": "damped",
+       "label": "R = 0.5 Ω (감쇠)",
+       "values": {
+        "R": 0.5,
+        "cycles": 200
+       },
+       "tags": [
+        "variant",
+        "reference"
+       ]
+      },
+      {
+       "key": "asym",
+       "label": "비대칭 1 %, R = 0.5 Ω",
+       "values": {
+        "asym": 0.01,
+        "R": 0.5,
+        "cycles": 200
+       },
+       "tags": [
+        "failure"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "lossless",
+      "damped"
+     ],
+     "status_of_reference": "PASS_WITHIN_MODEL",
+     "claim_limit": "이상 스위치·선형 L의 offset 동역학. 포화 없음."
+    },
+    {
+     "key": "two_modules",
+     "title": "2개 모듈 interleaving: 0/90/180°의 실제 DC 포트 전류와 L±10 % 분담",
+     "model_level": "C",
+     "presets": [
+      {
+       "key": "textbook",
+       "label": "90°, L ±10 %",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference"
+       ]
+      },
+      {
+       "key": "ideal",
+       "label": "δ = 0, 180°",
+       "values": {
+        "dL": 0.0,
+        "offset_deg": 180.0
+       },
+       "tags": [
+        "variant",
+        "reference"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "textbook",
+      "ideal"
+     ],
+     "status_of_reference": "PASS_WITHIN_MODEL",
+     "claim_limit": "이상 파형의 포트 전류 합. 출력 필터·제어 미포함."
+    }
+   ]
+  },
+  {
+   "id": "FL09",
+   "title": "LLC — 공진을 말로 설명하고 식으로 확인하기",
+   "title_en": "LLC: resonance in words, then in equations",
+   "minimum_scope": "LLC FHA·rectifier switching; R_ac·HB/FB·gain/phase·FHA mismatch (교재 19장)",
+   "claim_limits": [
+    "FHA 회로는 switching 검증이 아니다",
+    "이상 스위치: ZVS는 NOT_EVALUABLE, 전하는 SCREEN_ONLY",
+    "손실·온도 주장 없음"
+   ],
+   "experiments": [
+    {
+     "key": "fha_gain",
+     "title": "FHA gain 곡선: Q·k·bridge 계수를 식으로 확인",
+     "model_level": "A",
+     "presets": [
+      {
+       "key": "textbook",
+       "label": "교재: F 0.7–1.5, Q 0.2/0.8/1.5",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference"
+       ]
+      },
+      {
+       "key": "hb",
+       "label": "half bridge 400→48 V",
+       "values": {
+        "bridge": "HB"
+       },
+       "tags": [
+        "variant",
+        "reference"
+       ]
+      },
+      {
+       "key": "low_k",
+       "label": "L_m 100 µH (k = 2.5)",
+       "values": {
+        "Lm": 0.0001
+       },
+       "tags": [
+        "variant"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "textbook",
+      "hb"
+     ],
+     "status_of_reference": "PASS_WITHIN_MODEL",
+     "claim_limit": "FHA 대수. 정류 switching·ZVS·동특성 주장 없음."
+    },
+    {
+     "key": "switching_vs_fha",
+     "title": "정류기가 있는 스위칭 회로 vs FHA: 어디서 맞고 어디서 틀리나",
+     "model_level": "C + A",
+     "presets": [
+      {
+       "key": "mid",
+       "label": "중부하 Q 0.8, F 0.9",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference"
+       ]
+      },
+      {
+       "key": "at_fr",
+       "label": "Q 0.8, F 1.0",
+       "values": {
+        "F": 1.0
+       },
+       "tags": [
+        "variant",
+        "reference"
+       ]
+      },
+      {
+       "key": "below_heavy",
+       "label": "Q 0.8, F 0.7",
+       "values": {
+        "F": 0.7
+       },
+       "tags": [
+        "failure",
+        "reference"
+       ]
+      },
+      {
+       "key": "above_light",
+       "label": "Q 0.2, F 1.5",
+       "values": {
+        "Q": 0.2,
+        "F": 1.5
+       },
+       "tags": [
+        "corner",
+        "reference"
+       ]
+      },
+      {
+       "key": "hb",
+       "label": "half bridge, Q 0.8, F 0.9",
+       "values": {
+        "bridge": "HB"
+       },
+       "tags": [
+        "variant",
+        "reference"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "mid",
+      "at_fr",
+      "below_heavy",
+      "above_light",
+      "hb"
+     ],
+     "status_of_reference": "PASS_WITHIN_MODEL",
+     "claim_limit": "이상 스위칭·다이오드 정류의 정상상태. ZVS·손실·기동 주장 없음."
+    },
+    {
+     "key": "gain_curve",
+     "title": "스위칭 gain 곡선 전체: FHA peak와 실제 peak는 다른 곳에 있다",
+     "model_level": "C + A",
+     "presets": [
+      {
+       "key": "mid",
+       "label": "Q 0.8",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference"
+       ]
+      },
+      {
+       "key": "light",
+       "label": "Q 0.2",
+       "values": {
+        "Q": 0.2
+       },
+       "tags": [
+        "variant"
+       ]
+      },
+      {
+       "key": "heavy",
+       "label": "Q 1.5",
+       "values": {
+        "Q": 1.5
+       },
+       "tags": [
+        "corner"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "mid"
+     ],
+     "status_of_reference": "PASS_WITHIN_MODEL",
+     "claim_limit": "이상 스위칭 주기해의 gain·모드. 손실·기생 용량 없음."
+    },
+    {
+     "key": "zvs_lm",
+     "title": "L_m tradeoff: 경부하 ZVS 전하 vs 순환전류",
+     "model_level": "C + SCREEN",
+     "presets": [
+      {
+       "key": "textbook",
+       "label": "F 1.1, t_d 100 ns",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference"
+       ]
+      },
+      {
+       "key": "short_td",
+       "label": "t_d 50 ns",
+       "values": {
+        "td": 5e-08
+       },
+       "tags": [
+        "variant"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "textbook"
+     ],
+     "status_of_reference": "MISSING_INPUT",
+     "claim_limit": "edge 전류 부호·전하 screen. ZVS 보증·손실 없음."
+    }
+   ]
+  },
+  {
+   "id": "FL10",
+   "title": "CLLC — 설계 실패와 다중 해를 직접 방어하기",
+   "title_en": "CLLC: defend the design failure and the multiple solutions",
+   "minimum_scope": "CLLC network·full switching·branch; 초기 FAIL·수정안 2개 root·한계 (교재 19장)",
+   "claim_limits": [
+    "seed FAIL은 결과로 보존",
+    "FHA gain PASS ≠ 스위칭·ZVS·reverse·기동 PASS",
+    "이상 소자·강한 전압원 모델"
+   ],
+   "experiments": [
+    {
+     "key": "seed_fail",
+     "title": "초기안 FAIL을 먼저 재현하고 저장한다",
+     "model_level": "A",
+     "presets": [
+      {
+       "key": "seed",
+       "label": "교재 초기안 (n = 1)",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference",
+        "failure"
+       ]
+      },
+      {
+       "key": "fix",
+       "label": "n = 0.93 (환산 대칭)",
+       "values": {
+        "n": 0.93
+       },
+       "tags": [
+        "variant",
+        "reference"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "seed",
+      "fix"
+     ],
+     "status_of_reference": "FAIL_CONSTRAINT",
+     "claim_limit": "FHA gain 가능성. 스위칭·ZVS·기동·reverse 주장 없음."
+    },
+    {
+     "key": "fix_n093",
+     "title": "수정안 n = 0.93: 모든 해를 찾고 두 해의 차이를 표로",
+     "model_level": "A",
+     "presets": [
+      {
+       "key": "textbook",
+       "label": "교재 수정안 (환산 대칭)",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference"
+       ]
+      },
+      {
+       "key": "kept_lc",
+       "label": "n만 0.93, 2차 L·C 그대로",
+       "values": {
+        "symmetric": false
+       },
+       "tags": [
+        "variant",
+        "reference"
+       ]
+      },
+      {
+       "key": "turns_13_14",
+       "label": "정수 권선 13:14",
+       "values": {
+        "n": 0.9285714285714286
+       },
+       "tags": [
+        "variant"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "textbook",
+      "kept_lc"
+     ],
+     "status_of_reference": "UNRESOLVED_RANKING",
+     "claim_limit": "FHA 해와 FHA 전류. 스위칭 동작점 아님."
+    },
+    {
+     "key": "branch_selection",
+     "title": "branch 선택: 두 해는 fold에서 만나고 기울기가 0이 된다",
+     "model_level": "A",
+     "presets": [
+      {
+       "key": "textbook",
+       "label": "n = 0.93, 850 V link",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "textbook"
+     ],
+     "status_of_reference": "UNRESOLVED_RANKING",
+     "claim_limit": "FHA 해 구조. 폐루프·스위칭 주장 없음."
+    },
+    {
+     "key": "reverse",
+     "title": "reverse는 forward의 역수가 아니다: 회로를 뒤집어 다시 유도",
+     "model_level": "A",
+     "presets": [
+      {
+       "key": "textbook",
+       "label": "n = 0.93 수정안",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference",
+        "failure"
+       ]
+      },
+      {
+       "key": "kept_lc",
+       "label": "n만 0.93, 2차 L·C 그대로",
+       "values": {
+        "symmetric": false
+       },
+       "tags": [
+        "variant"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "textbook"
+     ],
+     "status_of_reference": "FAIL_CONSTRAINT",
+     "claim_limit": "reverse FHA 가능성. reverse 스위칭 검증 아님."
+    },
+    {
+     "key": "time_domain",
+     "title": "시간영역 검증: FHA 해 주파수에서 실제로 얼마의 전력이 흐르나",
+     "model_level": "C + A",
+     "presets": [
+      {
+       "key": "textbook",
+       "label": "n = 0.93, 강한 배터리, 무손실",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference"
+       ]
+      },
+      {
+       "key": "lossy",
+       "label": "R₁ = R₂′ = 50 mΩ",
+       "values": {
+        "R": 0.05
+       },
+       "tags": [
+        "variant",
+        "reference"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "textbook"
+     ],
+     "status_of_reference": "FAIL_CONSTRAINT",
+     "claim_limit": "이상 스위칭·강한 전압원 모델의 전력·RMS. 손실·ZVS 보증·기동 없음."
+    }
+   ]
+  }
+ ],
+ "expert_labs": [
+  {
+   "id": "EX02",
+   "title": "비선형 Coss·dead time·ZVS — 에너지식 하나로 판정하지 않기",
+   "title_en": "Nonlinear Coss, dead time and ZVS",
+   "minimum_scope": "Q/E 적분, deadtime·current sign·partial ZVS (E13 표); 286.606 ns vs 174.574 ns; 100/200/300/500 ns; 실제 i(t) 변화 경로는 회로·state를 추가해 별도 검증",
+   "claim_limits": [
+    "charge screen은 SCREEN_ONLY — 실제 converter ZVS PASS 아님",
+    "합성 C(v)의 D 수준 경향 결과이며 vendor 소자 모델이 아님",
+    "2E_oss를 모든 ZVS topology의 보편 최소에너지로 쓰지 않음",
+    "역회복·gate 동역학·링잉 미모델"
+   ],
+   "experiments": [
+    {
+     "key": "qe_integrals",
+     "title": "Coss·Qoss·Eoss는 세 가지 다른 함수다",
+     "model_level": "A",
+     "presets": [
+      {
+       "key": "textbook",
+       "label": "교재 C(v), 800 V",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference"
+       ]
+      },
+      {
+       "key": "v400",
+       "label": "V_bus = 400 V",
+       "values": {
+        "Vb": 400.0
+       },
+       "tags": [
+        "variant"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "textbook"
+     ],
+     "status_of_reference": "PASS_WITHIN_MODEL",
+     "claim_limit": "합성 C(v)의 적분값. 실제 소자 곡선 아님."
+    },
+    {
+     "key": "hb_constant_current",
+     "title": "고정 rail half-bridge: 2Q_oss와 dead time (charge screen)",
+     "model_level": "A (charge screen)",
+     "presets": [
+      {
+       "key": "textbook",
+       "label": "4 A, t_d 200 ns",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference"
+       ]
+      },
+      {
+       "key": "td300",
+       "label": "t_d 300 ns",
+       "values": {
+        "td": 3e-07
+       },
+       "tags": [
+        "variant"
+       ]
+      },
+      {
+       "key": "neg",
+       "label": "전류 반대 (−4 A)",
+       "values": {
+        "I": -4.0
+       },
+       "tags": [
+        "failure"
+       ]
+      },
+      {
+       "key": "low_i",
+       "label": "1 A, t_d 500 ns",
+       "values": {
+        "I": 1.0,
+        "td": 5e-07
+       },
+       "tags": [
+        "corner"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "textbook",
+      "td300",
+      "neg"
+     ],
+     "status_of_reference": "SCREEN_ONLY",
+     "claim_limit": "정전류 charge screen (SCREEN_ONLY)."
+    },
+    {
+     "key": "resonant_transition",
+     "title": "실제로 변하는 전류로 commutation event 풀기 (합성 D 수준)",
+     "model_level": "D (합성)",
+     "presets": [
+      {
+       "key": "mid",
+       "label": "v_x = V_bus/2, 4 A, t_d 200 ns",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference"
+       ]
+      },
+      {
+       "key": "mid300",
+       "label": "v_x = V_bus/2, t_d 300 ns",
+       "values": {
+        "td": 3e-07
+       },
+       "tags": [
+        "variant",
+        "reference"
+       ]
+      },
+      {
+       "key": "vx0",
+       "label": "v_x = 0 V (buck형)",
+       "values": {
+        "vx": 0.0,
+        "td": 5e-07
+       },
+       "tags": [
+        "failure",
+        "reference"
+       ]
+      },
+      {
+       "key": "delays",
+       "label": "gate 지연 20/15 ns, 타이머 10 ns",
+       "values": {
+        "t_doff": 2e-08,
+        "t_don": 1.5e-08,
+        "t_res": 1e-08,
+        "td": 2.85e-07
+       },
+       "tags": [
+        "variant"
+       ]
+      },
+      {
+       "key": "long",
+       "label": "t_d 1 µs (과다)",
+       "values": {
+        "td": 1e-06
+       },
+       "tags": [
+        "corner"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "mid",
+      "mid300",
+      "vx0"
+     ],
+     "status_of_reference": "FAIL_CONSTRAINT",
+     "claim_limit": "합성 C(v)·이상 diode·즉시 채널 차단의 D 수준 경향. 실제 소자 ZVS 보증 아님."
+    },
+    {
+     "key": "deadtime_window",
+     "title": "dead time은 한 점이 아니라 운전점별 창이다",
+     "model_level": "D (합성)",
+     "presets": [
+      {
+       "key": "mid",
+       "label": "v_x = V_bus/2, 0.5–8 A",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference"
+       ]
+      },
+      {
+       "key": "vxb",
+       "label": "v_x = V_bus (boost형)",
+       "values": {
+        "vx": 800.0
+       },
+       "tags": [
+        "variant"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "mid"
+     ],
+     "status_of_reference": "SCREEN_ONLY",
+     "claim_limit": "합성 event 격자 (SCREEN_ONLY)."
+    }
+   ]
+  },
+  {
+   "id": "EX05",
+   "title": "CLLC — gain 곡선에서 실제 동역학으로",
+   "title_en": "CLLC: from the gain curve to real dynamics",
+   "minimum_scope": "E05: 상태식·항등식, 두 root의 스위칭 운전점·G_vf, 폐루프 step, startup/reverse 실패 사례, seed 실패 보존",
+   "claim_limits": [
+    "이상 소자·합성 출력 C",
+    "plant-only Floquet ≠ 폐루프 안정성",
+    "ZVS/overshoot 수치는 합성 모델에만 유효"
+   ],
+   "experiments": [
+    {
+     "key": "state_identity",
+     "title": "CLLC 상태식과 에너지 항등식: 환산과 부호를 먼저 검산",
+     "model_level": "C",
+     "presets": [
+      {
+       "key": "textbook",
+       "label": "n = 0.93, 무손실",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference"
+       ]
+      },
+      {
+       "key": "lossy",
+       "label": "R₁ = R₂′ = 50 mΩ",
+       "values": {
+        "R": 0.05
+       },
+       "tags": [
+        "variant",
+        "reference"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "textbook",
+      "lossy"
+     ],
+     "status_of_reference": "PASS_WITHIN_MODEL",
+     "claim_limit": "모델 구조 검산. 설계 통과 주장 없음."
+    },
+    {
+     "key": "operating_points",
+     "title": "FHA 두 해 vs 스위칭 운전점: 기울기 부호가 같은가",
+     "model_level": "C + A",
+     "presets": [
+      {
+       "key": "textbook",
+       "label": "920/850 V, 11 kW R_L",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "textbook"
+     ],
+     "status_of_reference": "OUT_OF_VALIDITY",
+     "claim_limit": "이상 스위칭 주기해. 손실·ZVS 없음."
+    },
+    {
+     "key": "floquet",
+     "title": "주기해와 안정성은 따로: Floquet multiplier와 초기값 섭동",
+     "model_level": "C",
+     "presets": [
+      {
+       "key": "textbook",
+       "label": "920 V, 무손실",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference"
+       ]
+      },
+      {
+       "key": "lossy",
+       "label": "R = 50 mΩ",
+       "values": {
+        "R": 0.05,
+        "f_lo": 145000.0,
+        "f_hi": 149000.0
+       },
+       "tags": [
+        "variant",
+        "reference"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "textbook",
+      "lossy"
+     ],
+     "status_of_reference": "MARGINAL",
+     "claim_limit": "plant 국소 수렴. 폐루프·대신호 주장 없음."
+    },
+    {
+     "key": "gvf",
+     "title": "branch별 G_vf: 정상 기울기는 DC 한 점일 뿐",
+     "model_level": "C",
+     "presets": [
+      {
+       "key": "textbook",
+       "label": "920/850 V, 11 kW",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference"
+       ]
+      },
+      {
+       "key": "big_fm",
+       "label": "FM 진폭 0.2 %",
+       "values": {
+        "fm_amp": 0.002
+       },
+       "tags": [
+        "variant"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "textbook"
+     ],
+     "status_of_reference": "PASS_WITHIN_MODEL",
+     "claim_limit": "event 포함 소신호 모델 (이상 소자). 실제 보드 G_vf 아님."
+    },
+    {
+     "key": "closed_loop",
+     "title": "폐루프: 지연·포화 포함 PI, 부호가 맞아도 불안정할 수 있다",
+     "model_level": "C",
+     "presets": [
+      {
+       "key": "slow",
+       "label": "K_i = 1e4 (낮은 이득)",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference"
+       ]
+      },
+      {
+       "key": "fast",
+       "label": "K_i = 1e5 (부호는 맞음)",
+       "values": {
+        "Ki": 100000.0
+       },
+       "tags": [
+        "failure",
+        "reference"
+       ]
+      },
+      {
+       "key": "wrong_sign",
+       "label": "반대 부호 (FHA 아래 branch 가정), K_i = 3e4",
+       "values": {
+        "branch_sign": "positive",
+        "Ki": 30000.0,
+        "cycles": 3000
+       },
+       "tags": [
+        "failure",
+        "reference"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "slow",
+      "fast",
+      "wrong_sign"
+     ],
+     "status_of_reference": "MARGINAL",
+     "claim_limit": "이상 스위칭 plant + 이산 PI. 실제 제어기 구현·센서 없음."
+    },
+    {
+     "key": "startup_reverse",
+     "title": "기동과 reverse: 빈 출력 C, 연결된 배터리, 저전압 역방향",
+     "model_level": "C",
+     "presets": [
+      {
+       "key": "textbook",
+       "label": "210 kHz 시작, 300주기 램프",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference"
+       ]
+      },
+      {
+       "key": "slow_ramp",
+       "label": "램프 600주기",
+       "values": {
+        "ramp_cycles": 600,
+        "cycles": 900
+       },
+       "tags": [
+        "variant"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "textbook"
+     ],
+     "status_of_reference": "FAIL_CONSTRAINT",
+     "claim_limit": "개루프 기동·reverse의 이상 스위칭 과도. 보호 회로 없음."
+    },
+    {
+     "key": "tolerance",
+     "title": "공차: f_r만 움직이는 것이 아니다",
+     "model_level": "A + C",
+     "presets": [
+      {
+       "key": "textbook",
+       "label": "L·C ±5 %, L_m ±15 %",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "textbook"
+     ],
+     "status_of_reference": "SCREEN_ONLY",
+     "claim_limit": "합성 공차 screen. 수율·온도 drift 없음."
+    }
+   ]
+  },
+  {
+   "id": "EX06",
+   "title": "DAB: RMS 최소화와 ZVS의 상충관계",
+   "title_en": "DAB modulation: RMS minimisation vs ZVS",
+   "minimum_scope": "w₁, w₂, φ switching function; 정확 PWL P/Irms/Ipk; SPS 닫힌 식 독립 검증; 3.113563 → 2.893092 A; commutation sign/charge·zero-state·최소 펄스·dead time·timer; 전환 transient·offset",
+   "claim_limits": [
+    "global optimum 아님 (격자 + 첫 φ 해)",
+    "ZVS는 SCREEN_ONLY, 이상 전류 단계는 NOT_EVALUABLE",
+    "RMS 감소 ≠ 효율 이득; 손실 단계는 MISSING_INPUT (합성 손실은 설명용)"
+   ],
+   "experiments": [
+    {
+     "key": "general_modulation",
+     "title": "switching function을 고정하고 정확 적분: SPS vs width candidate",
+     "model_level": "C + A",
+     "presets": [
+      {
+       "key": "textbook",
+       "label": "교재 candidate w₁/π 0.7",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference"
+       ]
+      },
+      {
+       "key": "sps",
+       "label": "SPS (w₁ = w₂ = π)",
+       "values": {
+        "w1": 1.0
+       },
+       "tags": [
+        "variant",
+        "reference"
+       ]
+      },
+      {
+       "key": "w06",
+       "label": "w₁/π 0.6",
+       "values": {
+        "w1": 0.6
+       },
+       "tags": [
+        "variant"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "textbook",
+      "sps"
+     ],
+     "status_of_reference": "PASS_WITHIN_MODEL",
+     "claim_limit": "이상 전류 파형의 RMS/peak. ZVS·효율 개선 주장 없음."
+    },
+    {
+     "key": "candidate_map",
+     "title": "candidate map과 단계별 권장점: 이상 전류 → commutation → 손실",
+     "model_level": "C + SCREEN",
+     "presets": [
+      {
+       "key": "textbook",
+       "label": "900/600 V: 1.5 kW · 2 kW · 300 W",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference"
+       ]
+      },
+      {
+       "key": "fine",
+       "label": "격자 0.05 간격",
+       "values": {
+        "w_step": 0.05
+       },
+       "tags": [
+        "variant"
+       ]
+      },
+      {
+       "key": "synthetic",
+       "label": "③ 합성 손실 켜기 (설명용)",
+       "values": {
+        "synthetic_loss": true
+       },
+       "tags": [
+        "variant"
+       ]
+      },
+      {
+       "key": "matched",
+       "label": "전압비 일치 800/800 V",
+       "values": {
+        "V1": 800.0,
+        "V2": 800.0
+       },
+       "tags": [
+        "variant"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "textbook"
+     ],
+     "status_of_reference": "MISSING_INPUT",
+     "claim_limit": "격자 탐색 + SCREEN_ONLY. 손실 단계는 MISSING_INPUT (합성은 설명용)."
+    },
+    {
+     "key": "commutation_detail",
+     "title": "switch node별 commutation: zero-state 선택이 전환 전류를 바꾼다",
+     "model_level": "C + SCREEN",
+     "presets": [
+      {
+       "key": "textbook",
+       "label": "교재 candidate",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference"
+       ]
+      },
+      {
+       "key": "light",
+       "label": "300 W",
+       "values": {
+        "P": 300.0
+       },
+       "tags": [
+        "corner",
+        "reference"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "textbook",
+      "light"
+     ],
+     "status_of_reference": "SCREEN_ONLY",
+     "claim_limit": "SCREEN_ONLY"
+    },
+    {
+     "key": "implementation",
+     "title": "FPGA/MCU 구현: timer 분해능·최소 펄스·모드 전환 offset",
+     "model_level": "A + C",
+     "presets": [
+      {
+       "key": "textbook",
+       "label": "10 ns, 즉시 전환",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference"
+       ]
+      },
+      {
+       "key": "damped",
+       "label": "R = 1 Ω",
+       "values": {
+        "R": 1.0,
+        "cycles": 200
+       },
+       "tags": [
+        "variant"
+       ]
+      },
+      {
+       "key": "t100",
+       "label": "Δt = 100 ns",
+       "values": {
+        "t_res": 1e-07
+       },
+       "tags": [
+        "variant"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "textbook"
+     ],
+     "status_of_reference": "PASS_WITHIN_MODEL",
+     "claim_limit": "이상 1-step 감도와 이상 bridge 전환 offset."
+    }
+   ]
+  },
+  {
+   "id": "EX07",
+   "title": "제어·입력 상호작용 — 단일 루프가 안정해도 시스템은 불안정할 수 있다",
+   "title_en": "A stable loop can still make an unstable system",
+   "minimum_scope": "CPL exact example(394.935887 V, 320.565519 µF, 100 µF 불안정·1 mF 안정)을 비선형 적분·local Jacobian으로 독립 확인; 유한 대역 converter 입력 임피던스 비교; 15 µs 지연 1 kHz 5.4°·10 kHz 54°; delay/saturation/antiwindup 실험; 최소 3개 전압/부하 코너 주파수응답; current-loop margin과 whole-system 안정성 각각 보고 (E07·E13 표)",
+   "claim_limits": [
+    "이상 CPL 결과는 무한대역·국소(선형) 결과이며 큰 진폭 붕괴는 예측하지 않음",
+    "컨버터 임피던스는 평균모델(B) 소신호 — 스위칭·샘플링 포함 실측 임피던스 아님",
+    "|Z_s| < |Z_in|은 보수적 충분조건으로만 사용",
+    "스위칭 파형에 임의 사인 리플을 더해 측정 THD처럼 보고하지 않음 (THD는 FL05의 시뮬레이션 전류로만)",
+    "루프 여유·overshoot 기준은 학습용이며 고객 사양이 아님"
+   ],
+   "experiments": [
+    {
+     "key": "cpl_exact",
+     "title": "소스 R–L + C + CPL: 교재 예제를 세 경로로 재현",
+     "model_level": "A (해석 극점) + 비선형 ODE + 수치 Jacobian",
+     "presets": [
+      {
+       "key": "c100u",
+       "label": "C = 100 µF (교재: 불안정)",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference",
+        "failure"
+       ]
+      },
+      {
+       "key": "c1m",
+       "label": "C = 1 mF (교재: 안정)",
+       "values": {
+        "C": 0.001
+       },
+       "tags": [
+        "variant",
+        "reference"
+       ]
+      },
+      {
+       "key": "c_crit",
+       "label": "C = 330 µF (임계 바로 위)",
+       "values": {
+        "C": 0.00033
+       },
+       "tags": [
+        "corner"
+       ]
+      },
+      {
+       "key": "p250k",
+       "label": "P = 250 kW (> P_max)",
+       "values": {
+        "P": 250000.0
+       },
+       "tags": [
+        "failure",
+        "reference"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "c100u",
+      "c1m",
+      "p250k"
+     ],
+     "status_of_reference": "UNSTABLE",
+     "claim_limit": "이상 무한대역 CPL의 국소 선형 결과와 유효범위 안의 비선형 적분. 큰 진폭 붕괴·보호 동작은 주장하지 않는다."
+    },
+    {
+     "key": "converter_impedance",
+     "title": "실제 converter는 유한 대역 CPL이다: Z_s/Z_in, 코너, 단일 루프 vs 전체 시스템",
+     "model_level": "B (평균 컨버터 소신호 + 비선형 시간영역)",
+     "presets": [
+      {
+       "key": "nominal",
+       "label": "f_ci 5 kHz, C 100 µF",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference",
+        "failure"
+       ]
+      },
+      {
+       "key": "slow",
+       "label": "f_ci 1 kHz (공진 부근까지만 CPL)",
+       "values": {
+        "fci": 1000.0,
+        "fbw": 50.0
+       },
+       "tags": [
+        "variant",
+        "reference"
+       ]
+      },
+      {
+       "key": "feedforward",
+       "label": "입력전압 피드포워드",
+       "values": {
+        "ff": true
+       },
+       "tags": [
+        "failure",
+        "reference"
+       ]
+      },
+      {
+       "key": "big_c",
+       "label": "C = 1 mF",
+       "values": {
+        "C": 0.001
+       },
+       "tags": [
+        "variant",
+        "reference"
+       ]
+      },
+      {
+       "key": "damped",
+       "label": "감쇠가지 R_d 3 Ω, C_d 400 µF",
+       "values": {
+        "Rd": 3.0,
+        "Cd": 0.0004
+       },
+       "tags": [
+        "variant"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "nominal",
+      "slow",
+      "feedforward",
+      "big_c"
+     ],
+     "status_of_reference": "UNSTABLE",
+     "claim_limit": "평균모델(B)의 소신호 임피던스와 비선형 시간영역. 스위칭·샘플링·포화를 포함한 실측 임피던스는 주장하지 않는다."
+    },
+    {
+     "key": "digital_delay",
+     "title": "디지털 지연: 샘플·연산·갱신 순서가 위상을 정한다",
+     "model_level": "B (샘플링 순서의 정확 이산 모델)",
+     "presets": [
+      {
+       "key": "td15",
+       "label": "50 kHz double, 연산 8 µs → 15 µs",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference"
+       ]
+      },
+      {
+       "key": "slip",
+       "label": "연산 12 µs (갱신 한 번 놓침)",
+       "values": {
+        "t_calc": 1.2e-05
+       },
+       "tags": [
+        "failure",
+        "reference"
+       ]
+      },
+      {
+       "key": "single",
+       "label": "single update",
+       "values": {
+        "update": "single"
+       },
+       "tags": [
+        "variant"
+       ]
+      },
+      {
+       "key": "immediate",
+       "label": "즉시 갱신",
+       "values": {
+        "policy": "immediate"
+       },
+       "tags": [
+        "variant"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "td15",
+      "slip"
+     ],
+     "status_of_reference": "MARGINAL",
+     "claim_limit": "샘플링 순서의 정확 이산 모델(B). jitter·하드웨어 PWM 세부는 주장하지 않는다."
+    },
+    {
+     "key": "saturation_transfer",
+     "title": "dq 벡터 포화·적용 벡터 anti-windup·bumpless 복귀",
+     "model_level": "B (샘플링 dq 루프 + 1축 루프)",
+     "presets": [
+      {
+       "key": "axis",
+       "label": "축별 clamp (+ 변조기 원형 제한)",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference"
+       ]
+      },
+      {
+       "key": "circle",
+       "label": "원형 한계 + 적용 벡터 AW",
+       "values": {
+        "sat": "circle"
+       },
+       "tags": [
+        "variant",
+        "reference"
+       ]
+      },
+      {
+       "key": "noaw",
+       "label": "원형 한계, AW 없음",
+       "values": {
+        "sat": "circle_noaw"
+       },
+       "tags": [
+        "failure",
+        "reference"
+       ]
+      },
+      {
+       "key": "axis_wc5",
+       "label": "축별 clamp, 적분이 강한 PI",
+       "values": {
+        "zero": "wc5"
+       },
+       "tags": [
+        "corner"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "axis",
+      "circle"
+     ],
+     "status_of_reference": "PASS_WITHIN_MODEL",
+     "claim_limit": "평형 계통·이상 PLL의 샘플링 dq 루프(B). 과변조·보호 하드웨어 타이밍은 주장하지 않는다."
+    }
+   ]
+  }
+ ]
+}

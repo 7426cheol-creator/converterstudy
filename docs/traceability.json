@@ -1,0 +1,348 @@
+{
+ "generated": "2026-09-30T19:46:57",
+ "labs": [
+  {
+   "lab": "FL01",
+   "implemented": true,
+   "experiments": [
+    "buck_ccm",
+    "buck_light_load",
+    "buck_ripple",
+    "boost_rhpz"
+   ],
+   "code": "src/convlab/labs/fl01_buck_boost.py",
+   "tests": [
+    "tests/test_fl01.py"
+   ],
+   "n_tests": 13,
+   "runs": 7,
+   "runs_failed": 0,
+   "statuses": [
+    "PASS_WITHIN_MODEL"
+   ],
+   "reference_metrics": [
+    31,
+    31
+   ],
+   "independent_checks_passed": 9,
+   "hardware_validation": "NOT_DONE"
+  },
+  {
+   "lab": "FL02",
+   "implemented": false
+  },
+  {
+   "lab": "FL03",
+   "implemented": false
+  },
+  {
+   "lab": "FL04",
+   "implemented": false
+  },
+  {
+   "lab": "FL05",
+   "implemented": true,
+   "experiments": [
+    "grid_boundary",
+    "pf_thd",
+    "boost_pfc",
+    "dclink_power"
+   ],
+   "code": "src/convlab/labs/fl05_pfc.py",
+   "tests": [
+    "tests/test_fl05.py"
+   ],
+   "n_tests": 13,
+   "runs": 11,
+   "runs_failed": 0,
+   "statuses": [
+    "CUSTOMER_DECISION_REQUIRED",
+    "FAIL_CONSTRAINT",
+    "NOT_EVALUABLE",
+    "PASS_WITHIN_MODEL"
+   ],
+   "reference_metrics": [
+    48,
+    48
+   ],
+   "independent_checks_passed": 36,
+   "hardware_validation": "NOT_DONE"
+  },
+  {
+   "lab": "FL06",
+   "implemented": true,
+   "experiments": [
+    "pi_design",
+    "discrete_loop",
+    "dq_sign"
+   ],
+   "code": "src/convlab/labs/fl06_control.py",
+   "tests": [
+    "tests/test_fl06.py"
+   ],
+   "n_tests": 15,
+   "runs": 11,
+   "runs_failed": 0,
+   "statuses": [
+    "FAIL_CONSTRAINT",
+    "PASS_WITHIN_MODEL",
+    "UNSTABLE"
+   ],
+   "reference_metrics": [
+    40,
+    40
+   ],
+   "independent_checks_passed": 21,
+   "hardware_validation": "NOT_DONE"
+  },
+  {
+   "lab": "FL07",
+   "implemented": false
+  },
+  {
+   "lab": "FL08",
+   "implemented": true,
+   "experiments": [
+    "sps_nominal",
+    "zero_power_mismatch",
+    "voltage_corners",
+    "offset_startup",
+    "two_modules"
+   ],
+   "code": "src/convlab/labs/fl08_dab.py",
+   "tests": [
+    "tests/test_fl08.py"
+   ],
+   "n_tests": 11,
+   "runs": 11,
+   "runs_failed": 0,
+   "statuses": [
+    "NO_SOLUTION",
+    "PASS_WITHIN_MODEL",
+    "SCREEN_ONLY"
+   ],
+   "reference_metrics": [
+    19,
+    19
+   ],
+   "independent_checks_passed": 26,
+   "hardware_validation": "NOT_DONE"
+  },
+  {
+   "lab": "FL09",
+   "implemented": true,
+   "experiments": [
+    "fha_gain",
+    "switching_vs_fha",
+    "gain_curve",
+    "zvs_lm"
+   ],
+   "code": "src/convlab/labs/fl09_llc.py",
+   "tests": [
+    "tests/test_fl09.py"
+   ],
+   "n_tests": 12,
+   "runs": 9,
+   "runs_failed": 0,
+   "statuses": [
+    "MISSING_INPUT",
+    "OUT_OF_VALIDITY",
+    "PASS_WITHIN_MODEL"
+   ],
+   "reference_metrics": [
+    6,
+    6
+   ],
+   "independent_checks_passed": 21,
+   "hardware_validation": "NOT_DONE"
+  },
+  {
+   "lab": "FL10",
+   "implemented": true,
+   "experiments": [
+    "seed_fail",
+    "fix_n093",
+    "branch_selection",
+    "reverse",
+    "time_domain"
+   ],
+   "code": "src/convlab/labs/fl10_cllc.py",
+   "tests": [
+    "tests/test_fl10.py"
+   ],
+   "n_tests": 10,
+   "runs": 7,
+   "runs_failed": 0,
+   "statuses": [
+    "CANDIDATE_FHA_ONLY",
+    "FAIL_CONSTRAINT",
+    "UNRESOLVED_RANKING"
+   ],
+   "reference_metrics": [
+    14,
+    14
+   ],
+   "independent_checks_passed": 19,
+   "hardware_validation": "NOT_DONE"
+  },
+  {
+   "lab": "FL11",
+   "implemented": false
+  },
+  {
+   "lab": "FL12",
+   "implemented": false
+  },
+  {
+   "lab": "EX01",
+   "implemented": false
+  },
+  {
+   "lab": "EX02",
+   "implemented": true,
+   "experiments": [
+    "qe_integrals",
+    "hb_constant_current",
+    "resonant_transition",
+    "deadtime_window"
+   ],
+   "code": "src/convlab/labs/ex02_coss_zvs.py",
+   "tests": [
+    "tests/test_ex02.py"
+   ],
+   "n_tests": 11,
+   "runs": 8,
+   "runs_failed": 0,
+   "statuses": [
+    "FAIL_CONSTRAINT",
+    "PASS_WITHIN_MODEL",
+    "SCREEN_ONLY"
+   ],
+   "reference_metrics": [
+    8,
+    8
+   ],
+   "independent_checks_passed": 12,
+   "hardware_validation": "NOT_DONE"
+  },
+  {
+   "lab": "EX03",
+   "implemented": false
+  },
+  {
+   "lab": "EX04",
+   "implemented": false
+  },
+  {
+   "lab": "EX05",
+   "implemented": true,
+   "experiments": [
+    "state_identity",
+    "operating_points",
+    "floquet",
+    "gvf",
+    "closed_loop",
+    "startup_reverse",
+    "tolerance"
+   ],
+   "code": "src/convlab/labs/ex05_cllc_dynamics.py",
+   "tests": [
+    "tests/test_ex05.py"
+   ],
+   "n_tests": 8,
+   "runs": 11,
+   "runs_failed": 0,
+   "statuses": [
+    "FAIL_CONSTRAINT",
+    "MARGINAL",
+    "OUT_OF_VALIDITY",
+    "PASS_WITHIN_MODEL",
+    "SCREEN_ONLY",
+    "UNSTABLE"
+   ],
+   "reference_metrics": [
+    3,
+    3
+   ],
+   "independent_checks_passed": 22,
+   "hardware_validation": "NOT_DONE"
+  },
+  {
+   "lab": "EX06",
+   "implemented": true,
+   "experiments": [
+    "general_modulation",
+    "candidate_map",
+    "commutation_detail",
+    "implementation"
+   ],
+   "code": "src/convlab/labs/ex06_dab_modulation.py",
+   "tests": [
+    "tests/test_ex06.py"
+   ],
+   "n_tests": 9,
+   "runs": 6,
+   "runs_failed": 0,
+   "statuses": [
+    "MISSING_INPUT",
+    "PASS_WITHIN_MODEL",
+    "SCREEN_ONLY"
+   ],
+   "reference_metrics": [
+    18,
+    18
+   ],
+   "independent_checks_passed": 12,
+   "hardware_validation": "NOT_DONE"
+  },
+  {
+   "lab": "EX07",
+   "implemented": true,
+   "experiments": [
+    "cpl_exact",
+    "converter_impedance",
+    "digital_delay",
+    "saturation_transfer"
+   ],
+   "code": "src/convlab/labs/ex07_system_stability.py",
+   "tests": [
+    "tests/test_ex07.py"
+   ],
+   "n_tests": 13,
+   "runs": 11,
+   "runs_failed": 0,
+   "statuses": [
+    "MARGINAL",
+    "NO_SOLUTION",
+    "PASS_WITHIN_MODEL",
+    "UNSTABLE"
+   ],
+   "reference_metrics": [
+    29,
+    29
+   ],
+   "independent_checks_passed": 33,
+   "hardware_validation": "NOT_DONE"
+  },
+  {
+   "lab": "EX08",
+   "implemented": false
+  },
+  {
+   "lab": "EX09",
+   "implemented": false
+  },
+  {
+   "lab": "EX10",
+   "implemented": false
+  },
+  {
+   "lab": "EX11",
+   "implemented": false
+  },
+  {
+   "lab": "EX12",
+   "implemented": false
+  }
+ ]
+}

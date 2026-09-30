@@ -150,12 +150,14 @@ def shoot(
     fd_eps: float = 1e-6,
     t0: float = 0.0,
     rcond: float = 1e-10,
+    diverge: float = np.inf,
 ) -> PeriodicSolution:
     """Newton shooting for the periodic orbit through the section t = t0 (mod T).
 
     A singular (I - M), e.g. the undamped DC-offset mode of an ideal DAB inductor,
     is handled with a minimum-norm least-squares step; the returned note says so and
-    the multiplier at 1 is reported rather than hidden.
+    the multiplier at 1 is reported rather than hidden.  ``diverge`` stops the iteration
+    early when the normalised residual grows beyond it (a warm start from the wrong orbit).
     """
     scales = np.asarray(scales, dtype=float)
     x = np.asarray(x_guess, dtype=float).copy()
@@ -170,6 +172,9 @@ def shoot(
         r = fx - x
         res = float(np.max(np.abs(r) / scales))
         if res < tol:
+            break
+        if res > diverge:
+            note = f"Newton residual {res:.3g} exceeded {diverge:g}: stopped (diverging from this guess)"
             break
         J = _fd_jacobian(system, q0, x, t0, T, scales, fd_eps) - np.eye(x.size)
         # scale columns/rows for conditioning
