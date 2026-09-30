@@ -60,7 +60,14 @@ export function renderMap(host, spec, seriesByKey) {
   wrap.append(h("div", { class: "plot-head" }, h("figcaption", { class: "plot-title" }, spec.title), tools));
   const svgHost = h("div", { class: "plot-svg" });
   const readout = h("div", { class: "plot-readout" }, "셀 위에 마우스를 올리면 값과 판정 이유가 표시됩니다");
-  wrap.append(svgHost, readout);
+  wrap.append(svgHost);
+  // markers with a short in-plot tag are spelled out under the map, with their coordinates
+  if ((spec.markers || []).some((mk) => mk.short)) {
+    const lg = h("div", { class: "plot-legend map-legend" });
+    for (const mk of spec.markers) lg.append(h("span", { class: "lg-item" }, h("b", {}, mk.short || mk.label), mk.short ? ` ${mk.label} ` : " ", h("span", { class: "muted" }, `(${fmtNum(mk.x, 3)}, ${fmtNum(mk.y, 3)})`)));
+    wrap.append(lg);
+  }
+  wrap.append(readout);
   if (spec.proved || spec.not_yet) {
     const note = h("div", { class: "plot-note" });
     if (spec.proved) note.append(h("p", {}, h("b", {}, "입증한 것: "), spec.proved));
@@ -119,10 +126,23 @@ export function renderMap(host, spec, seriesByKey) {
     const yl = svgEl("text", { x: 12, y: m.t + ih / 2, "text-anchor": "middle", class: "axis-label", transform: `rotate(-90 12 ${m.t + ih / 2})` });
     yl.textContent = `${spec.y_label}${spec.y_unit ? ` [${spec.y_unit}]` : ""}`;
     svg.append(xl, yl);
-    for (const mk of spec.markers || []) {
-      const c = svgEl("circle", { cx: X(mk.x), cy: Y(mk.y), r: 6, class: "map-marker" });
-      const t = svgEl("text", { x: X(mk.x) + 8, y: Y(mk.y) - 7, class: "map-label" });
-      t.textContent = mk.label || "";
+    // marker labels: every marker circle is an obstacle; each label takes the first offset that stays in the
+    // frame and overlaps neither a circle nor an earlier label (width estimated per glyph: Hangul/symbols wider)
+    const mks = (spec.markers || []).map((mk) => ({ ...mk, cx: X(mk.x), cy: Y(mk.y) }));
+    const boxes = mks.map((mk) => ({ x: mk.cx - 7, y: mk.cy - 7, w: 14, h: 14 }));
+    const textW = (s) => [...s].reduce((a, ch) => a + (ch.codePointAt(0) > 0x2000 ? 11.2 : 6.8), 0);
+    for (const mk of mks) {
+      const label = mk.short || mk.label || "";
+      const w = textW(label), hgt = 13;
+      const tries = [[9, -8, "start"], [9, 17, "start"], [-9, -8, "end"], [-9, 17, "end"], [9, -22, "start"], [-9, -22, "end"], [9, 31, "start"], [-9, 31, "end"], [0, -12, "middle"], [0, 22, "middle"]];
+      const boxOf = (tr) => ({ x: tr[2] === "end" ? mk.cx + tr[0] - w : tr[2] === "middle" ? mk.cx - w / 2 : mk.cx + tr[0], y: mk.cy + tr[1] - 10, w, h: hgt });
+      const ok = (b) => b.x >= m.l - 2 && b.x + b.w <= m.l + iw + 2 && b.y >= m.t - 2 && b.y + b.h <= m.t + ih + 2 &&
+        !boxes.some((o) => b.x < o.x + o.w && b.x + b.w > o.x && b.y < o.y + o.h && b.y + b.h > o.y);
+      const pick = tries.find((tr) => ok(boxOf(tr))) || tries[0];
+      boxes.push(boxOf(pick));
+      const c = svgEl("circle", { cx: mk.cx, cy: mk.cy, r: 6, class: "map-marker" });
+      const t = svgEl("text", { x: mk.cx + pick[0], y: mk.cy + pick[1], "text-anchor": pick[2], class: "map-label" });
+      t.textContent = label;
       svg.append(c, t);
     }
     // colour bar
