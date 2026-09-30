@@ -1,0 +1,13 @@
+{
+  "name": "convlab-e2e",
+  "private": true,
+  "version": "4.0.0",
+  "description": "End-to-end smoke test of the Converter FAE Lab UI (every experiment's default preset in a real browser)",
+  "type": "module",
+  "scripts": {
+    "smoke": "node smoke.mjs"
+  },
+  "dependencies": {
+    "playwright": "1.56.1"
+  }
+}
