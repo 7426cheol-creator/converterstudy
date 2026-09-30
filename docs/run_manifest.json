@@ -1,0 +1,1737 @@
+{
+ "generated": "2026-09-30T19:46:57",
+ "environment": {
+  "app_version": "4.0.0",
+  "contract_version": "4.0-reconstructed",
+  "python": "3.11.15",
+  "numpy": "2.4.6",
+  "scipy": "1.17.1",
+  "platform": "Linux-6.18.44-fc-v50-x86_64-with-glibc2.39"
+ },
+ "runs": [
+  {
+   "lab": "FL01",
+   "experiment": "buck_ccm",
+   "preset": "nominal",
+   "status": "PASS_WITHIN_MODEL",
+   "verdicts": [
+    "PASS_WITHIN_MODEL"
+   ],
+   "model_level": "C (+B 평균모델 비교)",
+   "checks_total": 12,
+   "checks_failed": [],
+   "files": [
+    "FL01/FL01_buck_ccm_nominal.json",
+    "FL01/FL01_buck_ccm_nominal.csv",
+    "FL01/FL01_buck_ccm_nominal.html"
+   ],
+   "runtime_s": 0.157
+  },
+  {
+   "lab": "FL01",
+   "experiment": "buck_ccm",
+   "preset": "half_fs",
+   "status": "PASS_WITHIN_MODEL",
+   "verdicts": [
+    "PASS_WITHIN_MODEL"
+   ],
+   "model_level": "C (+B 평균모델 비교)",
+   "checks_total": 11,
+   "checks_failed": [],
+   "files": [
+    "FL01/FL01_buck_ccm_half_fs.json",
+    "FL01/FL01_buck_ccm_half_fs.csv",
+    "FL01/FL01_buck_ccm_half_fs.html"
+   ],
+   "runtime_s": 0.115
+  },
+  {
+   "lab": "FL01",
+   "experiment": "buck_ccm",
+   "preset": "lossy",
+   "status": "PASS_WITHIN_MODEL",
+   "verdicts": [
+    "PASS_WITHIN_MODEL"
+   ],
+   "model_level": "C (+B 평균모델 비교)",
+   "checks_total": 6,
+   "checks_failed": [],
+   "files": [
+    "FL01/FL01_buck_ccm_lossy.json",
+    "FL01/FL01_buck_ccm_lossy.csv",
+    "FL01/FL01_buck_ccm_lossy.html"
+   ],
+   "runtime_s": 0.138
+  },
+  {
+   "lab": "FL01",
+   "experiment": "buck_light_load",
+   "preset": "light",
+   "status": "PASS_WITHIN_MODEL",
+   "verdicts": [
+    "PASS_WITHIN_MODEL"
+   ],
+   "model_level": "C (+A DCM 해석식)",
+   "checks_total": 4,
+   "checks_failed": [],
+   "files": [
+    "FL01/FL01_buck_light_load_light.json",
+    "FL01/FL01_buck_light_load_light.csv",
+    "FL01/FL01_buck_light_load_light.html"
+   ],
+   "runtime_s": 0.127
+  },
+  {
+   "lab": "FL01",
+   "experiment": "buck_ripple",
+   "preset": "nominal",
+   "status": "PASS_WITHIN_MODEL",
+   "verdicts": [
+    "PASS_WITHIN_MODEL"
+   ],
+   "model_level": "C (+A 손계산)",
+   "checks_total": 2,
+   "checks_failed": [],
+   "files": [
+    "FL01/FL01_buck_ripple_nominal.json",
+    "FL01/FL01_buck_ripple_nominal.csv",
+    "FL01/FL01_buck_ripple_nominal.html"
+   ],
+   "runtime_s": 0.011
+  },
+  {
+   "lab": "FL01",
+   "experiment": "boost_rhpz",
+   "preset": "nominal",
+   "status": "PASS_WITHIN_MODEL",
+   "verdicts": [
+    "PASS_WITHIN_MODEL"
+   ],
+   "model_level": "A+B+C",
+   "checks_total": 6,
+   "checks_failed": [],
+   "files": [
+    "FL01/FL01_boost_rhpz_nominal.json",
+    "FL01/FL01_boost_rhpz_nominal.csv",
+    "FL01/FL01_boost_rhpz_nominal.html"
+   ],
+   "runtime_s": 0.184
+  },
+  {
+   "lab": "FL01",
+   "experiment": "boost_rhpz",
+   "preset": "light",
+   "status": "PASS_WITHIN_MODEL",
+   "verdicts": [
+    "PASS_WITHIN_MODEL"
+   ],
+   "model_level": "A+B+C",
+   "checks_total": 5,
+   "checks_failed": [],
+   "files": [
+    "FL01/FL01_boost_rhpz_light.json",
+    "FL01/FL01_boost_rhpz_light.csv",
+    "FL01/FL01_boost_rhpz_light.html"
+   ],
+   "runtime_s": 0.191
+  },
+  {
+   "lab": "FL05",
+   "experiment": "grid_boundary",
+   "preset": "nominal",
+   "status": "FAIL_CONSTRAINT",
+   "verdicts": [
+    "CUSTOMER_DECISION_REQUIRED",
+    "FAIL_CONSTRAINT",
+    "OUT_OF_VALIDITY"
+   ],
+   "model_level": "A (+ 시간영역 3상 전력 경로)",
+   "checks_total": 8,
+   "checks_failed": [],
+   "files": [
+    "FL05/FL05_grid_boundary_nominal.json",
+    "FL05/FL05_grid_boundary_nominal.csv",
+    "FL05/FL05_grid_boundary_nominal.html"
+   ],
+   "runtime_s": 0.009
+  },
+  {
+   "lab": "FL05",
+   "experiment": "grid_boundary",
+   "preset": "svpwm",
+   "status": "CUSTOMER_DECISION_REQUIRED",
+   "verdicts": [
+    "CUSTOMER_DECISION_REQUIRED"
+   ],
+   "model_level": "A (+ 시간영역 3상 전력 경로)",
+   "checks_total": 8,
+   "checks_failed": [],
+   "files": [
+    "FL05/FL05_grid_boundary_svpwm.json",
+    "FL05/FL05_grid_boundary_svpwm.csv",
+    "FL05/FL05_grid_boundary_svpwm.html"
+   ],
+   "runtime_s": 0.009
+  },
+  {
+   "lab": "FL05",
+   "experiment": "pf_thd",
+   "preset": "nominal",
+   "status": "PASS_WITHIN_MODEL",
+   "verdicts": [
+    "PASS_WITHIN_MODEL"
+   ],
+   "model_level": "A (합성 파형, DFT)",
+   "checks_total": 6,
+   "checks_failed": [],
+   "files": [
+    "FL05/FL05_pf_thd_nominal.json",
+    "FL05/FL05_pf_thd_nominal.csv",
+    "FL05/FL05_pf_thd_nominal.html"
+   ],
+   "runtime_s": 0.014
+  },
+  {
+   "lab": "FL05",
+   "experiment": "pf_thd",
+   "preset": "offset",
+   "status": "PASS_WITHIN_MODEL",
+   "verdicts": [
+    "PASS_WITHIN_MODEL"
+   ],
+   "model_level": "A (합성 파형, DFT)",
+   "checks_total": 6,
+   "checks_failed": [],
+   "files": [
+    "FL05/FL05_pf_thd_offset.json",
+    "FL05/FL05_pf_thd_offset.csv",
+    "FL05/FL05_pf_thd_offset.html"
+   ],
+   "runtime_s": 0.013
+  },
+  {
+   "lab": "FL05",
+   "experiment": "pf_thd",
+   "preset": "unsync",
+   "status": "NOT_EVALUABLE",
+   "verdicts": [
+    "NOT_EVALUABLE"
+   ],
+   "model_level": "A (합성 파형, DFT)",
+   "checks_total": 0,
+   "checks_failed": [],
+   "files": [
+    "FL05/FL05_pf_thd_unsync.json",
+    "FL05/FL05_pf_thd_unsync.csv",
+    "FL05/FL05_pf_thd_unsync.html"
+   ],
+   "runtime_s": 0.012
+  },
+  {
+   "lab": "FL05",
+   "experiment": "boost_pfc",
+   "preset": "nominal",
+   "status": "PASS_WITHIN_MODEL",
+   "verdicts": [
+    "PASS_WITHIN_MODEL"
+   ],
+   "model_level": "C (정확 스위칭) + B 평균모델 + A 강제 정현파",
+   "checks_total": 12,
+   "checks_failed": [],
+   "files": [
+    "FL05/FL05_boost_pfc_nominal.json",
+    "FL05/FL05_boost_pfc_nominal.csv",
+    "FL05/FL05_boost_pfc_nominal.html"
+   ],
+   "runtime_s": 1.364
+  },
+  {
+   "lab": "FL05",
+   "experiment": "boost_pfc",
+   "preset": "fast_v",
+   "status": "PASS_WITHIN_MODEL",
+   "verdicts": [
+    "PASS_WITHIN_MODEL"
+   ],
+   "model_level": "C (정확 스위칭) + B 평균모델 + A 강제 정현파",
+   "checks_total": 11,
+   "checks_failed": [],
+   "files": [
+    "FL05/FL05_boost_pfc_fast_v.json",
+    "FL05/FL05_boost_pfc_fast_v.csv",
+    "FL05/FL05_boost_pfc_fast_v.html"
+   ],
+   "runtime_s": 1.373
+  },
+  {
+   "lab": "FL05",
+   "experiment": "boost_pfc",
+   "preset": "light",
+   "status": "PASS_WITHIN_MODEL",
+   "verdicts": [
+    "PASS_WITHIN_MODEL"
+   ],
+   "model_level": "C (정확 스위칭) + B 평균모델 + A 강제 정현파",
+   "checks_total": 11,
+   "checks_failed": [],
+   "files": [
+    "FL05/FL05_boost_pfc_light.json",
+    "FL05/FL05_boost_pfc_light.csv",
+    "FL05/FL05_boost_pfc_light.html"
+   ],
+   "runtime_s": 4.942
+  },
+  {
+   "lab": "FL05",
+   "experiment": "dclink_power",
+   "preset": "nominal",
+   "status": "PASS_WITHIN_MODEL",
+   "verdicts": [
+    "PASS_WITHIN_MODEL"
+   ],
+   "model_level": "A (+ B 에너지 ODE)",
+   "checks_total": 11,
+   "checks_failed": [],
+   "files": [
+    "FL05/FL05_dclink_power_nominal.json",
+    "FL05/FL05_dclink_power_nominal.csv",
+    "FL05/FL05_dclink_power_nominal.html"
+   ],
+   "runtime_s": 0.15
+  },
+  {
+   "lab": "FL05",
+   "experiment": "dclink_power",
+   "preset": "unbalance",
+   "status": "PASS_WITHIN_MODEL",
+   "verdicts": [
+    "PASS_WITHIN_MODEL"
+   ],
+   "model_level": "A (+ B 에너지 ODE)",
+   "checks_total": 12,
+   "checks_failed": [],
+   "files": [
+    "FL05/FL05_dclink_power_unbalance.json",
+    "FL05/FL05_dclink_power_unbalance.csv",
+    "FL05/FL05_dclink_power_unbalance.html"
+   ],
+   "runtime_s": 0.141
+  },
+  {
+   "lab": "FL05",
+   "experiment": "dclink_power",
+   "preset": "small_c",
+   "status": "FAIL_CONSTRAINT",
+   "verdicts": [
+    "FAIL_CONSTRAINT"
+   ],
+   "model_level": "A (+ B 에너지 ODE)",
+   "checks_total": 10,
+   "checks_failed": [],
+   "files": [
+    "FL05/FL05_dclink_power_small_c.json",
+    "FL05/FL05_dclink_power_small_c.csv",
+    "FL05/FL05_dclink_power_small_c.html"
+   ],
+   "runtime_s": 0.144
+  },
+  {
+   "lab": "FL06",
+   "experiment": "pi_design",
+   "preset": "nominal",
+   "status": "PASS_WITHIN_MODEL",
+   "verdicts": [
+    "PASS_WITHIN_MODEL"
+   ],
+   "model_level": "A (+ 샘플링 루프 B)",
+   "checks_total": 10,
+   "checks_failed": [],
+   "files": [
+    "FL06/FL06_pi_design_nominal.json",
+    "FL06/FL06_pi_design_nominal.csv",
+    "FL06/FL06_pi_design_nominal.html"
+   ],
+   "runtime_s": 0.023
+  },
+  {
+   "lab": "FL06",
+   "experiment": "pi_design",
+   "preset": "duty",
+   "status": "PASS_WITHIN_MODEL",
+   "verdicts": [
+    "PASS_WITHIN_MODEL"
+   ],
+   "model_level": "A (+ 샘플링 루프 B)",
+   "checks_total": 11,
+   "checks_failed": [],
+   "files": [
+    "FL06/FL06_pi_design_duty.json",
+    "FL06/FL06_pi_design_duty.csv",
+    "FL06/FL06_pi_design_duty.html"
+   ],
+   "runtime_s": 0.022
+  },
+  {
+   "lab": "FL06",
+   "experiment": "pi_design",
+   "preset": "unit_error",
+   "status": "UNSTABLE",
+   "verdicts": [
+    "UNSTABLE"
+   ],
+   "model_level": "A (+ 샘플링 루프 B)",
+   "checks_total": 6,
+   "checks_failed": [],
+   "files": [
+    "FL06/FL06_pi_design_unit_error.json",
+    "FL06/FL06_pi_design_unit_error.csv",
+    "FL06/FL06_pi_design_unit_error.html"
+   ],
+   "runtime_s": 0.025
+  },
+  {
+   "lab": "FL06",
+   "experiment": "discrete_loop",
+   "preset": "load_step",
+   "status": "PASS_WITHIN_MODEL",
+   "verdicts": [
+    "PASS_WITHIN_MODEL"
+   ],
+   "model_level": "B (정확 ZOH plant + 샘플링 PI)",
+   "checks_total": 4,
+   "checks_failed": [],
+   "files": [
+    "FL06/FL06_discrete_loop_load_step.json",
+    "FL06/FL06_discrete_loop_load_step.csv",
+    "FL06/FL06_discrete_loop_load_step.html"
+   ],
+   "runtime_s": 0.136
+  },
+  {
+   "lab": "FL06",
+   "experiment": "discrete_loop",
+   "preset": "input_dip",
+   "status": "PASS_WITHIN_MODEL",
+   "verdicts": [
+    "PASS_WITHIN_MODEL"
+   ],
+   "model_level": "B (정확 ZOH plant + 샘플링 PI)",
+   "checks_total": 4,
+   "checks_failed": [],
+   "files": [
+    "FL06/FL06_discrete_loop_input_dip.json",
+    "FL06/FL06_discrete_loop_input_dip.csv",
+    "FL06/FL06_discrete_loop_input_dip.html"
+   ],
+   "runtime_s": 0.14
+  },
+  {
+   "lab": "FL06",
+   "experiment": "discrete_loop",
+   "preset": "current_limit",
+   "status": "PASS_WITHIN_MODEL",
+   "verdicts": [
+    "PASS_WITHIN_MODEL"
+   ],
+   "model_level": "B (정확 ZOH plant + 샘플링 PI)",
+   "checks_total": 4,
+   "checks_failed": [],
+   "files": [
+    "FL06/FL06_discrete_loop_current_limit.json",
+    "FL06/FL06_discrete_loop_current_limit.csv",
+    "FL06/FL06_discrete_loop_current_limit.html"
+   ],
+   "runtime_s": 0.133
+  },
+  {
+   "lab": "FL06",
+   "experiment": "discrete_loop",
+   "preset": "sensor_offset",
+   "status": "FAIL_CONSTRAINT",
+   "verdicts": [
+    "FAIL_CONSTRAINT"
+   ],
+   "model_level": "B (정확 ZOH plant + 샘플링 PI)",
+   "checks_total": 5,
+   "checks_failed": [],
+   "files": [
+    "FL06/FL06_discrete_loop_sensor_offset.json",
+    "FL06/FL06_discrete_loop_sensor_offset.csv",
+    "FL06/FL06_discrete_loop_sensor_offset.html"
+   ],
+   "runtime_s": 0.103
+  },
+  {
+   "lab": "FL06",
+   "experiment": "discrete_loop",
+   "preset": "extra_delay",
+   "status": "PASS_WITHIN_MODEL",
+   "verdicts": [
+    "PASS_WITHIN_MODEL"
+   ],
+   "model_level": "B (정확 ZOH plant + 샘플링 PI)",
+   "checks_total": 4,
+   "checks_failed": [],
+   "files": [
+    "FL06/FL06_discrete_loop_extra_delay.json",
+    "FL06/FL06_discrete_loop_extra_delay.csv",
+    "FL06/FL06_discrete_loop_extra_delay.html"
+   ],
+   "runtime_s": 0.107
+  },
+  {
+   "lab": "FL06",
+   "experiment": "dq_sign",
+   "preset": "correct",
+   "status": "PASS_WITHIN_MODEL",
+   "verdicts": [
+    "PASS_WITHIN_MODEL"
+   ],
+   "model_level": "B (dq 평균모델 + 독립 abc 모델)",
+   "checks_total": 5,
+   "checks_failed": [],
+   "files": [
+    "FL06/FL06_dq_sign_correct.json",
+    "FL06/FL06_dq_sign_correct.csv",
+    "FL06/FL06_dq_sign_correct.html"
+   ],
+   "runtime_s": 0.19
+  },
+  {
+   "lab": "FL06",
+   "experiment": "dq_sign",
+   "preset": "reversed",
+   "status": "UNSTABLE",
+   "verdicts": [
+    "UNSTABLE"
+   ],
+   "model_level": "B (dq 평균모델 + 독립 abc 모델)",
+   "checks_total": 3,
+   "checks_failed": [],
+   "files": [
+    "FL06/FL06_dq_sign_reversed.json",
+    "FL06/FL06_dq_sign_reversed.csv",
+    "FL06/FL06_dq_sign_reversed.html"
+   ],
+   "runtime_s": 0.027
+  },
+  {
+   "lab": "FL06",
+   "experiment": "dq_sign",
+   "preset": "reactive",
+   "status": "PASS_WITHIN_MODEL",
+   "verdicts": [
+    "PASS_WITHIN_MODEL"
+   ],
+   "model_level": "B (dq 평균모델 + 독립 abc 모델)",
+   "checks_total": 5,
+   "checks_failed": [],
+   "files": [
+    "FL06/FL06_dq_sign_reactive.json",
+    "FL06/FL06_dq_sign_reactive.csv",
+    "FL06/FL06_dq_sign_reactive.html"
+   ],
+   "runtime_s": 0.183
+  },
+  {
+   "lab": "FL08",
+   "experiment": "sps_nominal",
+   "preset": "nominal",
+   "status": "PASS_WITHIN_MODEL",
+   "verdicts": [
+    "PASS_WITHIN_MODEL",
+    "NOT_EVALUABLE",
+    "SCREEN_ONLY"
+   ],
+   "model_level": "A (닫힌 식) + C (구간 적분·스위칭 해)",
+   "checks_total": 18,
+   "checks_failed": [],
+   "files": [
+    "FL08/FL08_sps_nominal_nominal.json",
+    "FL08/FL08_sps_nominal_nominal.csv",
+    "FL08/FL08_sps_nominal_nominal.html"
+   ],
+   "runtime_s": 0.014
+  },
+  {
+   "lab": "FL08",
+   "experiment": "sps_nominal",
+   "preset": "reverse",
+   "status": "PASS_WITHIN_MODEL",
+   "verdicts": [
+    "PASS_WITHIN_MODEL",
+    "NOT_EVALUABLE",
+    "SCREEN_ONLY"
+   ],
+   "model_level": "A (닫힌 식) + C (구간 적분·스위칭 해)",
+   "checks_total": 11,
+   "checks_failed": [],
+   "files": [
+    "FL08/FL08_sps_nominal_reverse.json",
+    "FL08/FL08_sps_nominal_reverse.csv",
+    "FL08/FL08_sps_nominal_reverse.html"
+   ],
+   "runtime_s": 0.013
+  },
+  {
+   "lab": "FL08",
+   "experiment": "sps_nominal",
+   "preset": "over",
+   "status": "NO_SOLUTION",
+   "verdicts": [
+    "NO_SOLUTION"
+   ],
+   "model_level": "A (닫힌 식) + C (구간 적분·스위칭 해)",
+   "checks_total": 1,
+   "checks_failed": [],
+   "files": [
+    "FL08/FL08_sps_nominal_over.json",
+    "FL08/FL08_sps_nominal_over.csv",
+    "FL08/FL08_sps_nominal_over.html"
+   ],
+   "runtime_s": 0.002
+  },
+  {
+   "lab": "FL08",
+   "experiment": "zero_power_mismatch",
+   "preset": "mismatch",
+   "status": "PASS_WITHIN_MODEL",
+   "verdicts": [
+    "PASS_WITHIN_MODEL"
+   ],
+   "model_level": "A + C",
+   "checks_total": 4,
+   "checks_failed": [],
+   "files": [
+    "FL08/FL08_zero_power_mismatch_mismatch.json",
+    "FL08/FL08_zero_power_mismatch_mismatch.csv",
+    "FL08/FL08_zero_power_mismatch_mismatch.html"
+   ],
+   "runtime_s": 0.051
+  },
+  {
+   "lab": "FL08",
+   "experiment": "zero_power_mismatch",
+   "preset": "matched",
+   "status": "PASS_WITHIN_MODEL",
+   "verdicts": [
+    "PASS_WITHIN_MODEL"
+   ],
+   "model_level": "A + C",
+   "checks_total": 2,
+   "checks_failed": [],
+   "files": [
+    "FL08/FL08_zero_power_mismatch_matched.json",
+    "FL08/FL08_zero_power_mismatch_matched.csv",
+    "FL08/FL08_zero_power_mismatch_matched.html"
+   ],
+   "runtime_s": 0.074
+  },
+  {
+   "lab": "FL08",
+   "experiment": "voltage_corners",
+   "preset": "textbook",
+   "status": "SCREEN_ONLY",
+   "verdicts": [
+    "SCREEN_ONLY"
+   ],
+   "model_level": "A (+C 구간 적분 교차검증)",
+   "checks_total": 2,
+   "checks_failed": [],
+   "files": [
+    "FL08/FL08_voltage_corners_textbook.json",
+    "FL08/FL08_voltage_corners_textbook.csv",
+    "FL08/FL08_voltage_corners_textbook.html"
+   ],
+   "runtime_s": 0.008
+  },
+  {
+   "lab": "FL08",
+   "experiment": "voltage_corners",
+   "preset": "light",
+   "status": "SCREEN_ONLY",
+   "verdicts": [
+    "SCREEN_ONLY"
+   ],
+   "model_level": "A (+C 구간 적분 교차검증)",
+   "checks_total": 1,
+   "checks_failed": [],
+   "files": [
+    "FL08/FL08_voltage_corners_light.json",
+    "FL08/FL08_voltage_corners_light.csv",
+    "FL08/FL08_voltage_corners_light.html"
+   ],
+   "runtime_s": 0.006
+  },
+  {
+   "lab": "FL08",
+   "experiment": "offset_startup",
+   "preset": "lossless",
+   "status": "PASS_WITHIN_MODEL",
+   "verdicts": [
+    "PASS_WITHIN_MODEL"
+   ],
+   "model_level": "C",
+   "checks_total": 2,
+   "checks_failed": [],
+   "files": [
+    "FL08/FL08_offset_startup_lossless.json",
+    "FL08/FL08_offset_startup_lossless.csv",
+    "FL08/FL08_offset_startup_lossless.html"
+   ],
+   "runtime_s": 0.06
+  },
+  {
+   "lab": "FL08",
+   "experiment": "offset_startup",
+   "preset": "damped",
+   "status": "PASS_WITHIN_MODEL",
+   "verdicts": [
+    "PASS_WITHIN_MODEL"
+   ],
+   "model_level": "C",
+   "checks_total": 2,
+   "checks_failed": [],
+   "files": [
+    "FL08/FL08_offset_startup_damped.json",
+    "FL08/FL08_offset_startup_damped.csv",
+    "FL08/FL08_offset_startup_damped.html"
+   ],
+   "runtime_s": 0.273
+  },
+  {
+   "lab": "FL08",
+   "experiment": "two_modules",
+   "preset": "textbook",
+   "status": "PASS_WITHIN_MODEL",
+   "verdicts": [
+    "PASS_WITHIN_MODEL"
+   ],
+   "model_level": "C (구간 적분)",
+   "checks_total": 2,
+   "checks_failed": [],
+   "files": [
+    "FL08/FL08_two_modules_textbook.json",
+    "FL08/FL08_two_modules_textbook.csv",
+    "FL08/FL08_two_modules_textbook.html"
+   ],
+   "runtime_s": 0.139
+  },
+  {
+   "lab": "FL08",
+   "experiment": "two_modules",
+   "preset": "ideal",
+   "status": "PASS_WITHIN_MODEL",
+   "verdicts": [
+    "PASS_WITHIN_MODEL"
+   ],
+   "model_level": "C (구간 적분)",
+   "checks_total": 2,
+   "checks_failed": [],
+   "files": [
+    "FL08/FL08_two_modules_ideal.json",
+    "FL08/FL08_two_modules_ideal.csv",
+    "FL08/FL08_two_modules_ideal.html"
+   ],
+   "runtime_s": 0.137
+  },
+  {
+   "lab": "FL09",
+   "experiment": "fha_gain",
+   "preset": "textbook",
+   "status": "PASS_WITHIN_MODEL",
+   "verdicts": [
+    "PASS_WITHIN_MODEL",
+    "INFO"
+   ],
+   "model_level": "A (FHA)",
+   "checks_total": 7,
+   "checks_failed": [],
+   "files": [
+    "FL09/FL09_fha_gain_textbook.json",
+    "FL09/FL09_fha_gain_textbook.csv",
+    "FL09/FL09_fha_gain_textbook.html"
+   ],
+   "runtime_s": 0.017
+  },
+  {
+   "lab": "FL09",
+   "experiment": "fha_gain",
+   "preset": "hb",
+   "status": "PASS_WITHIN_MODEL",
+   "verdicts": [
+    "PASS_WITHIN_MODEL",
+    "INFO"
+   ],
+   "model_level": "A (FHA)",
+   "checks_total": 7,
+   "checks_failed": [],
+   "files": [
+    "FL09/FL09_fha_gain_hb.json",
+    "FL09/FL09_fha_gain_hb.csv",
+    "FL09/FL09_fha_gain_hb.html"
+   ],
+   "runtime_s": 0.017
+  },
+  {
+   "lab": "FL09",
+   "experiment": "switching_vs_fha",
+   "preset": "mid",
+   "status": "PASS_WITHIN_MODEL",
+   "verdicts": [
+    "PASS_WITHIN_MODEL",
+    "NOT_EVALUABLE",
+    "SCREEN_ONLY"
+   ],
+   "model_level": "C (이상 스위칭·다이오드 정류) + A (FHA 비교)",
+   "checks_total": 4,
+   "checks_failed": [],
+   "files": [
+    "FL09/FL09_switching_vs_fha_mid.json",
+    "FL09/FL09_switching_vs_fha_mid.csv",
+    "FL09/FL09_switching_vs_fha_mid.html"
+   ],
+   "runtime_s": 0.082
+  },
+  {
+   "lab": "FL09",
+   "experiment": "switching_vs_fha",
+   "preset": "at_fr",
+   "status": "PASS_WITHIN_MODEL",
+   "verdicts": [
+    "PASS_WITHIN_MODEL",
+    "NOT_EVALUABLE",
+    "SCREEN_ONLY"
+   ],
+   "model_level": "C (이상 스위칭·다이오드 정류) + A (FHA 비교)",
+   "checks_total": 4,
+   "checks_failed": [],
+   "files": [
+    "FL09/FL09_switching_vs_fha_at_fr.json",
+    "FL09/FL09_switching_vs_fha_at_fr.csv",
+    "FL09/FL09_switching_vs_fha_at_fr.html"
+   ],
+   "runtime_s": 0.08
+  },
+  {
+   "lab": "FL09",
+   "experiment": "switching_vs_fha",
+   "preset": "below_heavy",
+   "status": "OUT_OF_VALIDITY",
+   "verdicts": [
+    "PASS_WITHIN_MODEL",
+    "OUT_OF_VALIDITY",
+    "NOT_EVALUABLE",
+    "SCREEN_ONLY"
+   ],
+   "model_level": "C (이상 스위칭·다이오드 정류) + A (FHA 비교)",
+   "checks_total": 4,
+   "checks_failed": [],
+   "files": [
+    "FL09/FL09_switching_vs_fha_below_heavy.json",
+    "FL09/FL09_switching_vs_fha_below_heavy.csv",
+    "FL09/FL09_switching_vs_fha_below_heavy.html"
+   ],
+   "runtime_s": 0.138
+  },
+  {
+   "lab": "FL09",
+   "experiment": "switching_vs_fha",
+   "preset": "above_light",
+   "status": "OUT_OF_VALIDITY",
+   "verdicts": [
+    "PASS_WITHIN_MODEL",
+    "OUT_OF_VALIDITY",
+    "NOT_EVALUABLE",
+    "SCREEN_ONLY"
+   ],
+   "model_level": "C (이상 스위칭·다이오드 정류) + A (FHA 비교)",
+   "checks_total": 4,
+   "checks_failed": [],
+   "files": [
+    "FL09/FL09_switching_vs_fha_above_light.json",
+    "FL09/FL09_switching_vs_fha_above_light.csv",
+    "FL09/FL09_switching_vs_fha_above_light.html"
+   ],
+   "runtime_s": 0.112
+  },
+  {
+   "lab": "FL09",
+   "experiment": "switching_vs_fha",
+   "preset": "hb",
+   "status": "PASS_WITHIN_MODEL",
+   "verdicts": [
+    "PASS_WITHIN_MODEL",
+    "NOT_EVALUABLE",
+    "SCREEN_ONLY"
+   ],
+   "model_level": "C (이상 스위칭·다이오드 정류) + A (FHA 비교)",
+   "checks_total": 4,
+   "checks_failed": [],
+   "files": [
+    "FL09/FL09_switching_vs_fha_hb.json",
+    "FL09/FL09_switching_vs_fha_hb.csv",
+    "FL09/FL09_switching_vs_fha_hb.html"
+   ],
+   "runtime_s": 0.143
+  },
+  {
+   "lab": "FL09",
+   "experiment": "gain_curve",
+   "preset": "mid",
+   "status": "PASS_WITHIN_MODEL",
+   "verdicts": [
+    "PASS_WITHIN_MODEL",
+    "INFO",
+    "SCREEN_ONLY"
+   ],
+   "model_level": "C (주파수 sweep) + A",
+   "checks_total": 0,
+   "checks_failed": [],
+   "files": [
+    "FL09/FL09_gain_curve_mid.json",
+    "FL09/FL09_gain_curve_mid.csv",
+    "FL09/FL09_gain_curve_mid.html"
+   ],
+   "runtime_s": 1.739
+  },
+  {
+   "lab": "FL09",
+   "experiment": "zvs_lm",
+   "preset": "textbook",
+   "status": "MISSING_INPUT",
+   "verdicts": [
+    "SCREEN_ONLY",
+    "MISSING_INPUT"
+   ],
+   "model_level": "C + SCREEN",
+   "checks_total": 0,
+   "checks_failed": [],
+   "files": [
+    "FL09/FL09_zvs_lm_textbook.json",
+    "FL09/FL09_zvs_lm_textbook.csv",
+    "FL09/FL09_zvs_lm_textbook.html"
+   ],
+   "runtime_s": 1.595
+  },
+  {
+   "lab": "FL10",
+   "experiment": "seed_fail",
+   "preset": "seed",
+   "status": "FAIL_CONSTRAINT",
+   "verdicts": [
+    "FAIL_CONSTRAINT"
+   ],
+   "model_level": "A (FHA)",
+   "checks_total": 5,
+   "checks_failed": [],
+   "files": [
+    "FL10/FL10_seed_fail_seed.json",
+    "FL10/FL10_seed_fail_seed.csv",
+    "FL10/FL10_seed_fail_seed.html"
+   ],
+   "runtime_s": 0.245
+  },
+  {
+   "lab": "FL10",
+   "experiment": "seed_fail",
+   "preset": "fix",
+   "status": "CANDIDATE_FHA_ONLY",
+   "verdicts": [
+    "CANDIDATE_FHA_ONLY"
+   ],
+   "model_level": "A (FHA)",
+   "checks_total": 3,
+   "checks_failed": [],
+   "files": [
+    "FL10/FL10_seed_fail_fix.json",
+    "FL10/FL10_seed_fail_fix.csv",
+    "FL10/FL10_seed_fail_fix.html"
+   ],
+   "runtime_s": 0.258
+  },
+  {
+   "lab": "FL10",
+   "experiment": "fix_n093",
+   "preset": "textbook",
+   "status": "UNRESOLVED_RANKING",
+   "verdicts": [
+    "CANDIDATE_FHA_ONLY",
+    "UNRESOLVED_RANKING"
+   ],
+   "model_level": "A (FHA)",
+   "checks_total": 15,
+   "checks_failed": [],
+   "files": [
+    "FL10/FL10_fix_n093_textbook.json",
+    "FL10/FL10_fix_n093_textbook.csv",
+    "FL10/FL10_fix_n093_textbook.html"
+   ],
+   "runtime_s": 0.064
+  },
+  {
+   "lab": "FL10",
+   "experiment": "fix_n093",
+   "preset": "kept_lc",
+   "status": "UNRESOLVED_RANKING",
+   "verdicts": [
+    "CANDIDATE_FHA_ONLY",
+    "UNRESOLVED_RANKING"
+   ],
+   "model_level": "A (FHA)",
+   "checks_total": 5,
+   "checks_failed": [],
+   "files": [
+    "FL10/FL10_fix_n093_kept_lc.json",
+    "FL10/FL10_fix_n093_kept_lc.csv",
+    "FL10/FL10_fix_n093_kept_lc.html"
+   ],
+   "runtime_s": 0.065
+  },
+  {
+   "lab": "FL10",
+   "experiment": "branch_selection",
+   "preset": "textbook",
+   "status": "UNRESOLVED_RANKING",
+   "verdicts": [
+    "UNRESOLVED_RANKING",
+    "INFO"
+   ],
+   "model_level": "A (FHA)",
+   "checks_total": 0,
+   "checks_failed": [],
+   "files": [
+    "FL10/FL10_branch_selection_textbook.json",
+    "FL10/FL10_branch_selection_textbook.csv",
+    "FL10/FL10_branch_selection_textbook.html"
+   ],
+   "runtime_s": 1.068
+  },
+  {
+   "lab": "FL10",
+   "experiment": "reverse",
+   "preset": "textbook",
+   "status": "FAIL_CONSTRAINT",
+   "verdicts": [
+    "FAIL_CONSTRAINT",
+    "NOT_EVALUABLE"
+   ],
+   "model_level": "A (FHA)",
+   "checks_total": 1,
+   "checks_failed": [],
+   "files": [
+    "FL10/FL10_reverse_textbook.json",
+    "FL10/FL10_reverse_textbook.csv",
+    "FL10/FL10_reverse_textbook.html"
+   ],
+   "runtime_s": 0.127
+  },
+  {
+   "lab": "FL10",
+   "experiment": "time_domain",
+   "preset": "textbook",
+   "status": "FAIL_CONSTRAINT",
+   "verdicts": [
+    "CANDIDATE_FHA_ONLY",
+    "FAIL_CONSTRAINT",
+    "MARGINAL",
+    "SCREEN_ONLY",
+    "NOT_EVALUABLE"
+   ],
+   "model_level": "C (이상 스위칭, 강한 배터리) + A",
+   "checks_total": 4,
+   "checks_failed": [],
+   "files": [
+    "FL10/FL10_time_domain_textbook.json",
+    "FL10/FL10_time_domain_textbook.csv",
+    "FL10/FL10_time_domain_textbook.html"
+   ],
+   "runtime_s": 6.052
+  },
+  {
+   "lab": "EX02",
+   "experiment": "qe_integrals",
+   "preset": "textbook",
+   "status": "PASS_WITHIN_MODEL",
+   "verdicts": [
+    "PASS_WITHIN_MODEL"
+   ],
+   "model_level": "A",
+   "checks_total": 4,
+   "checks_failed": [],
+   "files": [
+    "EX02/EX02_qe_integrals_textbook.json",
+    "EX02/EX02_qe_integrals_textbook.csv",
+    "EX02/EX02_qe_integrals_textbook.html"
+   ],
+   "runtime_s": 0.012
+  },
+  {
+   "lab": "EX02",
+   "experiment": "hb_constant_current",
+   "preset": "textbook",
+   "status": "SCREEN_ONLY",
+   "verdicts": [
+    "SCREEN_ONLY"
+   ],
+   "model_level": "A (charge screen) + D-합성 해석",
+   "checks_total": 3,
+   "checks_failed": [],
+   "files": [
+    "EX02/EX02_hb_constant_current_textbook.json",
+    "EX02/EX02_hb_constant_current_textbook.csv",
+    "EX02/EX02_hb_constant_current_textbook.html"
+   ],
+   "runtime_s": 0.016
+  },
+  {
+   "lab": "EX02",
+   "experiment": "hb_constant_current",
+   "preset": "td300",
+   "status": "SCREEN_ONLY",
+   "verdicts": [
+    "SCREEN_ONLY"
+   ],
+   "model_level": "A (charge screen) + D-합성 해석",
+   "checks_total": 3,
+   "checks_failed": [],
+   "files": [
+    "EX02/EX02_hb_constant_current_td300.json",
+    "EX02/EX02_hb_constant_current_td300.csv",
+    "EX02/EX02_hb_constant_current_td300.html"
+   ],
+   "runtime_s": 0.015
+  },
+  {
+   "lab": "EX02",
+   "experiment": "hb_constant_current",
+   "preset": "neg",
+   "status": "FAIL_CONSTRAINT",
+   "verdicts": [
+    "SCREEN_ONLY",
+    "FAIL_CONSTRAINT"
+   ],
+   "model_level": "A (charge screen) + D-합성 해석",
+   "checks_total": 2,
+   "checks_failed": [],
+   "files": [
+    "EX02/EX02_hb_constant_current_neg.json",
+    "EX02/EX02_hb_constant_current_neg.csv",
+    "EX02/EX02_hb_constant_current_neg.html"
+   ],
+   "runtime_s": 0.01
+  },
+  {
+   "lab": "EX02",
+   "experiment": "resonant_transition",
+   "preset": "mid",
+   "status": "FAIL_CONSTRAINT",
+   "verdicts": [
+    "FAIL_CONSTRAINT"
+   ],
+   "model_level": "D (합성 commutation event)",
+   "checks_total": 3,
+   "checks_failed": [],
+   "files": [
+    "EX02/EX02_resonant_transition_mid.json",
+    "EX02/EX02_resonant_transition_mid.csv",
+    "EX02/EX02_resonant_transition_mid.html"
+   ],
+   "runtime_s": 0.587
+  },
+  {
+   "lab": "EX02",
+   "experiment": "resonant_transition",
+   "preset": "mid300",
+   "status": "PASS_WITHIN_MODEL",
+   "verdicts": [
+    "PASS_WITHIN_MODEL"
+   ],
+   "model_level": "D (합성 commutation event)",
+   "checks_total": 3,
+   "checks_failed": [],
+   "files": [
+    "EX02/EX02_resonant_transition_mid300.json",
+    "EX02/EX02_resonant_transition_mid300.csv",
+    "EX02/EX02_resonant_transition_mid300.html"
+   ],
+   "runtime_s": 0.6
+  },
+  {
+   "lab": "EX02",
+   "experiment": "resonant_transition",
+   "preset": "vx0",
+   "status": "FAIL_CONSTRAINT",
+   "verdicts": [
+    "FAIL_CONSTRAINT"
+   ],
+   "model_level": "D (합성 commutation event)",
+   "checks_total": 3,
+   "checks_failed": [],
+   "files": [
+    "EX02/EX02_resonant_transition_vx0.json",
+    "EX02/EX02_resonant_transition_vx0.csv",
+    "EX02/EX02_resonant_transition_vx0.html"
+   ],
+   "runtime_s": 0.312
+  },
+  {
+   "lab": "EX02",
+   "experiment": "deadtime_window",
+   "preset": "mid",
+   "status": "SCREEN_ONLY",
+   "verdicts": [
+    "SCREEN_ONLY"
+   ],
+   "model_level": "D (합성 commutation event)",
+   "checks_total": 0,
+   "checks_failed": [],
+   "files": [
+    "EX02/EX02_deadtime_window_mid.json",
+    "EX02/EX02_deadtime_window_mid.csv",
+    "EX02/EX02_deadtime_window_mid.html"
+   ],
+   "runtime_s": 3.463
+  },
+  {
+   "lab": "EX05",
+   "experiment": "state_identity",
+   "preset": "textbook",
+   "status": "PASS_WITHIN_MODEL",
+   "verdicts": [
+    "PASS_WITHIN_MODEL",
+    "INFO"
+   ],
+   "model_level": "C (상태식) + 항등식 검산",
+   "checks_total": 3,
+   "checks_failed": [],
+   "files": [
+    "EX05/EX05_state_identity_textbook.json",
+    "EX05/EX05_state_identity_textbook.csv",
+    "EX05/EX05_state_identity_textbook.html"
+   ],
+   "runtime_s": 0.2
+  },
+  {
+   "lab": "EX05",
+   "experiment": "state_identity",
+   "preset": "lossy",
+   "status": "PASS_WITHIN_MODEL",
+   "verdicts": [
+    "PASS_WITHIN_MODEL",
+    "INFO"
+   ],
+   "model_level": "C (상태식) + 항등식 검산",
+   "checks_total": 3,
+   "checks_failed": [],
+   "files": [
+    "EX05/EX05_state_identity_lossy.json",
+    "EX05/EX05_state_identity_lossy.csv",
+    "EX05/EX05_state_identity_lossy.html"
+   ],
+   "runtime_s": 0.194
+  },
+  {
+   "lab": "EX05",
+   "experiment": "operating_points",
+   "preset": "textbook",
+   "status": "OUT_OF_VALIDITY",
+   "verdicts": [
+    "PASS_WITHIN_MODEL",
+    "OUT_OF_VALIDITY",
+    "INFO"
+   ],
+   "model_level": "C (스위칭 주기해) + A (FHA)",
+   "checks_total": 3,
+   "checks_failed": [],
+   "files": [
+    "EX05/EX05_operating_points_textbook.json",
+    "EX05/EX05_operating_points_textbook.csv",
+    "EX05/EX05_operating_points_textbook.html"
+   ],
+   "runtime_s": 1.129
+  },
+  {
+   "lab": "EX05",
+   "experiment": "floquet",
+   "preset": "textbook",
+   "status": "MARGINAL",
+   "verdicts": [
+    "PASS_WITHIN_MODEL",
+    "INFO",
+    "MARGINAL"
+   ],
+   "model_level": "C (주기해·Floquet, plant only)",
+   "checks_total": 2,
+   "checks_failed": [],
+   "files": [
+    "EX05/EX05_floquet_textbook.json",
+    "EX05/EX05_floquet_textbook.csv",
+    "EX05/EX05_floquet_textbook.html"
+   ],
+   "runtime_s": 0.662
+  },
+  {
+   "lab": "EX05",
+   "experiment": "floquet",
+   "preset": "lossy",
+   "status": "PASS_WITHIN_MODEL",
+   "verdicts": [
+    "PASS_WITHIN_MODEL",
+    "INFO"
+   ],
+   "model_level": "C (주기해·Floquet, plant only)",
+   "checks_total": 2,
+   "checks_failed": [],
+   "files": [
+    "EX05/EX05_floquet_lossy.json",
+    "EX05/EX05_floquet_lossy.csv",
+    "EX05/EX05_floquet_lossy.html"
+   ],
+   "runtime_s": 0.642
+  },
+  {
+   "lab": "EX05",
+   "experiment": "gvf",
+   "preset": "textbook",
+   "status": "PASS_WITHIN_MODEL",
+   "verdicts": [
+    "PASS_WITHIN_MODEL",
+    "INFO"
+   ],
+   "model_level": "C (sampled small-signal, event 포함)",
+   "checks_total": 5,
+   "checks_failed": [],
+   "files": [
+    "EX05/EX05_gvf_textbook.json",
+    "EX05/EX05_gvf_textbook.csv",
+    "EX05/EX05_gvf_textbook.html"
+   ],
+   "runtime_s": 1.292
+  },
+  {
+   "lab": "EX05",
+   "experiment": "closed_loop",
+   "preset": "slow",
+   "status": "MARGINAL",
+   "verdicts": [
+    "PASS_WITHIN_MODEL",
+    "MARGINAL"
+   ],
+   "model_level": "C (비선형 폐루프) + 선형 폐루프 Jacobian (제어기 상태 포함)",
+   "checks_total": 1,
+   "checks_failed": [],
+   "files": [
+    "EX05/EX05_closed_loop_slow.json",
+    "EX05/EX05_closed_loop_slow.csv",
+    "EX05/EX05_closed_loop_slow.html"
+   ],
+   "runtime_s": 2.777
+  },
+  {
+   "lab": "EX05",
+   "experiment": "closed_loop",
+   "preset": "fast",
+   "status": "UNSTABLE",
+   "verdicts": [
+    "UNSTABLE",
+    "INFO"
+   ],
+   "model_level": "C (비선형 폐루프) + 선형 폐루프 Jacobian (제어기 상태 포함)",
+   "checks_total": 1,
+   "checks_failed": [],
+   "files": [
+    "EX05/EX05_closed_loop_fast.json",
+    "EX05/EX05_closed_loop_fast.csv",
+    "EX05/EX05_closed_loop_fast.html"
+   ],
+   "runtime_s": 2.326
+  },
+  {
+   "lab": "EX05",
+   "experiment": "closed_loop",
+   "preset": "wrong_sign",
+   "status": "UNSTABLE",
+   "verdicts": [
+    "UNSTABLE"
+   ],
+   "model_level": "C (비선형 폐루프) + 선형 폐루프 Jacobian (제어기 상태 포함)",
+   "checks_total": 1,
+   "checks_failed": [],
+   "files": [
+    "EX05/EX05_closed_loop_wrong_sign.json",
+    "EX05/EX05_closed_loop_wrong_sign.csv",
+    "EX05/EX05_closed_loop_wrong_sign.html"
+   ],
+   "runtime_s": 4.192
+  },
+  {
+   "lab": "EX05",
+   "experiment": "startup_reverse",
+   "preset": "textbook",
+   "status": "FAIL_CONSTRAINT",
+   "verdicts": [
+    "FAIL_CONSTRAINT",
+    "FAIL_CONSTRAINT",
+    "FAIL_CONSTRAINT",
+    "INFO"
+   ],
+   "model_level": "C (대신호 과도) + A",
+   "checks_total": 3,
+   "checks_failed": [],
+   "files": [
+    "EX05/EX05_startup_reverse_textbook.json",
+    "EX05/EX05_startup_reverse_textbook.csv",
+    "EX05/EX05_startup_reverse_textbook.html"
+   ],
+   "runtime_s": 11.774
+  },
+  {
+   "lab": "EX05",
+   "experiment": "tolerance",
+   "preset": "textbook",
+   "status": "SCREEN_ONLY",
+   "verdicts": [
+    "SCREEN_ONLY",
+    "SCREEN_ONLY"
+   ],
+   "model_level": "A (FHA) + C (운전점 V_o)",
+   "checks_total": 3,
+   "checks_failed": [],
+   "files": [
+    "EX05/EX05_tolerance_textbook.json",
+    "EX05/EX05_tolerance_textbook.csv",
+    "EX05/EX05_tolerance_textbook.html"
+   ],
+   "runtime_s": 1.103
+  },
+  {
+   "lab": "EX06",
+   "experiment": "general_modulation",
+   "preset": "textbook",
+   "status": "PASS_WITHIN_MODEL",
+   "verdicts": [
+    "PASS_WITHIN_MODEL",
+    "NOT_EVALUABLE"
+   ],
+   "model_level": "C (정확 구간 적분) + A (SPS 닫힌 식)",
+   "checks_total": 16,
+   "checks_failed": [],
+   "files": [
+    "EX06/EX06_general_modulation_textbook.json",
+    "EX06/EX06_general_modulation_textbook.csv",
+    "EX06/EX06_general_modulation_textbook.html"
+   ],
+   "runtime_s": 0.048
+  },
+  {
+   "lab": "EX06",
+   "experiment": "general_modulation",
+   "preset": "sps",
+   "status": "PASS_WITHIN_MODEL",
+   "verdicts": [
+    "PASS_WITHIN_MODEL",
+    "NOT_EVALUABLE"
+   ],
+   "model_level": "C (정확 구간 적분) + A (SPS 닫힌 식)",
+   "checks_total": 10,
+   "checks_failed": [],
+   "files": [
+    "EX06/EX06_general_modulation_sps.json",
+    "EX06/EX06_general_modulation_sps.csv",
+    "EX06/EX06_general_modulation_sps.html"
+   ],
+   "runtime_s": 0.045
+  },
+  {
+   "lab": "EX06",
+   "experiment": "candidate_map",
+   "preset": "textbook",
+   "status": "MISSING_INPUT",
+   "verdicts": [
+    "SCREEN_ONLY",
+    "MISSING_INPUT"
+   ],
+   "model_level": "C + SCREEN",
+   "checks_total": 0,
+   "checks_failed": [],
+   "files": [
+    "EX06/EX06_candidate_map_textbook.json",
+    "EX06/EX06_candidate_map_textbook.csv",
+    "EX06/EX06_candidate_map_textbook.html"
+   ],
+   "runtime_s": 1.183
+  },
+  {
+   "lab": "EX06",
+   "experiment": "commutation_detail",
+   "preset": "textbook",
+   "status": "SCREEN_ONLY",
+   "verdicts": [
+    "SCREEN_ONLY"
+   ],
+   "model_level": "C + SCREEN",
+   "checks_total": 0,
+   "checks_failed": [],
+   "files": [
+    "EX06/EX06_commutation_detail_textbook.json",
+    "EX06/EX06_commutation_detail_textbook.csv",
+    "EX06/EX06_commutation_detail_textbook.html"
+   ],
+   "runtime_s": 0.027
+  },
+  {
+   "lab": "EX06",
+   "experiment": "commutation_detail",
+   "preset": "light",
+   "status": "SCREEN_ONLY",
+   "verdicts": [
+    "SCREEN_ONLY"
+   ],
+   "model_level": "C + SCREEN",
+   "checks_total": 0,
+   "checks_failed": [],
+   "files": [
+    "EX06/EX06_commutation_detail_light.json",
+    "EX06/EX06_commutation_detail_light.csv",
+    "EX06/EX06_commutation_detail_light.html"
+   ],
+   "runtime_s": 0.013
+  },
+  {
+   "lab": "EX06",
+   "experiment": "implementation",
+   "preset": "textbook",
+   "status": "PASS_WITHIN_MODEL",
+   "verdicts": [
+    "PASS_WITHIN_MODEL"
+   ],
+   "model_level": "A + C",
+   "checks_total": 6,
+   "checks_failed": [],
+   "files": [
+    "EX06/EX06_implementation_textbook.json",
+    "EX06/EX06_implementation_textbook.csv",
+    "EX06/EX06_implementation_textbook.html"
+   ],
+   "runtime_s": 0.291
+  },
+  {
+   "lab": "EX07",
+   "experiment": "cpl_exact",
+   "preset": "c100u",
+   "status": "UNSTABLE",
+   "verdicts": [
+    "UNSTABLE"
+   ],
+   "model_level": "A (해석 극점) + 비선형 ODE + 수치 Jacobian",
+   "checks_total": 12,
+   "checks_failed": [],
+   "files": [
+    "EX07/EX07_cpl_exact_c100u.json",
+    "EX07/EX07_cpl_exact_c100u.csv",
+    "EX07/EX07_cpl_exact_c100u.html"
+   ],
+   "runtime_s": 0.08
+  },
+  {
+   "lab": "EX07",
+   "experiment": "cpl_exact",
+   "preset": "c1m",
+   "status": "PASS_WITHIN_MODEL",
+   "verdicts": [
+    "PASS_WITHIN_MODEL"
+   ],
+   "model_level": "A (해석 극점) + 비선형 ODE + 수치 Jacobian",
+   "checks_total": 12,
+   "checks_failed": [],
+   "files": [
+    "EX07/EX07_cpl_exact_c1m.json",
+    "EX07/EX07_cpl_exact_c1m.csv",
+    "EX07/EX07_cpl_exact_c1m.html"
+   ],
+   "runtime_s": 0.059
+  },
+  {
+   "lab": "EX07",
+   "experiment": "cpl_exact",
+   "preset": "p250k",
+   "status": "NO_SOLUTION",
+   "verdicts": [
+    "NO_SOLUTION"
+   ],
+   "model_level": "A (해석 극점) + 비선형 ODE + 수치 Jacobian",
+   "checks_total": 1,
+   "checks_failed": [],
+   "files": [
+    "EX07/EX07_cpl_exact_p250k.json",
+    "EX07/EX07_cpl_exact_p250k.csv",
+    "EX07/EX07_cpl_exact_p250k.html"
+   ],
+   "runtime_s": 0.008
+  },
+  {
+   "lab": "EX07",
+   "experiment": "converter_impedance",
+   "preset": "nominal",
+   "status": "UNSTABLE",
+   "verdicts": [
+    "UNSTABLE"
+   ],
+   "model_level": "B (평균 컨버터 소신호 + 비선형 시간영역)",
+   "checks_total": 7,
+   "checks_failed": [],
+   "files": [
+    "EX07/EX07_converter_impedance_nominal.json",
+    "EX07/EX07_converter_impedance_nominal.csv",
+    "EX07/EX07_converter_impedance_nominal.html"
+   ],
+   "runtime_s": 0.508
+  },
+  {
+   "lab": "EX07",
+   "experiment": "converter_impedance",
+   "preset": "slow",
+   "status": "PASS_WITHIN_MODEL",
+   "verdicts": [
+    "PASS_WITHIN_MODEL"
+   ],
+   "model_level": "B (평균 컨버터 소신호 + 비선형 시간영역)",
+   "checks_total": 5,
+   "checks_failed": [],
+   "files": [
+    "EX07/EX07_converter_impedance_slow.json",
+    "EX07/EX07_converter_impedance_slow.csv",
+    "EX07/EX07_converter_impedance_slow.html"
+   ],
+   "runtime_s": 0.667
+  },
+  {
+   "lab": "EX07",
+   "experiment": "converter_impedance",
+   "preset": "feedforward",
+   "status": "UNSTABLE",
+   "verdicts": [
+    "UNSTABLE"
+   ],
+   "model_level": "B (평균 컨버터 소신호 + 비선형 시간영역)",
+   "checks_total": 7,
+   "checks_failed": [],
+   "files": [
+    "EX07/EX07_converter_impedance_feedforward.json",
+    "EX07/EX07_converter_impedance_feedforward.csv",
+    "EX07/EX07_converter_impedance_feedforward.html"
+   ],
+   "runtime_s": 0.482
+  },
+  {
+   "lab": "EX07",
+   "experiment": "converter_impedance",
+   "preset": "big_c",
+   "status": "PASS_WITHIN_MODEL",
+   "verdicts": [
+    "PASS_WITHIN_MODEL"
+   ],
+   "model_level": "B (평균 컨버터 소신호 + 비선형 시간영역)",
+   "checks_total": 7,
+   "checks_failed": [],
+   "files": [
+    "EX07/EX07_converter_impedance_big_c.json",
+    "EX07/EX07_converter_impedance_big_c.csv",
+    "EX07/EX07_converter_impedance_big_c.html"
+   ],
+   "runtime_s": 0.612
+  },
+  {
+   "lab": "EX07",
+   "experiment": "digital_delay",
+   "preset": "td15",
+   "status": "MARGINAL",
+   "verdicts": [
+    "PASS_WITHIN_MODEL",
+    "MARGINAL"
+   ],
+   "model_level": "B (샘플링 순서의 정확 이산 모델)",
+   "checks_total": 7,
+   "checks_failed": [],
+   "files": [
+    "EX07/EX07_digital_delay_td15.json",
+    "EX07/EX07_digital_delay_td15.csv",
+    "EX07/EX07_digital_delay_td15.html"
+   ],
+   "runtime_s": 0.097
+  },
+  {
+   "lab": "EX07",
+   "experiment": "digital_delay",
+   "preset": "slip",
+   "status": "UNSTABLE",
+   "verdicts": [
+    "PASS_WITHIN_MODEL",
+    "UNSTABLE"
+   ],
+   "model_level": "B (샘플링 순서의 정확 이산 모델)",
+   "checks_total": 6,
+   "checks_failed": [],
+   "files": [
+    "EX07/EX07_digital_delay_slip.json",
+    "EX07/EX07_digital_delay_slip.csv",
+    "EX07/EX07_digital_delay_slip.html"
+   ],
+   "runtime_s": 0.098
+  },
+  {
+   "lab": "EX07",
+   "experiment": "saturation_transfer",
+   "preset": "axis",
+   "status": "PASS_WITHIN_MODEL",
+   "verdicts": [
+    "PASS_WITHIN_MODEL"
+   ],
+   "model_level": "B (샘플링 dq 루프 + 1축 루프)",
+   "checks_total": 2,
+   "checks_failed": [],
+   "files": [
+    "EX07/EX07_saturation_transfer_axis.json",
+    "EX07/EX07_saturation_transfer_axis.csv",
+    "EX07/EX07_saturation_transfer_axis.html"
+   ],
+   "runtime_s": 0.07
+  },
+  {
+   "lab": "EX07",
+   "experiment": "saturation_transfer",
+   "preset": "circle",
+   "status": "PASS_WITHIN_MODEL",
+   "verdicts": [
+    "PASS_WITHIN_MODEL"
+   ],
+   "model_level": "B (샘플링 dq 루프 + 1축 루프)",
+   "checks_total": 2,
+   "checks_failed": [],
+   "files": [
+    "EX07/EX07_saturation_transfer_circle.json",
+    "EX07/EX07_saturation_transfer_circle.csv",
+    "EX07/EX07_saturation_transfer_circle.html"
+   ],
+   "runtime_s": 0.068
+  }
+ ],
+ "not_implemented": [
+  "FL02",
+  "FL03",
+  "FL04",
+  "FL07",
+  "FL11",
+  "FL12",
+  "EX01",
+  "EX03",
+  "EX04",
+  "EX08",
+  "EX09",
+  "EX10",
+  "EX11",
+  "EX12"
+ ],
+ "total_runtime_s": 58.43
+}
