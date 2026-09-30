@@ -387,13 +387,13 @@ def run_pi_design(v: dict) -> Result:
     res.add_series("ph_cd", "∠L 연속 × exp(−sT_d)", "deg", fgrid.tolist(), np.degrees(np.unwrap(np.angle(Lcd))).tolist())
     res.add_series("ph_z", "∠L 샘플링 루프 (정확)", "deg", fgrid.tolist(), np.degrees(np.unwrap(np.angle(Lz))).tolist(), dash=True)
     vl = [{"x": fc, "label": f"설계 f_c {fc / 1e3:g} kHz"}]
-    if mz.fc:
-        vl.append({"x": mz.fc, "label": "샘플링 crossover"})
-    res.add_plot("p_mag", "루프이득 크기", ["mag_c", "mag_z"], x_label="f", x_unit="Hz", y_label="|L|", y_unit="dB", kind="xy", log_x=True, group="bode", hlines=[{"y": 0.0, "label": "0 dB"}], vlines=vl, level="A/B",
+    mk_m = [{"x": mz.fc, "y": 0.0, "label": f"샘플링 crossover {mz.fc:.4g} Hz"}] if mz.fc else []
+    mk_p = [{"x": mz.fc, "y": mz.pm - 180.0, "label": f"PM {mz.pm:.3g}°"}] if mz.fc else []
+    res.add_plot("p_mag", "루프이득 크기", ["mag_c", "mag_z"], x_label="f", x_unit="Hz", y_label="|L|", y_unit="dB", kind="xy", log_x=True, group="bode", hlines=[{"y": 0.0, "label": "0 dB"}], vlines=vl, markers=mk_m, level="A/B",
                  proved="PI 영점이 plant 극점을 소거하면 |L| = ω_c/ω인 −20 dB/dec 직선이 되어 설계 f_c에서 0 dB를 지난다. 단위 오류(duty에 V/A 숫자)는 이 직선을 K_PWM배 위로 올린다.",
                  not_yet="L이 전류에 따라 줄거나 센서 필터 극점이 있으면 소거가 정확하지 않다(L 비율 입력으로 일부 확인). 식별하지 않은 공진은 없다고 가정했다.")
     res.add_plot("p_phase", "루프이득 위상: 지연이 crossover에서 위상을 소비한다", ["ph_c0", "ph_cd", "ph_z"], x_label="f", x_unit="Hz", y_label="∠L", y_unit="deg", kind="xy", log_x=True, group="bode",
-                 hlines=[{"y": -180.0, "label": "−180°"}], vlines=vl, level="A/B",
+                 hlines=[{"y": -180.0, "label": "−180°"}], vlines=vl, markers=mk_p, level="A/B",
                  proved=f"지연이 없으면 위상은 −90°로 평평하고, T_d = {Td * 1e6:.4g} µs가 f_c에서 {lag:.3g}°를 소비한다. 샘플링 루프의 정확한 위상은 연속 근사와 따로 계산했다.",
                  not_yet="샘플링 루프 위상은 f_samp/2까지만 의미가 있다. 실측 루프이득(주입 측정)과의 비교는 하지 않았다.")
     res.tables.append(
@@ -685,27 +685,28 @@ def _sat_bands(t, sat, Ts):
 
 
 def rl_loop_circuit(v: dict, show_sat: bool) -> Circuit:
-    c = Circuit("rl_loop", 720, 330, title="RL plant 전류 루프 (평균 변조기)")
-    u = c.add("vsource", "U", 90, 150, 90, "u = K·y", "컨버터 평균전압", lpos=(66, 146, "end"))
-    rr = c.add("resistor", "R", 230, 60, 0, "R", f"{v['R']:g} Ω")
-    ll = c.add("inductor", "L", 370, 60, 0, "L", f"{v['L'] * 1e3:g} mH")
-    ee = c.add("vsource", "E", 500, 150, 90, "e", "역기전력/계통", lpos=(524, 146, "start"))
-    c.wire("w1", u["a"], (90, 60), rr["a"])
+    c = Circuit("rl_loop", 780, 330, title="RL plant 전류 루프 (평균 변조기)")
+    u = c.add("vsource", "U", 170, 170, 90, "u = K·y", "컨버터 평균전압", lpos=(194, 166, "start"))
+    rr = c.add("resistor", "R", 280, 70, 0, "R", f"{v['R']:g} Ω")
+    ll = c.add("inductor", "L", 400, 70, 0, "L", f"{v['L'] * 1e3:g} mH")
+    ee = c.add("vsource", "E", 510, 170, 90, "e", "역기전력/계통", lpos=(488, 166, "end"))
+    c.wire("w1", u["a"], (170, 70), rr["a"])
     c.wire("w2", rr["b"], ll["a"])
-    c.wire("w3", ll["b"], (500, 60), ee["a"])
-    c.wire("w4", ee["b"], (500, 240), (90, 240), u["b"])
-    c.probe("pi", "i_cont", 150, 48, "right", "i")
-    c.add("block", "ADC", 620, 60, 0, "ADC i[k]", w=110, h=34)
-    c.add("block", "PI", 620, 150, 0, "PI + 포화 + AW", w=130, h=34)
-    c.add("block", "PWM", 620, 240, 0, "지연 n_d·T_s → u", w=130, h=34)
-    c.wire("w_s", (500, 60), (565, 60))
-    c.wire("w_s2", (620, 77), (620, 133))
-    c.wire("w_s3", (620, 167), (620, 223))
-    c.wire("w_s4", (555, 240), (540, 240), (540, 290), (40, 290), (40, 150), (60, 150))
-    c.text(300, 290, "제어기 출력 → 변조기 → 인가 전압 (한 샘플 이상 늦게)", "note")
+    c.wire("w3", ll["b"], (510, 70), ee["a"])
+    c.wire("w4", ee["b"], (510, 260), (170, 260), u["b"])
+    c.dot((510, 70))
+    c.probe("pi", "i_cont", 220, 58, "right", "i")
+    c.add("block", "ADC", 660, 70, 0, "ADC: i[k]", w=130, h=34)
+    c.add("block", "PI", 660, 150, 0, "PI + 포화 + AW", w=130, h=34)
+    c.add("block", "PWM", 660, 230, 0, "n_d·T_s 지연 → u", w=130, h=34)
+    c.wire("w_s", (510, 70), (595, 70))
+    c.wire("w_s2", (660, 87), (660, 133))
+    c.wire("w_s3", (660, 167), (660, 213))
+    c.wire("w_s4", (660, 247), (660, 305), (100, 305), (100, 170), (154, 170))
+    c.text(380, 292, "제어기 출력 → 변조기 → 인가 전압 (한 샘플 이상 늦게)", "note")
     active = ["U", "R", "L", "E", "w1", "w2", "w3", "w4"]
     c.mode("lin", "선형 (포화 없음)", active + ["ADC", "PI", "PWM", "w_s", "w_s2", "w_s3", "w_s4"], "u = Kp·e + x_I (+ e 피드포워드), 적분기는 오차만 적분")
-    c.mode("sat", "전압 포화", active + ["PI"], "u = ±V_max에 묶임: anti-windup이 없으면 x_I가 계속 쌓인다" if show_sat else "", dim=["ADC", "PWM"])
+    c.mode("sat", "전압 포화", active + ["PI"], "u = ±V_max에 묶임: anti-windup이 없으면 x_I가 계속 쌓인다" if show_sat else "u = ±V_max에 묶임", dim=["ADC", "PWM"])
     return c
 
 
@@ -979,24 +980,25 @@ def run_dq_sign(v: dict) -> Result:
 
 
 def dq_circuit(v: dict) -> Circuit:
-    c = Circuit("dq_pfc", 720, 330, title="3상 계통 – RL 필터 – 컨버터 (단선도, 상당 1개 표시)")
-    g = c.add("vsource", "G", 90, 150, 90, "v_g,abc", f"{v['V_LL']:g} V LL", lpos=(66, 146, "end"))
-    rr = c.add("resistor", "R", 220, 60, 0, "R", f"{v['R']:g} Ω (상당)")
-    ll = c.add("inductor", "L", 360, 60, 0, "L", f"{v['L'] * 1e3:g} mH (상당)")
-    cv = c.add("vsource", "CV", 490, 150, 90, "v_c,abc", "컨버터 평균전압", lpos=(514, 146, "start"))
-    c.wire("w1", g["a"], (90, 60), rr["a"])
+    c = Circuit("dq_pfc", 780, 330, title="3상 계통 – RL 필터 – 컨버터 (단선도, 한 상 표시)")
+    g = c.add("vsource", "G", 170, 170, 90, "v_g,abc", f"{v['V_LL']:g} V LL", lpos=(194, 166, "start"))
+    rr = c.add("resistor", "R", 280, 70, 0, "R", f"{v['R']:g} Ω (상당)")
+    ll = c.add("inductor", "L", 400, 70, 0, "L", f"{v['L'] * 1e3:g} mH (상당)")
+    cv = c.add("vsource", "CV", 510, 170, 90, "v_c,abc", "컨버터 평균전압", lpos=(488, 166, "end"))
+    c.wire("w1", g["a"], (170, 70), rr["a"])
     c.wire("w2", rr["b"], ll["a"])
-    c.wire("w3", ll["b"], (490, 60), cv["a"])
-    c.wire("w4", cv["b"], (490, 240), (90, 240), g["b"])
-    c.probe("pi", "ia", 150, 48, "right", "i (계통→컨버터 +)")
-    c.add("block", "PARK", 630, 60, 0, "abc→dq (θ=ωt)", w=130, h=34)
-    c.add("block", "PIDQ", 630, 150, 0, "PI_dq + ωL 디커플링", w=150, h=34)
-    c.add("block", "SIGN", 630, 240, 0, "v_c = v_g − PI (+디커플링)", w=170, h=34)
-    c.wire("w_m", (490, 60), (565, 60))
-    c.wire("w_c1", (630, 77), (630, 133))
-    c.wire("w_c2", (630, 167), (630, 223))
-    c.wire("w_c3", (545, 240), (530, 240), (530, 300), (40, 300), (40, 150), (60, 150))
-    c.text(290, 290, "d축 = 계통전압: P = 1.5·v_d·i_d", "note")
+    c.wire("w3", ll["b"], (510, 70), cv["a"])
+    c.wire("w4", cv["b"], (510, 260), (170, 260), g["b"])
+    c.dot((510, 70))
+    c.probe("pi", "ia", 215, 58, "right", "i_a")
+    c.add("block", "PARK", 670, 70, 0, "abc→dq (θ = ωt)", w=150, h=34)
+    c.add("block", "PIDQ", 670, 150, 0, "PI_dq + ωL 디커플링", w=150, h=34)
+    c.add("block", "SIGN", 670, 230, 0, "v_c = v_g − PI_dq", w=150, h=34)
+    c.wire("w_m", (510, 70), (595, 70))
+    c.wire("w_c1", (670, 87), (670, 133))
+    c.wire("w_c2", (670, 167), (670, 213))
+    c.wire("w_c3", (595, 230), (560, 230), (560, 170), (526, 170))
+    c.text(340, 292, "i: 계통 → 컨버터가 +, d축 = 계통전압: P = 1.5·v_d·i_d", "note")
     act = ["G", "R", "L", "CV", "w1", "w2", "w3", "w4", "PARK", "PIDQ", "SIGN", "w_m", "w_c1", "w_c2", "w_c3"]
     c.mode("lin", "전류 제어 (선형)", act, "전류를 늘리려면 v_c를 v_g보다 낮춘다")
     c.mode("sat", "전압 벡터 포화", act, "|v_c| = V_dc/√3 (원형 한계)에 묶임")
@@ -1178,7 +1180,7 @@ EXPERIMENTS = [
             Param("iq_ref", "i_q 기준", "A", 0.0, "A", vmin=-200, vmax=200, source="ASSUMED", source_note="0이면 단위 역률", group="기준"),
             Param("sign", "PI 출력 부호", "", "correct", kind="choice", choices=[("correct", "올바름: v_c = v_g − PI"), ("reversed", "뒤집힘: v_c = v_g + PI (인버터 관습 복사)")], source="TEXTBOOK", group="기준"),
             Param("decouple", "ωL 디커플링", "", True, kind="bool", source="ASSUMED", group="디지털"),
-            Param("t_sim", "시뮬레이션 길이", "s", 6e-3, "ms", vmin=2e-3, vmax=40e-3, source="ASSUMED", group="시뮬레이션"),
+            Param("t_sim", "시뮬레이션 길이", "s", 21e-3, "ms", vmin=2e-3, vmax=40e-3, source="ASSUMED", source_note="step 뒤 한 계통주기 이상", group="시뮬레이션"),
         ],
         presets=[
             Preset("correct", "올바른 부호, i_d 0→20 A", {}, "단위 역률 PFC", ("nominal", "reference")),
