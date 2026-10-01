@@ -525,7 +525,9 @@ def run_flux_walk(v: dict) -> Result:
                  proved="한쪽으로 V·Δt가 매 주기 남으면 자속 평균이 주기마다 이동한다. R은 이동을 L_m/R 시정수로만 늦추고 도달점은 비현실적인 DC 자속이며, blocking C_b는 DC를 막아 자속을 가둔다(대신 L_m–C_b 공진 과도).",
                  not_yet="선형 코어: 실제로는 B_sat 근처에서 L_m이 무너져 전류가 급증한다(포화 모델 없음). 제어로 비대칭을 보정하는 루프는 넣지 않았다.")
     res.add_plot("p_i", "자화전류 (walk의 증거)", ["i"], y_label="i_m", y_unit="A", level="C", group="long",
-                 proved="실제 walk는 자화전류의 평균이 움직이는 것으로 확인된다(측정 오차는 전류에 나타나지 않는다).", not_yet="")
+                 proved="실제 walk는 자화전류의 평균이 움직이는 것으로 확인된다(측정 오차는 전류에 나타나지 않는다).",
+                 not_yet="자화전류 상태와 권선 전압 적분이 같은 B를 준다는 검산이 근거지만, 선형 L_m이라 포화 근처에서 전류가 급증하는 모습은 나오지 않는다. "
+                         "실측 전류 probe의 offset·대역폭 오차도 넣지 않았다.")
     if Cb:
         xs, ys = decimate_minmax(t, np.array(smp["vc"]), 2500)
         res.add_series("vc", "v_Cb", "V", xs, ys)
@@ -537,9 +539,12 @@ def run_flux_walk(v: dict) -> Result:
     res.add_series("B_z", "B", "T", smz["t"], smz["B"])
     bands = bands_from_traj(tr, 0.0, tz, {"+": "+V", "-": "−V"})
     res.add_plot("p_vz", "처음 3주기: 비대칭 구동의 권선 전압", ["vw_z"], y_label="v_w", y_unit="V", bands=bands, group="z", level="C",
-                 proved="+V 구간이 −V 구간보다 Δt 길다 — 파형만 봐서는 100 ns 차이를 알아보기 어렵다.", not_yet="")
+                 proved="+V 구간이 −V 구간보다 Δt 길다 — 파형만 봐서는 100 ns 차이를 알아보기 어렵다.",
+                 not_yet="이상 bridge의 사각 전압이고 Δt는 매 주기 같은 가정 값이다. 비대칭을 만드는 gate 지연·dead time 차이의 원인과 dv/dt·링잉은 모델 밖이다.")
     res.add_plot("p_Bz", "처음 3주기: 자속", ["B_z"], y_label="B", y_unit="T", bands=bands, group="z", level="C",
-                 proved="매 주기 끝의 B가 조금씩 올라간다.", not_yet="")
+                 proved="매 주기 끝의 B가 조금씩 올라간다.",
+                 not_yet="주기당 상승량은 정확 해와 V·Δt/(N A_e)의 비교로 확인했지만, 선형 코어라 히스테리시스·minor loop와 그 손실은 보이지 않는다. "
+                         "포화로 넘어가는 순간은 장기 그림의 B_sat 가정선으로만 본다.")
     res.add_series("m_true", "실제 B (대칭 구동)", "T", tt.tolist(), Bt.tolist())
     res.add_series("m_os", f"측정 v + offset {v['V_os']:g} V 적분", "T", tt.tolist(), Bos.tolist(), dash=True)
     res.add_series("m_co", f"{fsm / 1e6:g} MS/s 표본 사다리꼴 적분", "T", ts.tolist(), Bco.tolist(), dash=True)

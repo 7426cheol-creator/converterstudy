@@ -608,7 +608,9 @@ def run_timeline(v: dict) -> Result:
                  not_yet="선형 전류 감소·일정 L_σ 가정(A). 실제 V_DS 파형·avalanche·gate 동역학은 D 수준 모델과 측정이 필요하다.")
     res.add_plot("p_eoff", "soft-off를 길게 하면 turn-off 에너지가 는다", ["eoff"], x_label="전류 fall 시간 t_f", x_unit="s", y_label="E_off", y_unit="J", kind="xy", log_x=True, level="A",
                  vlines=[{"x": v["t_soft"], "label": "현재 soft-off"}, {"x": tf_min, "label": "과전압 한계 최소"}],
-                 proved="과전압을 줄이려고 t_f를 늘리면 전류가 흐르는 시간이 길어져 에너지가 선형으로 는다 — 둘 사이의 창에서 고른다.", not_yet="")
+                 proved="과전압을 줄이려고 t_f를 늘리면 전류가 흐르는 시간이 길어져 에너지가 선형으로 는다 — 둘 사이의 창에서 고른다.",
+                 not_yet="E_off = V_peak·I·t_f/2는 선형 전류 감소와 일정 L_σ를 가정한 근사(A)다. 실제 soft-off의 gate 저항·Miller 구간·온도에 따른 파형과 "
+                         "소자 SOA·단락 내량은 측정 자료가 필요하다.")
     # blanking trade-off
     tbs = np.linspace(0.1e-6, 1.5e-6, 141)
     ft = false_trip_rate(tbs, v["mu_settle"], v["sig_settle"], v["fsw"])
@@ -623,7 +625,9 @@ def run_timeline(v: dict) -> Result:
                  not_yet="안정 시간 분포는 합성 정규분포다. 실제로는 전류·온도·dv/dt·링잉별 측정 분포(MISSING_INPUT)로 바꾼다.")
     res.add_plot("p_fe", "DESAT blanking: 길면 고장 에너지 증가", ["esc"], x_label="blanking", x_unit="s", y_label="E_sc", y_unit="J", kind="xy", level="A",
                  vlines=[{"x": v["t_blank"], "label": "현재"}],
-                 proved="type I 단락에서는 blanking만큼 검출이 늦어져 소자 에너지가 는다. 오검출과 고장 에너지는 같은 변수의 반대 방향이다.", not_yet="")
+                 proved="type I 단락에서는 blanking만큼 검출이 늦어져 소자 에너지가 는다. 오검출과 고장 에너지는 같은 변수의 반대 방향이다.",
+                 not_yet="E_sc는 합성 보호 단계 시간과 합성 고장 전류 증가 모델(A)로 계산했다. 실제 단락 전류의 포화·온도 의존과 소자의 단락 생존(SC 내량)은 "
+                         "이 그림이 판정하지 않는다.")
     rows = []
     for lane, key_ in (("DESAT", "stagesA"), ("과전류", "stagesB"), ("시스템", "stagesS")):
         for j, (kind, a, b) in enumerate(typ[key_]):
@@ -785,7 +789,9 @@ def run_discharge(v: dict) -> Result:
     res.add_plot("p_p", "저항 하나의 전력: 평균이 아니라 펄스", ["pk"], y_label="P", y_unit="W", level="A", group="dis", hlines=[{"y": v["P_cont"], "label": f"연속 정격 {v['P_cont']:g} W"}], vlines=vl,
                  proved="초기 전력이 연속 정격의 수십 배다. 방전저항은 짧은 펄스 에너지 곡선(단열 가열)으로 선정해야 한다.", not_yet="실제 펄스 에너지 곡선·반복·열 결합은 부품 자료가 필요하다(MISSING_INPUT).")
     res.add_plot("p_e", "저항 하나에 쌓이는 에너지", ["ek"], y_label="E", y_unit="J", level="A", group="dis", hlines=[{"y": v["E_pulse"], "label": f"펄스 허용 {v['E_pulse']:g} J (가정)"}], vlines=vl,
-                 proved="직렬 분배가 공차로 틀어지면 한 저항이 평균 몫보다 많은 에너지를 받는다.", not_yet="")
+                 proved="직렬 분배가 공차로 틀어지면 한 저항이 평균 몫보다 많은 에너지를 받는다.",
+                 not_yet="누적 에너지는 RC 지수 해에 공차 worst-case 분배 몫을 곱한 해석 값(A)이고, 펄스 허용 에너지는 가정 값이다. "
+                         "저항의 단열 가열 곡선·반복 방전·주변 부품과의 열 결합은 부품 자료(MISSING_INPUT)가 있어야 판정한다.")
     res.tables.append(Table("t_corner", "공차 corner별 60 V 도달 시간", ["R 배율", "C 배율", "t [s]", "판정"], [[fr, fc, t, "불만족" if t > treq else "만족"] for fr, fc, t in corners],
                             note=f"공차 worst-case 설계 R = {R_wc:.1f} Ω (공칭 {R_nom:.1f} Ω). 그 대신 초기 전력이 {V0 * V0 / (R_wc * (1 - tolR)):.0f} W까지 커진다."))
     res.tables.append(Table("t_bleed", "능동 방전 vs 수동 bleeder", ["방식", "R", "연속 소모 @ V₀", f"{Ve:g} V 도달"], [
@@ -1261,7 +1267,9 @@ def run_safe_state(v: dict) -> Result:
                  proved="ASC는 저속에서 제동토크가 크고 고속에서 작다. freewheel은 임계속도 아래에서 0, 위에서 비제어 정류로 제동토크와 충전 전류가 생긴다.",
                  not_yet="freewheel 점은 비돌극 근사(L = (L_d+L_q)/2) 시뮬레이션이다. 배터리 수용 한계는 없다.")
     res.add_plot("p_fw_I", "freewheel DC 평균 전류 vs 속도 (배터리 연결)", ["fw_I"], x_label="n", x_unit="rpm", y_label="i_dc", y_unit="A", kind="xy", level="C",
-                 vlines=[{"x": n_th, "label": "임계"}], proved="임계속도 아래는 전류 0, 위에서는 속도와 함께 커지는 비제어 충전 전류가 흐른다.", not_yet="")
+                 vlines=[{"x": n_th, "label": "임계"}], proved="임계속도 아래는 전류 0, 위에서는 속도와 함께 커지는 비제어 충전 전류가 흐른다.",
+                 not_yet="점들은 비돌극 근사(L = (L_d+L_q)/2)·이상 diode의 freewheel 시뮬레이션 평균이고, 임계속도는 V_dc/(√3 p ψ_m) 폐형식과 맞춰 보았다. "
+                         "배터리 수용(충전 전류) 한계·BMS 동작과 diode 발열은 모델 밖이다.")
     smp = trf.sample(["ia", "ib", "ic", "idc"] + ([] if fw.bat else ["vdc"]), per_segment=40)
     for key, lab in (("ia", "i_a"), ("ib", "i_b"), ("ic", "i_c")):
         xs, ys = decimate_minmax(smp["t"], smp[key], 2500)
@@ -1276,7 +1284,8 @@ def run_safe_state(v: dict) -> Result:
                  proved="gate를 꺼도 권선 전류는 즉시 0이 되지 않고 body diode로 DC-link에 에너지를 돌려준 뒤 멈추며, 임계속도 이상이면 역기전력이 계속 전류를 만든다.",
                  not_yet="비돌극 근사 (돌극 권선 에너지와 다름), 이상 diode(V_f·역회복 없음).")
     res.add_plot("p_fw_dc", "freewheel: DC-link 충전 전류", ["f_ich"], y_label="i", y_unit="A", bands=bands, group=gf, level="C",
-                 proved="충전 전류는 diode 도통 구간에만 흐르는 한 방향 전류다.", not_yet="")
+                 proved="충전 전류는 diode 도통 구간에만 흐르는 한 방향 전류다.",
+                 not_yet="이상 diode(V_f·역회복 없음)와 비돌극 근사의 전류 파형이다. DC-link 커패시터 리플 정격과 배터리·케이블 임피던스 영향은 다루지 않았다.")
     # zoom on the first moments after gate-off (winding energy returned through the diodes)
     t_off = next((sg.t0 for sg in trf.segments if "".join(sg.q) == "FFF"), None)
     t_z = min(t_fw, max(1.6 * t_off, 20e-6)) if t_off is not None else min(t_fw, Tper)
