@@ -461,6 +461,10 @@ def run_flux_walk(v: dict) -> Result:
         res.add_metric("tau", "DC 전류 시정수 L_m/R", tau, "s", basis=f"{tau * fs:.0f} 주기")
         res.add_metric("Idc_inf", "R이 멈추게 하는 DC 전류 V_avg/R", Vavg / R, "A")
         res.add_metric("Bdc_inf", "그때의 DC 자속 (선형 모델)", kB * Vavg / R, "T", note="B_sat보다 훨씬 커서 물리적으로 도달 전에 포화 — R은 보호가 아니다")
+    elif bound == "none":
+        res.add_metric("Bdc_inf", "DC 자속이 멈추는 값 (선형 모델)", "∞ (R = 0: 멈추지 않음)" if Vavg != 0 else "0 T (대칭 구동)", "")
+    else:
+        res.add_metric("Bdc_inf", "DC 자속이 멈추는 값 (선형 모델)", "0 T (C_b가 DC 전압을 받음)", "", note="대신 L_m–C_b 공진 과도가 남는다")
     if Cb:
         f0 = 1.0 / (TWO_PI * math.sqrt(Lm * Cb))
         Q = math.sqrt(Lm / Cb) / max(R, 1e-12)

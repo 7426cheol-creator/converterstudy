@@ -1,0 +1,48 @@
+{
+ "version": "4.0-reconstructed",
+ "note": "교재·지침의 수치와 이 앱의 계산이 다를 때 근거를 남긴다. 원문은 조용히 바꾸지 않는다. items = 정정, findings = 교재 수치는 맞지만 더 높은 수준의 모델에서 결론이 달라지는 경우(정정 아님).",
+ "items": [
+  {
+   "id": "E-000",
+   "where": "지침 ‘함께 제공된 파일’",
+   "original": "simulation_contract_v4.json, reference_results.json, verify_reference.py, expert_reference_results.json, verify_expert.py, baseline_v3/, START_HERE.txt, VERIFICATION.txt가 함께 제공된다.",
+   "corrected": "실제로 받은 파일은 지침(Opus55_Integrated_Instructions.txt, v4.0)과 교재(Infineon_FAE_Expert_Integrated.html) 두 개뿐이다. 계약은 지침·교재에 적힌 ID·preset·기준값으로 재구성했고(docs/contract/*_reconstructed.json, 계약 버전 4.0-reconstructed), 기준값 검산은 표준 라이브러리만으로 새로 작성했다(verification/independent_reference_check.py). START_HERE.md와 docs/VERIFICATION.md는 이 저장소 기준으로 새로 썼다.",
+   "evidence": "세션 업로드 폴더에 위 두 파일만 있었다. 다른 이름·위치에서도 찾지 못했다.",
+   "impact": "원본 계약·reference_results·v3 baseline과의 전체 정합은 주장하지 않는다. 원본 파일이 생기면 docs/contract의 재구성본, 각 실습의 기준값과 대조해야 한다."
+  },
+  {
+   "id": "E-001",
+   "where": "교재 E06 ‘FPGA/MCU에서 구현하면 생기는 문제’ · 실습 EX06 implementation",
+   "original": "위 SPS operating point에서 Δt = 10 ns이면 Δφ ≈ 0.006283 rad, local ΔP ≈ 20.62 W, 즉 1500 W의 약 1.37 %다.",
+   "corrected": "같은 식 ∂P/∂φ = V₁V₂′(1 − 2φ/π)/(ω_s L)과 같은 운전점(900 V, 600 V 환산, 200 µH, 100 kHz, 1.5 kW, φ = 0.399994 rad)에서 ΔP ≈ 20.1246 W(1.342 %)다. 실제 차분 P(φ + Δφ) − P(φ)는 20.0706 W(1.338 %)다.",
+   "evidence": "K = V₁V₂′/(ω_s L) = 4297.18 W/rad, 1 − 2φ/π = 0.74536, Δφ = 2π·100 kHz·10 ns. 20.62 W가 나오려면 1 − 2φ/π = 0.7637(φ = 0.3712 rad)이어야 하는데, 이 값은 1.5 kW 운전점이 아니다. 독립 검산: verification/independent_reference_check.py (표준 라이브러리), 앱 EX06 metric dP_lin.",
+   "impact": "EX06은 20.12 W를 정정값으로 표시하고 교재 값 20.62 W를 옆에 남긴다. 결론(1-step 계단은 약 1.3 %이며 출력 ripple 예측이 아니다)은 바뀌지 않는다. EX12 메모 B가 이 정정값을 인용한다."
+  },
+  {
+   "id": "E-002",
+   "where": "교재 E04 ‘첫 screening은 B와 window를 각각 계산한다’ · 지침 EX04 ‘window 168.329 mm²’",
+   "original": "Np = 50, Ns = 3, Ip ≈ 2.02 Arms, Is ≈ 33.665 Arms, J = 4 A/mm², ku = 0.30이면 window 요구는 약 168.33 mm²(지침 168.329 mm²)다.",
+   "corrected": "반올림 전 전류 Ip = 2.019881509 A(FL08 nominal), Is = (Np/Ns)·Ip = 33.664692 A를 쓰면 A_w = 168.3235 mm²다. 168.329 mm²는 반올림한 전류 2.02 A와 33.665 A에서 나온 값이다.",
+   "evidence": "(50·2.019881509/4 + 3·33.664692/4)/0.30 = 168.32346 mm²; (50·2.02/4 + 3·33.665/4)/0.30 = 168.32917 mm². 독립 검산: verification/independent_reference_check.py.",
+   "impact": "0.003 %의 차이로 screening 결론은 같다. EX04는 두 값을 모두 보이고 어느 입력에서 나왔는지 표시한다."
+  }
+ ],
+ "findings": [
+  {
+   "id": "F-001",
+   "where": "교재 13장 CLLC [FL10] ‘수정 A의 모든 해’ · 실습 FL10 time_domain, EX05 operating_points",
+   "textbook": "n = 0.93, 고전압 corner(920 V, 11 kW)에서 FHA 해 136099.47 Hz와 147060.86 Hz. 두 해의 FHA 기울기는 +0.001871/kHz와 −0.001803/kHz이며 ‘이 수치는 스위칭 실측값이 아니다’.",
+   "model_result": "FHA 해와 기울기는 그대로 재현된다(FL10 fix_n093, Octave fzero로 독립 확인). 그러나 정류기를 포함한 이상 스위칭 모델에서 920 V 배터리(강성 출력, R = 0)로 두 주파수를 돌리면 전력이 11 kW가 아니라 17.34 kW와 22.24 kW다. 범위 안에서 11 kW가 되는 점은 peak 위 148.005 kHz 하나다. 이 점의 dP/df는 약 −1.63 kW/Hz라 10 Hz 오차가 148 %의 전력 오차가 된다. peak 아래(+기울기) 쪽은 120 kHz에서도 13.16 kW라 11 kW 점이 없다.",
+   "evidence": "엔진 주기해를 DOP853 독립 적분과 고조파 중첩(harmonic_power)으로 맞춰 보았다. tests/test_fl10.py.",
+   "impact": "FHA 해는 CANDIDATE_FHA_ONLY로만 표시한다. branch 선택, ZVS, 기동, 역방향은 스위칭 모델에서 따로 판정한다(교재의 ‘FHA gain PASS와 switching PASS 분리’ 원칙과 같은 방향)."
+  },
+  {
+   "id": "F-002",
+   "where": "교재 13장 CLLC ‘같은 출력이지만 주파수 변화에 대한 출력 방향이 반대다’ · 실습 EX05 operating_points, closed_loop",
+   "textbook": "136.099 kHz(아래 branch)는 FHA 기울기가 +, 147.061 kHz(위 branch)는 −라서 제어감도 부호가 바뀔 수 있다.",
+   "model_result": "출력 C와 부하 R을 가진 전압 제어 모델(EX05)에서 136.099 kHz의 스위칭 기울기는 −3.76 V/kHz다(FHA는 +1.71 V/kHz). 스위칭 V_o의 최대점은 약 123.3 kHz로, FHA peak(141.5 kHz)보다 18 kHz 아래에 있다. 이 부하에서는 두 FHA 주파수가 모두 스위칭 기준으로 peak 위(− 기울기)에 있다. 136.099 kHz에서 V_o는 961.5 V, 147.061 kHz에서 922.9 V다. 920 V 운전점은 148.005 kHz 하나다.",
+   "evidence": "스위칭 주기해 연속(continuation)과 ±2 Hz 차분. Floquet과 G_vf는 FM 주입으로 검증했다. tests/test_ex05.py가 부호 반대와 peak 이동을 고정한다.",
+   "impact": "‘아래 branch에서 제어 부호가 반대’라는 설명은 FHA 모델에서만 성립한다고 밝혀서 말한다. 실제 부호는 스위칭 모델이나 실측의 소신호 응답으로 확인한다. EX05의 폐루프 불안정(Ki 1e5)은 부호가 맞아도 약 1 kHz의 약감쇠 출력 공진 때문에 생긴다."
+  }
+ ]
+}

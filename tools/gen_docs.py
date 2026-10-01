@@ -64,49 +64,86 @@ def main() -> int:
     now = manifest.get("generated", time.strftime("%Y-%m-%dT%H:%M:%S"))
 
     # ---------------- traceability ----------------
+    # one row per lab (the 24 official ids), then one row per experiment x reference preset
     rows = []
+    detail = []
     trace_json = []
     for lid in OFFICIAL_IDS:
         lab = labs.get(lid)
         if lab is None:
-            rows.append(f"| {lid} | - | 미구현 | - | - | - | - | - | - | {HW} |")
-            trace_json.append({"lab": lid, "implemented": False})
+            rows.append(f"| {lid} | - | 미구현 | - | - | - | - | - | - | - | {HW} |")
+            trace_json.append({"lab": lid, "implemented": False, "hardware_validation": "NOT_DONE"})
             continue
         my = [r for r in manifest["runs"] if r["lab"] == lid]
         n_fail = sum(1 for r in my if r.get("checks_failed") or r["status"] == "SOLVER_FAILED")
         statuses = sorted({r["status"] for r in my})
-        n_ind = 0
-        n_ref = 0
-        n_ref_pass = 0
+        n_ind = n_reg = n_ref = n_ref_pass = 0
+        nvf: list[str] = []
+        exp_json = []
         for r in my:
             js = runs.get((r["lab"], r["experiment"], r["preset"]))
             if not js:
                 continue
             res = js["result"]
-            n_ind += sum(1 for c in res["checks"] if c.get("independent") and c["status"] == "PASS")
-            for m in res["metrics"]:
-                if m.get("ref") is not None and m.get("check"):
-                    n_ref += 1
-                    n_ref_pass += m["check"] == "PASS"
+            ind = sum(1 for c in res["checks"] if c.get("independent") and c["status"] == "PASS")
+            reg = sum(1 for c in res["checks"] if not c.get("independent"))
+            refs_here = [m for m in res["metrics"] if m.get("ref") is not None and m.get("check")]
+            rp = sum(m["check"] == "PASS" for m in refs_here)
+            n_ind += ind
+            n_reg += reg
+            n_ref += len(refs_here)
+            n_ref_pass += rp
+            for x in res["not_valid_for"]:
+                if x not in nvf:
+                    nvf.append(x)
+            exp = lab.experiment(r["experiment"])
+            files = r.get("files", [])
+            detail.append(
+                f"| {lid} | {md_escape(r['experiment'])} | {md_escape(r['preset'])} | {md_escape(exp.model_level)} | `{r['status']}` | {md_escape(' · '.join(r.get('verdicts', [])))} | "
+                f"{rp}/{len(refs_here)} | {ind} / {reg} | {'실패: ' + md_escape(', '.join(r['checks_failed'])) if r.get('checks_failed') else '없음'} | "
+                f"{('`results/' + files[0].rsplit('.', 1)[0] + '.{json,csv,html}`') if files else '-'} | {md_escape('; '.join(res['not_valid_for'][:3]))} |"
+            )
+            exp_json.append({"experiment": r["experiment"], "preset": r["preset"], "model_level": exp.model_level, "status": r["status"], "verdicts": r.get("verdicts", []), "reference_metrics": [rp, len(refs_here)], "independent_checks_passed": ind, "regression_checks": reg, "checks_failed": r.get("checks_failed", []), "result_files": ["results/" + f for f in files], "not_valid_for": res["not_valid_for"]})
         tb = "; ".join(t.title for t in lab.textbook[:2])
         test_files = lab.test_paths or [f"tests/test_{lid.lower()}.py"]
         n_tests = sum(count_tests(ROOT / p) for p in test_files)
         exps = ", ".join(e.key for e in lab.experiments)
         code = f"src/convlab/labs/{Path(lab.code_path).name}" if lab.code_path else "-"
         rows.append(
-            f"| {lid} | {md_escape(tb)} | {md_escape(lab.title)} | {md_escape(exps)} | `{code}` | {', '.join('`' + p + '`' for p in test_files)} ({n_tests}) | "
-            f"{len(my)} runs, 실패 {n_fail} · {' / '.join(statuses)} | 기준값 {n_ref_pass}/{n_ref} · 독립 검산 {n_ind} | {md_escape('; '.join(lab.claim_limits[:2]))} | {HW} |"
+            f"| {lid} | {md_escape(tb)} | {md_escape(exps)} | `{code}` | {', '.join('`' + p + '`' for p in test_files)} ({n_tests}) | `results/{lid}/` | "
+            f"{len(my)} runs · 실패 {n_fail} · {' / '.join(statuses)} | 기준값 {n_ref_pass}/{n_ref} · 독립 {n_ind} · 회귀 {n_reg} | {md_escape('; '.join(nvf[:3]))} | {md_escape('; '.join(lab.claim_limits[:2]))} | {HW} |"
         )
-        trace_json.append({"lab": lid, "implemented": True, "experiments": [e.key for e in lab.experiments], "code": code, "tests": test_files, "n_tests": n_tests, "runs": len(my), "runs_failed": n_fail, "statuses": statuses, "reference_metrics": [n_ref_pass, n_ref], "independent_checks_passed": n_ind, "hardware_validation": "NOT_DONE"})
+        trace_json.append({"lab": lid, "implemented": True, "textbook": [t.title for t in lab.textbook], "experiments": [e.key for e in lab.experiments], "code": code, "tests": test_files, "n_tests": n_tests, "runs": len(my), "runs_failed": n_fail, "statuses": statuses, "reference_metrics": [n_ref_pass, n_ref], "independent_checks_passed": n_ind, "regression_checks": n_reg, "result_dir": f"results/{lid}/", "not_valid_for": nvf, "claim_limits": lab.claim_limits, "hardware_validation": "NOT_DONE", "runs_detail": exp_json})
+    n_impl = sum(1 for x in trace_json if x.get("implemented"))
     head = (
         f"# 추적표 (Traceability) — 교재 v4.0 ↔ 실습 ↔ 코드 ↔ 테스트 ↔ 실행 결과\n\n"
-        f"생성: `tools/gen_docs.py` · run-all {now} · 앱 {__version__} · 계약 {CONTRACT_VERSION}\n\n"
-        "열 설명: **학습 내용**(교재 절) · **구현**(실험 key) · **코드/테스트** · **실제 실행**(`convlab run-all`의 기준 preset 실행 수, 실패 수, 나온 상태) · "
-        "**검증**(기준값 metric 통과 수 / 독립 경로 check 수) · **범위 한계** · **하드웨어 검증**(모두 미수행). 상태는 모델 안에서의 판정이며 학습 완료나 면접 준비 완료를 뜻하지 않는다.\n\n"
-        "| Lab | 교재 | 제목 | 실험 | 코드 | 테스트 (개수) | 실제 실행 | 검증 | 범위 한계 | 하드웨어 검증 |\n|---|---|---|---|---|---|---|---|---|---|\n"
+        f"생성: `tools/gen_docs.py` · run-all {now} · 앱 {__version__} · 계약 {CONTRACT_VERSION} · 구현 {n_impl}/24\n\n"
+        "열: **교재 절**(학습 내용) · **시나리오**(실험 key) · **코드** · **테스트**(test 함수 수) · **결과**(`convlab run-all --out results`가 쓰는 폴더; 저장소에는 "
+        "run manifest만 커밋) · **실제 실행**(기준 preset 실행 수, 실패 수, 나온 상태) · **검증**(기준값 metric 통과/전체, 독립 경로 check PASS 수, 회귀 check 수) · "
+        "**not_valid_for**(적용 불가, 앞 3개) · **주장 한계** · **하드웨어 검증**(모두 미수행). "
+        "상태는 합성 모델 안의 판정이며 학습 완료나 면접 준비 완료를 뜻하지 않는다. 의도된 FAIL(예: FL10 seed)은 실패 수에 들어가지 않는다 — 실패 수는 검증 check 실패와 수치 실패만 센다.\n\n"
+        "| Lab | 교재 절 | 시나리오 | 코드 | 테스트 | 결과 | 실제 실행 | 검증 | not_valid_for | 주장 한계 | 하드웨어 검증 |\n|---|---|---|---|---|---|---|---|---|---|---|\n"
     )
-    (docs / "TRACEABILITY.md").write_text(head + "\n".join(rows) + "\n", encoding="utf-8")
-    (docs / "traceability.json").write_text(json.dumps({"generated": now, "labs": trace_json}, ensure_ascii=False, indent=1), encoding="utf-8")
+    dhead = (
+        "\n\n## 실험 × 기준 preset 상세\n\n"
+        "| Lab | 실험 | preset | 모델 수준 | 헤드라인 | 판정 전체 | 기준값 | 독립 / 회귀 | 검증 실패 | 결과 파일 | not_valid_for (앞 3개) |\n|---|---|---|---|---|---|---|---|---|---|---|\n"
+    )
+    (docs / "TRACEABILITY.md").write_text(head + "\n".join(rows) + dhead + "\n".join(detail) + "\n", encoding="utf-8")
+    (docs / "traceability.json").write_text(json.dumps({"generated": now, "implemented": n_impl, "labs": trace_json}, ensure_ascii=False, indent=1), encoding="utf-8")
+
+    # ---------------- errata (rendered from docs/errata.json, which is written by hand) ----------------
+    ej = docs / "errata.json"
+    if ej.exists():
+        er = json.loads(ej.read_text(encoding="utf-8"))
+        out = [f"# Errata — 교재·지침 수치와 계산의 차이\n\n`docs/errata.json`에서 생성 (`tools/gen_docs.py`). {er.get('note', '')}\n"]
+        out.append("\n## 정정\n")
+        for it in er.get("items", []):
+            out.append(f"\n### {it['id']} · {it['where']}\n\n- **원문:** {it['original']}\n- **정정:** {it['corrected']}\n- **근거:** {it['evidence']}\n- **영향:** {it['impact']}\n")
+        if er.get("findings"):
+            out.append("\n## 발견 (정정 아님: 교재 수치는 맞고, 더 높은 수준의 모델에서 결론이 달라진다)\n")
+            for it in er["findings"]:
+                out.append(f"\n### {it['id']} · {it['where']}\n\n- **교재:** {it['textbook']}\n- **모델 결과:** {it['model_result']}\n- **근거:** {it['evidence']}\n- **영향:** {it['impact']}\n")
+        (docs / "ERRATA.md").write_text("".join(out), encoding="utf-8")
 
     # ---------------- model cards and independence map ----------------
     mc = [f"# 모델 카드 (Model cards)\n\n생성: `tools/gen_docs.py` · run-all {now}\n\n모델 수준: A 해석/FHA · B 평균 동역학 · C 이상 스위칭 · D 비이상 commutation(합성). 가정·적용 불가 범위는 각 실험의 기준 preset 실행 결과에서 그대로 가져왔다.\n"]
