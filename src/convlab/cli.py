@@ -87,7 +87,7 @@ def cmd_run_all(args) -> int:
             manifest["not_implemented"].append(lid)
             continue
         for e in lab.experiments:
-            presets = e.reference_presets or [e.presets[0].key]
+            presets = [pr.key for pr in e.presets] if getattr(args, "all_presets", False) else (e.reference_presets or [e.presets[0].key])
             for pk in presets:
                 rec = {"lab": lid, "experiment": e.key, "preset": pk}
                 t0 = time.perf_counter()
@@ -164,6 +164,7 @@ def main(argv: list[str] | None = None) -> int:
     p = sub.add_parser("run-all", help="모든 실험의 기준 preset 실행 + run manifest")
     p.add_argument("--out", default="results")
     p.add_argument("--only", help="FL01,EX02 처럼 일부만")
+    p.add_argument("--all-presets", action="store_true", help="기준 preset만이 아니라 모든 preset 실행 (오류·계약 점검용)")
     p.set_defaults(func=cmd_run_all)
     args = ap.parse_args(argv)
     if not getattr(args, "func", None):
