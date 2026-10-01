@@ -289,6 +289,9 @@ def run_map(v: dict) -> Result:
     res.assumptions += ["격자 탐색(w 간격 입력값)과 각 셀의 가장 작은 φ 해", "합성 C_oss·dead time·최소 펄스·peak 한계 (ASSUMED)"]
     res.not_valid_for += ["global optimum", "효율·온도 개선 주장", "실제 소자 ZVS 보증"]
     res.interpretation = "RMS만 보면 zero interval을 넓힌 candidate가 좋아 보이지만, 경부하 corner에서는 edge 전류가 작아지거나 부호가 바뀌어 commutation screen을 통과하지 못한다. 그래서 단계마다 권장점이 달라질 수 있고, 마지막 손실 단계는 실제 데이터 없이는 확정하지 않는다."
+    cir = dab_circuit(v["V1"], _VL(v), f"n={v['n']:.4g}", v["L"], None)
+    cir.notes.append("w₁·w₂·φ 격자와 corner 전력은 이 실험의 축이다. 그림의 전압은 nominal이다.")
+    res.circuit = {"diagram": cir.to_json(), "intervals": [], "plot_group": ""}
     return res
 
 
@@ -440,6 +443,9 @@ def run_impl(v: dict) -> Result:
     res.assumptions += ["이상 1-step 감도 (dithering·폐루프 없음)", "전환은 bridge 전압 패턴의 즉시 교체", f"R = {R:g} Ω"]
     res.not_valid_for += ["실제 출력 리플 예측", "scheduler 안정성 증명"]
     res.interpretation = "디지털 구현에서는 φ가 timer step으로만 움직여 전력이 계단이 되고, 경부하에서는 최소 펄스가 부드러운 제어를 끊는다. 변조를 바꿀 때 전류 궤적이 맞지 않으면 DC offset·자속 불균형이 생기므로 전환 순서와 시점을 설계해야 한다."
+    cir = dab_circuit(v["V1"], _VL(v), f"n={v['n']:.4g}", v["L"], None)
+    cir.notes.append("타이머 분해능·최소 펄스·모드 전환은 같은 회로의 gate 시각을 바꾸는 문제다.")
+    res.circuit = {"diagram": cir.to_json(), "intervals": [], "plot_group": ""}
     return res
 
 

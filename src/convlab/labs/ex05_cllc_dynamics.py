@@ -82,6 +82,14 @@ def _tank(v) -> Tank:
     return Tank(v["L1"], v["C1"], v["Lm"], v["L1"], v["C1"], v["R"], v["R"])  # referred symmetry (FL10 candidate)
 
 
+def _context_circuit(v, note: str = "") -> dict:
+    """The circuit this experiment solves, drawn without waveform intervals (sweeps and maps have no single cycle)."""
+    c = resonant_circuit("CLLC", v["Vlink"], f"{v['n']:g}", _tank(v), "FB")
+    if note:
+        c.notes.append(note)
+    return {"diagram": c.to_json(), "intervals": [], "plot_group": ""}
+
+
 def _RL(v) -> float:
     return v["Vref"] ** 2 / v["P"]
 
@@ -317,6 +325,7 @@ def run_points(v: dict) -> Result:
         "FHA는 gain peak를 약 141.5 kHz에 두고 목표 전압을 두 주파수에서 만족한다고 본다. 정류기가 있는 스위칭 모델은 f_r 아래에서 gain이 더 높고 peak가 훨씬 낮은 주파수에 있어, "
         "주파수 범위 안에서는 V_o가 주파수에 대해 단조 감소한다. 그래서 FHA의 아래 해(136 kHz)는 스위칭 모델에서 기울기 부호가 FHA와 반대이고, 목표 전압 운전점은 하나뿐이다."
     )
+    res.circuit = _context_circuit(v, "출력은 C_o ∥ R_L (전압 조절 모델). 운전점은 주파수 sweep과 연속(continuation)으로 찾는다.")
     return res
 
 
@@ -383,6 +392,7 @@ def run_floquet(v: dict) -> Result:
     res.assumptions += ["외부 clock(고정 주파수)으로 구동되는 sampled map", "FD 섭동 1e-6 × 상태 scale, event 재탐색 포함"]
     res.not_valid_for += ["폐루프 안정성", "대신호(기동·포화)"]
     res.interpretation = "주기해를 찾았다고 끝이 아니다. 같은 branch에서 초기값을 흔들면 편차가 지배 Floquet multiplier의 거듭제곱으로 줄어든다. 이 운전점의 지배 모드는 출력 C와 tank의 등가 인덕턴스가 만드는 약 1 kHz 공진으로, 주기당 감쇠가 0.05 % 수준이라 수 ms 동안 울린다."
+    res.circuit = _context_circuit(v, "주기해 주변의 초기 상태를 흔들어 한 주기 map의 고유값(Floquet 승수)을 구한다.")
     return res
 
 
@@ -455,6 +465,7 @@ def run_gvf(v: dict) -> Result:
     res.assumptions += ["cycle-to-cycle map: 주기 시작 샘플 v_o, 주기마다 한 번 바뀌는 주파수 명령", f"FM 주입 진폭 ±{v['fm_amp'] * 100:g} % (소신호)"]
     res.not_valid_for += ["f_s/2 이상의 변조", "대신호 과도"]
     res.interpretation = "주파수에서 출력까지의 전달함수는 운전점마다 다르다. DC 이득은 정상 기울기와 같지만, 출력 C와 tank 등가 L의 공진 때문에 1 kHz 부근에서 |G_vf|가 DC보다 한 자릿수 이상 커지고 위상이 급변한다. 기울기 부호만 보고 폐루프 이득을 정하면 이 공진을 놓친다."
+    res.circuit = _context_circuit(v, "입력: 스위칭 주파수의 작은 FM 변조, 출력: v_o (sampled small-signal).")
     return res
 
 
@@ -580,6 +591,7 @@ def run_closed_loop(v: dict) -> Result:
         "제어기 부호가 정상 기울기와 맞아도, 출력 C와 tank 등가 L의 약 1 kHz 공진이 거의 감쇠되지 않아 적분 이득을 조금만 올려도 폐루프 multiplier가 1을 넘는다. "
         "반대로 FHA 아래 branch를 믿고 부호를 뒤집으면 실수 multiplier가 1을 넘어 주파수가 한쪽으로 달아난다. 안정성은 plant의 event 포함 Jacobian에 제어기 상태·지연을 붙여 판정한다."
     )
+    res.circuit = _context_circuit(v, "PI가 주기마다 v_o를 표본화해 주파수 명령을 만든다 (1주기 계산 지연, 주파수 포화, 조건부 적분).")
     return res
 
 
@@ -724,6 +736,7 @@ def run_startup(v: dict) -> Result:
         "빈 출력 C로 기동하면 정류기가 곧바로 도통해 tank가 거의 단락 부하를 본다. 높은 시작 주파수는 tank 임피던스로 전류를 줄여 줄 뿐 자동 제한이 아니므로 첫 주기 전류가 정상 peak를 넘을 수 있다. "
         "배터리가 이미 연결돼 있으면 반대로 높은 주파수에서는 전력이 거의 흐르지 않다가 공진 근처에서 급증한다. 두 기동은 다른 문제이고, reverse 저전압 corner는 스위칭 모델에서도 목표 전력을 낼 수 없다."
     )
+    res.circuit = _context_circuit(v, "A 빈 C_o 기동은 이 회로, B는 출력이 배터리(강성 전압원), C는 역방향(배터리측 bridge 구동, 1차측 정류)이다.")
     return res
 
 
@@ -781,6 +794,7 @@ def run_tolerance(v: dict) -> Result:
     res.assumptions += ["L₁·L₂′, C₁·C₂′가 같이 움직인다 (환산 대칭 유지)", "명목 운전점 주파수 고정 — 제어가 보정하기 전의 편차"]
     res.not_valid_for += ["통계적 수율", "온도 drift"]
     res.interpretation = "공차는 공진점만 옮기는 것이 아니라 가능한 최대 gain과 운전점 전압을 바꾼다. 고전압 corner처럼 여유가 1 % 미만인 곳에서는 공차 corner 일부에서 해가 사라진다. 제어가 주파수로 보정하더라도 범위와 기울기가 바뀐다."
+    res.circuit = _context_circuit(v, "L·C 공차 corner마다 같은 회로를 다시 푼다. 그림의 값은 nominal이다.")
     return res
 
 

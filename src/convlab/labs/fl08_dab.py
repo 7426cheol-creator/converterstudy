@@ -331,6 +331,9 @@ def run_corners(v: dict) -> Result:
     res.assumptions += [f"V_L 최대 {v['VL_max']:g} V는 ASSUMED (교재는 36/48 V만 명시)", "합성 C_oss (HV/LV)와 dead time은 ASSUMED"]
     res.not_valid_for += ["ZVS 확정·손실·온도"]
     res.interpretation = "전력식이 풀린다는 것(해 존재)과 RMS·ZVS·열이 통과한다는 것은 다르다. 전압비가 어긋나는 corner에서 순환전류가 커지고, edge 전류 부호가 바뀌는 쪽 bridge가 먼저 soft switching을 잃는다."
+    cir = dab_circuit(v["VH"], v["VL"], f"n = {n:.4g}", L, None)
+    cir.notes.append("V_H·V_L은 corner마다 바뀐다 (표·map 참고). 그림의 값은 nominal이다.")
+    res.circuit = {"diagram": cir.to_json(), "intervals": [], "plot_group": ""}
     return res
 
 
@@ -420,6 +423,7 @@ def run_offset(v: dict) -> Result:
     res.assumptions += ["0 초기조건 (precharge·soft-start 없음)", "비대칭은 1차 하강 edge 지연으로 모델"]
     res.not_valid_for += ["자속 포화·코어 손실", "실제 기동 시퀀스"]
     res.interpretation = "이상 인덕터에는 DC offset을 되돌리는 힘이 없다. 시뮬레이션을 0에서 시작하면 첫 주기의 offset이 그대로 남아 ‘정상상태’처럼 보이지만 실제 기준해가 아니다. 저항·제어·blocking capacitor가 offset을 제한하며, 펄스 비대칭은 자속 walking으로 이어질 수 있다."
+    res.circuit = {"diagram": dab_circuit(V1, v["VL"], f"n = {n:.4g}", L, Lm).to_json(), "intervals": [], "plot_group": ""}
     return res
 
 
@@ -489,6 +493,9 @@ def run_two_modules(v: dict) -> Result:
     res.assumptions += [f"모듈 L = L(1∓δ), δ = {d:g}", "공통 φ 명령 (모듈별 전류 제어 없음)"]
     res.not_valid_for += ["모듈별 폐루프 분담 제어", "출력 필터 설계"]
     res.interpretation = "SPS의 포트 전류는 반주기마다 극성과 전류가 함께 뒤집혀 T/2 주기를 가진다. 그래서 모듈을 180° 옮기면 같은 파형이 겹칠 뿐이고, 90°가 주 리플을 상쇄한다. 공통 φ로 운전하면 L이 작은 모듈이 더 많은 전력을 가져가 분담 오차가 L 오차만큼 생긴다."
+    cir = dab_circuit(V1, v["VL"], f"n = {n:.4g}", L, None)
+    cir.title = "DAB 1모듈 — 두 모듈이 같은 V_H·V_L 포트에 병렬 (모듈별 L = L(1∓δ), 공통 φ, 모듈 사이 위상 offset)"
+    res.circuit = {"diagram": cir.to_json(), "intervals": [], "plot_group": ""}
     return res
 
 

@@ -319,6 +319,7 @@ def run_branch(v: dict) -> Result:
     res.assumptions += ["FHA 해를 V_bat별로 독립 계산", f"link {Vlink:g} V, {v['P'] / 1e3:g} kW 고정"]
     res.not_valid_for += ["폐루프 안정성", "스위칭 동작점"]
     res.interpretation = "필요 gain이 올라가면 두 해가 gain peak 쪽으로 모이다가 fold에서 만나고 사라진다. fold 근처에서는 기울기가 0이라 주파수로 출력을 거의 못 움직인다. 해를 매 순간 새로 고르는 제어기는 해 집합이 바뀌는 순간 다른 branch로 뛰어 명령이 불연속이 되고 기울기 부호가 뒤집힌다."
+    res.circuit = {"diagram": resonant_circuit("CLLC", Vlink, f"{n:g}", tank, "FB", out="battery", vo_label="V_bat sweep").to_json(), "intervals": [], "plot_group": ""}
     return res
 
 

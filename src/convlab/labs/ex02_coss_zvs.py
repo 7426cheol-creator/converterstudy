@@ -698,6 +698,9 @@ def run_deadtime_map(v: dict) -> Result:
     res.assumptions += ["v_x·L 고정, 합성 C(v)", "gate 지연 산포는 입력 하나로 더함 (분포 미모델)"]
     res.not_valid_for += ["실제 소자·온도에서의 dead time 확정"]
     res.interpretation = "작은 전류일수록 같은 전하를 옮기는 데 오래 걸리므로 최소 dead time은 경부하에서 정해지고, 큰 전류에서는 긴 dead time이 diode 도통을 늘린다. 그래서 dead time은 운전점별 창(또는 전류 의존 스케줄)으로 설계한다."
+    cir = hb_circuit(v)
+    cir.notes.append("초기 인덕터 전류 I₀와 dead time은 이 실험의 sweep 변수다 (map의 축).")
+    res.circuit = {"diagram": cir.to_json(), "intervals": [], "plot_group": ""}
     return res
 
 

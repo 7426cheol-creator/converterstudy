@@ -342,6 +342,8 @@ def run_curve(v: dict) -> Result:
     res.assumptions += ["각 점: 물리 12주기 + Newton shooting 주기해", "이상 스위치·다이오드, 합성 tank"]
     res.not_valid_for += ["실제 gain peak 위치(기생 용량·dead time 영향)", "제어 설계(동특성 없음)"]
     res.interpretation = "FHA는 f_r 부근 중부하에서 몇 % 이내로 맞지만, f_r 아래(off 구간이 생기는 영역)에서는 스위칭 gain이 더 크고 peak도 더 낮은 주파수로 간다. 같은 gain이라도 어느 영역인지에 따라 정류 모드·ZVS 전류가 다르다."
+    tk0 = _tank(v)
+    res.circuit = {"diagram": resonant_circuit("LLC", v["Vin"], f"{n:.4g}", tk0, v["bridge"]).to_json(), "intervals": [], "plot_group": ""}
     return res
 
 
@@ -388,6 +390,9 @@ def run_zvs(v: dict) -> Result:
     res.assumptions += ["이상 스위칭 주기해에서 edge 전류를 읽고 전하 screen 적용", "합성 C_oss·t_d (ASSUMED)"]
     res.not_valid_for += ["ZVS 보증", "효율 최적 L_m"]
     res.interpretation = "경부하에서 ZVS 전하를 주는 것은 부하 전류가 아니라 여자전류다. L_m을 줄이면 전하 여유가 커지지만 모든 부하에서 순환전류(RMS)가 늘어 전도·자성체 손실 비용을 낸다. FHA의 inductive 판정은 부호의 필요조건일 뿐 전하 충분조건이 아니다."
+    cir = resonant_circuit("LLC", v["Vin"], f"{n:.4g}", _tank(v), v["bridge"])
+    cir.notes.append("L_m은 이 실험의 sweep 변수다 (그래프의 각 곡선). 그림의 L_m 값은 기본 preset 값이다.")
+    res.circuit = {"diagram": cir.to_json(), "intervals": [], "plot_group": ""}
     return res
 
 

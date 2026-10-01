@@ -35,10 +35,13 @@ export function renderResult(host, payload, opts = {}) {
   let circuitCtl = null;
   if (res.circuit && res.circuit.diagram) {
     const cc = h("section", { class: "card circuit-card" });
-    cc.append(h("h3", {}, "회로와 도통 경로 ", h("span", { class: "muted small" }, "(파형 커서와 연결)")));
-    circuitCtl = renderCircuit(cc, res.circuit.diagram);
-    root.append(cc);
+    const dg = res.circuit.diagram;
     const intervals = res.circuit.intervals || [];
+    cc.append(h("h3", {}, "회로와 도통 경로 ", h("span", { class: "muted small" }, intervals.length ? "(파형 커서와 연결)" : "(이 실험에는 시간 파형 구간이 없어 고정 그림)")));
+    if (dg.title) cc.append(h("p", { class: "muted small circuit-title" }, dg.title));
+    circuitCtl = renderCircuit(cc, dg);
+    for (const n of dg.notes || []) cc.append(h("p", { class: "muted small" }, "※ " + n));
+    root.append(cc);
     const probeSeries = (res.circuit.diagram.probes || []).map((p) => p.series);
     bus.on((group, x) => {
       if (res.circuit.plot_group && group !== res.circuit.plot_group) return;
