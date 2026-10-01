@@ -2,14 +2,14 @@
   "schema": "convlab-psim-status/1",
   "tool": "PSIM 12.0.2",
   "rule": "Build sheets only. PSIM is not installed here, no PSIM file or PSIM result exists; a sheet stays NOT_RUN_ENVIRONMENT until a person builds and runs it in PSIM and records the result. No schematic-generation API is assumed for 12.0.2.",
-  "checked_at": "2026-09-30",
+  "checked_at": "2026-10-01",
   "environment": "Linux container without PSIM (Windows tool)",
   "sheets": [
     {"sheet": "psim/fl01_buck.md", "lab": "FL01", "reference_runs": ["FL01 buck_ccm --preset nominal"], "status": "NOT_RUN_ENVIRONMENT", "expected_values": "python export"},
     {"sheet": "psim/fl08_dab.md", "lab": "FL08", "reference_runs": ["FL08 sps_nominal --preset nominal", "FL08 zero_power_mismatch --preset mismatch"], "status": "NOT_RUN_ENVIRONMENT", "expected_values": "python export"},
     {"sheet": "psim/ex06_dab_width.md", "lab": "EX06", "reference_runs": ["EX06 general_modulation --preset textbook"], "status": "NOT_RUN_ENVIRONMENT", "expected_values": "python export"},
     {"sheet": "psim/fl09_llc.md", "lab": "FL09", "reference_runs": ["FL09 switching_vs_fha --preset at_fr", "FL09 switching_vs_fha --preset mid"], "status": "NOT_RUN_ENVIRONMENT", "expected_values": "python export"},
-    {"sheet": "psim/fl10_cllc.md", "lab": "FL10", "reference_runs": [], "status": "NOT_RUN_ENVIRONMENT", "expected_values": "PENDING: FL10 not merged; textbook FHA reference only"},
+    {"sheet": "psim/fl10_cllc.md", "lab": "FL10", "reference_runs": ["FL10 time_domain --preset textbook", "FL10 time_domain --preset lossy", "FL10 fix_n093 --preset textbook", "EX05 operating_points --preset textbook"], "status": "NOT_RUN_ENVIRONMENT", "expected_values": "python export"},
     {"sheet": "psim/ex02_commutation.md", "lab": "EX02", "reference_runs": ["EX02 hb_constant_current --preset textbook"], "status": "NOT_RUN_ENVIRONMENT", "expected_values": "python export"},
     {"sheet": "psim/ex07_cpl_filter.md", "lab": "EX07", "reference_runs": ["EX07 cpl_exact --preset c100u", "EX07 cpl_exact --preset c1m"], "status": "NOT_RUN_ENVIRONMENT", "expected_values": "python export"}
   ]

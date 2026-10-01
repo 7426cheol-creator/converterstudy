@@ -14,7 +14,7 @@ Python으로 schematic을 만드는 사례가 있지만 12.0.2에서 같은 기�
 | [fl08_dab.md](fl08_dab.md) | DAB 800 V ↔ 48 V, 1.5 kW / ratio mismatch 900 V ↔ 36 V | `FL08 sps_nominal --preset nominal`, `FL08 zero_power_mismatch --preset mismatch` | 있음 |
 | [ex06_dab_width.md](ex06_dab_width.md) | DAB width modulation (w₁ = 0.7π) 900 V ↔ 36 V | `EX06 general_modulation --preset textbook` | 있음 |
 | [fl09_llc.md](fl09_llc.md) | LLC 400 → 48 V, 다이오드 정류 | `FL09 switching_vs_fha --preset at_fr`, `--preset mid` | 있음 |
-| [fl10_cllc.md](fl10_cllc.md) | CLLC n = 0.93, 850 V → 920 V, 두 분기 | FL10 미병합 | **자리만** (FHA 참고값만 교재에서) |
+| [fl10_cllc.md](fl10_cllc.md) | CLLC n = 0.93, 850 V → 920 V, 두 FHA 분기와 11 kW 스위칭 점 | `FL10 time_domain --preset textbook`, `--preset lossy`, `FL10 fix_n093 --preset textbook`, `EX05 operating_points --preset textbook` | 있음 |
 | [ex02_commutation.md](ex02_commutation.md) | half-bridge 비선형 Coss 전환 | `EX02 hb_constant_current --preset textbook` | 있음 |
 | [ex07_cpl_filter.md](ex07_cpl_filter.md) | 입력 R-L-C + 이상 CPL 10 kW | `EX07 cpl_exact --preset c100u`, `--preset c1m` | 있음 |
 

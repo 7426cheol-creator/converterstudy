@@ -15,7 +15,6 @@ Vin = xc_get(d, 'input', 'Vin');
 Vo = xc_get(d, 'input', 'Vo_nom');
 Qsel = xc_get(d, 'input', 'Q');
 Fmin = xc_get(d, 'input', 'F_min');
-Fmax = xc_get(d, 'input', 'F_max');
 if strcmp(xc_get(d, 'input', 'bridge'), 'FB')
   kb = 1;                                    % full bridge: Vo/Vi = |H|/n
 else
@@ -62,6 +61,11 @@ end
 rows{end + 1} = xc_row('FL09.table.H.normalized_vs_circuit', d, 'max | |H| normalized - |H| circuit | over the table', '', 0, dev_forms, 1e-12, 'abs', 'textbook normalized 1/H formula against the phasor circuit (internal consistency)', 0, 'identity (0)');
 
 % ---------------------------------------------------------------- inductive / capacitive boundary column
+% Row text (app 4.0.0 after 4ee1a30): "F < 0.4388 capacitive (<Korean: all inductive in
+% range>)", "F < 0.8442 capacitive", ...: the printed boundary is compared with the root of
+% Im Zin within half a unit of its last printed digit, and the "all inductive in
+% the table range" remark (the only place the word "inductive" appears) with
+% F_b < F_min.
 for r = 1:numel(tab)
   row = tab{r};
   q = str2double(row{1});
@@ -71,17 +75,18 @@ for r = 1:numel(tab)
   Fb = fzero(imz, [0.05, 1.0], optimset('TolX', 1e-14));   % capacitive below Fb
   t_b = toc(t0);
   m = 'fzero on Im Zin(F) = 0, Zin = Zr + Zm || Rac (capacitive below the root)';
-  tok = regexp(txt, 'F < ([0-9.]+)', 'tokens', 'once');
+  tok = regexp(txt, 'F < ([0-9]+)\.([0-9]+)', 'tokens', 'once');
   if ~isempty(tok)
-    % the app interpolates its 241-point phase grid and prints 3 decimals
-    rows{end + 1} = xc_row(sprintf('FL09.table.boundary.Q%g', q), d, sprintf('capacitive below F_b, Q = %g (table text "%s")', q, local_ascii(txt)), '', str2double(tok{1}), Fb, 2e-3, 'abs', m, t_b); %#ok<AGROW>
-  else
-    % no boundary printed: the whole table range [F_min, F_max] must be inductive
-    rows{end + 1} = xc_row(sprintf('FL09.table.boundary.Q%g', q), d, sprintf('whole range F >= %g inductive, Q = %g (F_b = %.5f)', Fmin, q, Fb), '', 1, double(Fb < Fmin), 0, 'bool', m, t_b); %#ok<AGROW>
+    shown = str2double([tok{1} '.' tok{2}]);
+    tol = 0.5 * 10 ^ (-numel(tok{2})) + 1e-12;   % rounding of the printed value
+    rows{end + 1} = xc_row(sprintf('FL09.table.boundary.Q%g', q), d, ...
+      sprintf('capacitive below F_b, Q = %g (table text "%s")', q, local_ascii(txt)), '', shown, Fb, tol, 'abs', ...
+      sprintf('%s; tolerance = half a unit of the %d printed decimals', m, numel(tok{2})), t_b); %#ok<AGROW>
   end
-  if Fb > Fmin && Fb < Fmax && isempty(tok)
-    rows{end}.method = [m '; table says all inductive but the root is inside the range'];
-  end
+  says_all = ~isempty(strfind(txt, 'inductive'));
+  rows{end + 1} = xc_row(sprintf('FL09.table.inrange.Q%g', q), d, ...
+    sprintf('table says the whole range F >= %g is inductive (1) or not (0), Q = %g; F_b = %.5f', Fmin, q, Fb), '', ...
+    double(says_all), double(Fb < Fmin), 0, 'bool', [m '; the table range starts at F_min'], t_b); %#ok<AGROW>
 end
 end
 

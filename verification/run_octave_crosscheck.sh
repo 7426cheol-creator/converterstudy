@@ -44,7 +44,11 @@ EXPORTS=(
   "FL05 grid_boundary nominal"
   "FL05 dclink_power nominal"
   "FL01 buck_ccm nominal"
-  # TODO(FL10/EX05 time domain): add the FL10 / EX05 presets here when they are merged
+  "FL10 seed_fail seed"
+  "FL10 fix_n093 textbook"
+  "FL10 time_domain textbook"
+  "FL10 time_domain lossy"
+  "EX05 operating_points textbook"
 )
 
 mkdir -p "$EXPORT"
