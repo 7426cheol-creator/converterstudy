@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import sys
 import time
@@ -98,6 +99,9 @@ def cmd_run_all(args) -> int:
                     (base / lid / f"{stem}.json").write_text(to_json(out), encoding="utf-8")
                     (base / lid / f"{stem}.csv").write_text("﻿" + to_csv(out), encoding="utf-8")
                     (base / lid / f"{stem}.html").write_text(to_html(out, {"lab": lab.meta(), "experiment": e.meta()}), encoding="utf-8")
+                    issues = contract_issues(res)
+                    if issues:
+                        rec["contract_issues"] = issues
                     rec.update(
                         {
                             "status": res["status"]["code"],
@@ -106,19 +110,32 @@ def cmd_run_all(args) -> int:
                             "checks_total": len(res["checks"]) + sum(1 for m in res["metrics"] if m["check"]),
                             "checks_failed": [c["name"] for c in res["checks"] if c["status"] == "FAIL"] + [m["key"] for m in res["metrics"] if m["check"] == "FAIL"],
                             "files": [f"{lid}/{stem}.{x}" for x in ("json", "csv", "html")],
+                            "sha256": {x: hashlib.sha256((base / lid / f"{stem}.{x}").read_bytes()).hexdigest() for x in ("json", "csv", "html")},
                             "runtime_s": round(time.perf_counter() - t0, 3),
                         }
                     )
                 except RunError as exc:
                     rec.update({"status": "SOLVER_FAILED", "error": exc.payload.get("message"), "runtime_s": round(time.perf_counter() - t0, 3)})
                 manifest["runs"].append(rec)
-                flag = "OK " if not rec.get("checks_failed") and rec["status"] != "SOLVER_FAILED" else "!! "
-                print(f"{flag}{lid} {e.key:22s} {pk:14s} {rec['status']:22s} {rec['runtime_s']:.2f}s {rec.get('checks_failed') or ''}")
+                flag = "OK " if not rec.get("checks_failed") and rec["status"] != "SOLVER_FAILED" and not rec.get("contract_issues") else "!! "
+                print(f"{flag}{lid} {e.key:22s} {pk:14s} {rec['status']:22s} {rec['runtime_s']:.2f}s {rec.get('checks_failed') or ''} {rec.get('contract_issues') or ''}")
     manifest["total_runtime_s"] = round(time.perf_counter() - t_all, 2)
     (base / "run_manifest.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=1), encoding="utf-8")
     bad = [r for r in manifest["runs"] if r.get("checks_failed") or r["status"] == "SOLVER_FAILED"]
-    print(f"{len(manifest['runs'])} runs, {len(bad)} with failed checks, {manifest['total_runtime_s']} s → {base / 'run_manifest.json'}")
-    return 1 if bad else 0
+    contract = [r for r in manifest["runs"] if r.get("contract_issues")]
+    print(f"{len(manifest['runs'])} runs, {len(bad)} with failed checks, {len(contract)} with contract issues, {manifest['total_runtime_s']} s → {base / 'run_manifest.json'}")
+    return 1 if bad or contract else 0
+
+
+def contract_issues(res: dict) -> list[str]:
+    """Presentation rules every result must meet (instruction §13): each plot says, in a paragraph, what it proved
+    and what it has not proved yet. Returned as messages; run-all fails on any."""
+    out = []
+    for pl in res.get("plots", []):
+        missing = [k for k in ("proved", "not_yet") if not str(pl.get(k) or "").strip()]
+        if missing:
+            out.append(f"plot {pl.get('key')}: {'/'.join(missing)} 없음")
+    return out
 
 
 def cmd_serve(args) -> int:
