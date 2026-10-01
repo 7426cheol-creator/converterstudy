@@ -1,7 +1,7 @@
 {
  "kind": "project_state",
  "note": "이 파일은 저장소 작업 상태다. 학습자의 예측·답 기록은 ~/.convlab/progress.json (앱이 관리)이며 이 파일과 다르다.",
- "updated": "2026-10-01T01:55:00Z",
+ "updated": "2026-10-01T02:10:00Z",
  "app_version": "4.0.0",
  "contract_version": "4.0-reconstructed",
  "branch": "ccr-947b03d9-ahvguh",
@@ -46,7 +46,7 @@
  ],
  "in_progress": [],
  "next": [
-  "새 저장소 7426cheol-creator/converterstudy가 이 세션에 연결되면 push하고 main 대상 draft PR 생성, CI 확인",
+  "main 대상 PR을 열거나 main에 반영하고, CI(python, e2e, octave) 결과 확인",
   "원본 패키지 파일(simulation_contract_v4.json 등)이 생기면 docs/contract 재구성본·기준값과 대조",
   "MATLAB/PSIM이 있는 환경에서 matlab/simscape builder와 psim build sheet로 대표점 대조"
  ],
@@ -60,9 +60,10 @@
   "e2e": "cd e2e && npm ci && node smoke.mjs --spawn"
  },
  "blockers": [
-  "GitHub: 이 세션의 연결은 이전 계정이며 403. 새 계정(7426cheol-creator)을 https://claude.ai/connect-github 에서 연결하고 converterstudy에 Claude GitHub App을 설치해야 push 가능",
+  "PR 생성: claude.ai의 GitHub 커넥터가 재인증 전이라 세션에서 PR을 만들 수 없음 (push는 됨)",
   "MATLAB/Simulink/PSIM 미설치: NOT_RUN_ENVIRONMENT (Python 필수 기능과 무관)",
   "원본 패키지 파일 미제공 (ERRATA E-000)"
  ],
- "resume": "브랜치 ccr-947b03d9-ahvguh. `python -m pytest -q`, `python -m convlab run-all --out results`로 상태 확인 후 next부터."
+ "resume": "브랜치 ccr-947b03d9-ahvguh. `python -m pytest -q`, `python -m convlab run-all --out results`로 상태 확인 후 next부터.",
+ "repository": "https://github.com/7426cheol-creator/converterstudy (branch ccr-947b03d9-ahvguh)"
 }

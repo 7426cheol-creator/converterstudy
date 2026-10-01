@@ -60,8 +60,8 @@
   - `psim/`의 build sheet 7개를 손으로 회로를 만드는 용도로 둡니다: FL01, FL08, EX06, FL09, FL10, EX02, EX07.
   - 각 sheet에는 접속, 소자, gate 식, solver, 초기조건, probe, 앱 실행에서 가져온 기대값, 한계가 들어 있습니다.
 - **GitHub Actions 결과.** workflow(`.github/workflows/ci.yml`)는 저장소에 있습니다.
-  - 2026-09-30 19:59 UTC부터 이 세션의 GitHub 접근이 끊겨(403) 그 뒤 커밋은 push하지 못했습니다. 사용자의 GitHub 계정이 바뀌어, 새 저장소 `7426cheol-creator/converterstudy`의 연결을 기다리고 있습니다.
-  - 그래서 CI 결과도 확인하지 못했습니다. 같은 명령의 로컬 결과는 §6에 있습니다.
+  - 사용자의 GitHub 계정이 바뀌어 저장소를 `7426cheol-creator/converterstudy`로 옮겼고, 작업 브랜치 `ccr-947b03d9-ahvguh`로 push했습니다.
+  - CI는 main push와 PR에서 돕니다. 이 문서를 쓰는 시점에는 아직 PR이 없어 GitHub의 CI 결과는 없습니다. 같은 명령의 로컬 결과는 §6에 있습니다.
 - **하드웨어.** 측정, 열화상, 규격 시험, 수명 시험은 없습니다. ‘통과’는 모두 합성 모델 안의 판정입니다.
 
 ## 5. 재현
