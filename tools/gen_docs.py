@@ -68,11 +68,13 @@ def main() -> int:
     rows = []
     detail = []
     trace_json = []
+    ui_rows = []  # the shape the app's traceability page reads (web/app.js tracePage)
     for lid in OFFICIAL_IDS:
         lab = labs.get(lid)
         if lab is None:
             rows.append(f"| {lid} | - | 미구현 | - | - | - | - | - | - | - | {HW} |")
             trace_json.append({"lab": lid, "implemented": False, "hardware_validation": "NOT_DONE"})
+            ui_rows.append({"id": lid, "textbook": "", "scenario": "", "code": "", "reference": "", "test": "", "result": "", "implementation": "NOT_IMPLEMENTED", "run": "", "verification": "", "hardware": "NOT_VALIDATED_HARDWARE", "not_valid_for": ""})
             continue
         my = [r for r in manifest["runs"] if r["lab"] == lid]
         n_fail = sum(1 for r in my if r.get("checks_failed") or r["status"] == "SOLVER_FAILED")
@@ -113,6 +115,7 @@ def main() -> int:
             f"| {lid} | {md_escape(tb)} | {md_escape(exps)} | `{code}` | {', '.join('`' + p + '`' for p in test_files)} ({n_tests}) | `results/{lid}/` | "
             f"{len(my)} runs · 실패 {n_fail} · {' / '.join(statuses)} | 기준값 {n_ref_pass}/{n_ref} · 독립 {n_ind} · 회귀 {n_reg} | {md_escape('; '.join(nvf[:3]))} | {md_escape('; '.join(lab.claim_limits[:2]))} | {HW} |"
         )
+        ui_rows.append({"id": lid, "textbook": tb, "scenario": exps, "code": code, "reference": f"기준값 metric {n_ref}개 (교재·지침 수치는 test에 직접 기재)", "test": f"{', '.join(test_files)} ({n_tests})", "result": f"results/{lid}/ (run-all), docs/run_manifest.json", "implementation": "IMPLEMENTED", "run": f"{len(my)} runs · 실패 {n_fail} · {' / '.join(statuses)}", "verification": f"기준값 {n_ref_pass}/{n_ref} · 독립 {n_ind} · 회귀 {n_reg}", "hardware": "NOT_VALIDATED_HARDWARE", "not_valid_for": "; ".join(nvf[:3])})
         trace_json.append({"lab": lid, "implemented": True, "textbook": [t.title for t in lab.textbook], "experiments": [e.key for e in lab.experiments], "code": code, "tests": test_files, "n_tests": n_tests, "runs": len(my), "runs_failed": n_fail, "statuses": statuses, "reference_metrics": [n_ref_pass, n_ref], "independent_checks_passed": n_ind, "regression_checks": n_reg, "result_dir": f"results/{lid}/", "not_valid_for": nvf, "claim_limits": lab.claim_limits, "hardware_validation": "NOT_DONE", "runs_detail": exp_json})
     n_impl = sum(1 for x in trace_json if x.get("implemented"))
     head = (
@@ -129,7 +132,7 @@ def main() -> int:
         "| Lab | 실험 | preset | 모델 수준 | 헤드라인 | 판정 전체 | 기준값 | 독립 / 회귀 | 검증 실패 | 결과 파일 | not_valid_for (앞 3개) |\n|---|---|---|---|---|---|---|---|---|---|---|\n"
     )
     (docs / "TRACEABILITY.md").write_text(head + "\n".join(rows) + dhead + "\n".join(detail) + "\n", encoding="utf-8")
-    (docs / "traceability.json").write_text(json.dumps({"generated": now, "implemented": n_impl, "labs": trace_json}, ensure_ascii=False, indent=1), encoding="utf-8")
+    (docs / "traceability.json").write_text(json.dumps({"generated": now, "implemented": n_impl, "rows": ui_rows, "labs": trace_json}, ensure_ascii=False, indent=1), encoding="utf-8")
 
     # ---------------- errata (rendered from docs/errata.json, which is written by hand) ----------------
     ej = docs / "errata.json"
