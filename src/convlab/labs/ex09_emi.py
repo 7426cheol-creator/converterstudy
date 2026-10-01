@@ -793,12 +793,14 @@ def run_spv(v: dict) -> Result:
                  proved="CM 전류는 edge 동안 C_par·dv/dt 규모이고 링잉 동안 같은 주파수로 진동한다.", not_yet="실제 heatsink 용량은 분포돼 있고 전압 의존성이 있을 수 있다.")
     res.add_plot("p_e1d", "turn-off edge: diode 전류 (DC link로 돌아가는 DM source)", ["e1_i_d"], x_label="t", x_unit="s", y_label="i_d", y_unit="A", bands=b1, group="edge_off", level="C",
                  hlines=[{"y": p["I_L"], "label": "I_L"}],
-                 proved="부하전류가 diode 경로로 넘어가며 L_loop 전류가 링잉한다: DC-link 전류(DM source)의 고주파 성분.", not_yet="")
+                 proved="부하전류가 diode 경로로 넘어가며 L_loop 전류가 링잉한다: DC-link 전류(DM source)의 고주파 성분이다. 이 전류가 DC-link C·ESL과 선로로 나뉘는 비율은 2-node admittance 해와 분배식이 일치하는 check가 뒷받침한다.",
+                 not_yet="diode는 이상 소자라 역회복·순방향 회복 전류와 접합 용량의 전압 의존이 없다. 실제 SiC/Si diode의 recovery는 이 링잉의 진폭과 감쇠를 바꾸고 DM spectrum을 키울 수 있다(DPT 측정·소자 모델 필요). 링잉 주파수도 lumped L_loop·C_node 가정이다.")
     res.add_plot("p_e2", "turn-on edge: 스위치 노드 전압 (t = 0: 채널 전류 상승 시작)", ["e2_v_n"], x_label="t", x_unit="s", y_label="v_n", y_unit="V", bands=b2, group="edge_on", level="C",
                  proved="채널 전류가 부하전류를 넘어서야 diode가 꺼지고 노드가 방전된다. turn-on dv/dt는 gate(방전 전류)가 정한다.", not_yet="역회복 전류 spike는 모델에 없다.")
     res.add_plot("p_e2i", "turn-on edge: 채널 전류와 diode 전류", ["e2_i_ch", "e2_i_d"], x_label="t", x_unit="s", y_label="전류", y_unit="A", bands=b2, group="edge_on", level="C",
                  hlines=[{"y": p["I_L"], "label": "I_L"}],
-                 proved="채널 전류가 오르는 동안 diode 전류가 L_loop를 통해 줄고, 채널이 I_L + I_dis를 흘리는 동안 노드가 방전된다.", not_yet="")
+                 proved="채널 전류가 오르는 동안 diode 전류가 L_loop를 통해 줄고, 채널이 I_L + I_dis를 흘리는 동안 노드가 방전된다. 이 전류 분할이 상태식과 에너지적으로 일관된다는 것은 cell 에너지 장부(입력·출력·손실·저장 에너지 잔차) check가 뒷받침한다.",
+                 not_yet="turn-on에서 가장 큰 DM·손실 원인인 diode 역회복 전류 spike가 없다. 채널 전류는 합성 ramp라 gate 전압·Miller plateau·온도에 따른 변화도 없다. 따라서 turn-on 손실과 고주파 spectrum은 실제보다 작게 나올 수 있다(SCREEN 수준).")
     res.circuit = {"diagram": cell_circuit({**v, **p}).to_json(), "intervals": b1, "plot_group": "edge_off"}
     res.tables.append(Table("t_bands", "대역별 최대 proxy (relative)", ["대역", "CM [dBµV]", "DM [dBµV]"], [[f"{lo / 1e6:g}–{hi / 1e6:g} MHz", a[f"cm_{lo / 1e6:g}_{hi / 1e6:g}"], a[f"dm_{lo / 1e6:g}_{hi / 1e6:g}"]] for lo, hi in BANDS], note=PROXY_NOTE))
     res.verdict("NOT_EVALUABLE", "EMI compliance는 판정 불가 — receiver·규격 LISN·detector·limit이 없는 relative conducted-noise proxy다. 모델 수치 검증은 통과.")
