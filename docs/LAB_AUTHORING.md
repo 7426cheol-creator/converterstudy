@@ -53,7 +53,7 @@ lab module first and propose promotion.
 ## Result content (what the UI shows)
 
 - `Metric(key, label, value, unit, ref=, ref_label=, tol=, basis=, note=)` — basis says per-device/total/RMS/window.
-- `Plot(..., proved=..., not_yet=...)` — every expert plot states in Korean what it proved and what it has not.
+- `Plot(..., proved=..., not_yet=...)` — every plot states in Korean what it proved and what it has not. Both are required: `convlab run-all` reports an empty one as a contract issue and exits 1 (CI fails).
   Time plots in the same `group` share the cursor; `bands` (state intervals) link to circuit `modes`.
 - `Check(name, status, value, unit, threshold, path=, independent=, detail=)` for verification.
 - `res.verdict(code, why)`; `res.assumptions`, `res.not_valid_for`, `res.interpretation` (Korean, "왜 그런가").
