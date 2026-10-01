@@ -209,7 +209,7 @@ def run_matrix(v: dict) -> Result:
                  proved="반복은 ρ < 1일 때 기하급수로 수렴한다: 오차가 매번 약 ρ배.", not_yet="선형 α 모델이다. 비선형 손실 곡선에서는 국소 기울기로 ρ를 다시 계산한다.")
     if stable:
         res.add_plot("p_err", "반복 오차와 spectral radius", ["it_err", "it_rho"], x_label="반복 k", x_unit="", y_label="오차", y_unit="K", kind="xy", log_y=True, level="A",
-                     proved=f"오차 감소율이 되먹임 행렬의 spectral radius {rho:.4g}와 같다.", not_yet="")
+                     proved=f"오차 감소율이 되먹임 행렬의 spectral radius {rho:.4g}와 같다.", not_yet="오차 기울기는 ρ^k 안내선과 겹치고 수렴값은 선형 풀이와 1e-10 이내로 일치한다. 상수 되먹임 행렬(선형 α)의 수렴률이라 비선형 손실 곡선에서는 해 근처의 국소 기울기로 ρ를 다시 계산해야 하며, 1e-16 근처의 평탄부는 부동소수점 한계다.")
     # independent formulation: steady state of the physical network with loss feedback at the junctions.
     # The passive T-network realizes Z only for 0 < Z12 < min(Z11, Z22); otherwise it is not built.
     physical = 0.0 < Z[0, 1] < min(Z[0, 0], Z[1, 1])
@@ -780,7 +780,7 @@ def run_mission(v: dict) -> Result:
                  proved="같은 mission에서도 온도 의존 손실을 넣으면 고온 구간의 T_j와 사이클 진폭이 커진다. 냉각수 warm-up·주차 구간이 평균 온도를 바꾼다.",
                  not_yet="합성 mission·합성 열망이다. 실제 주행 빈도·부하 분포·수명 모델은 없다.")
     res.add_plot("p_P", "손실 trace: 손실만 보는 관점 vs 전열 연성", ["P1c", "P1u"], y_label="P", y_unit="W", bands=bands, level="B", group="ms", vlines=vl,
-                 proved="손실만 보면 온도에 따른 손실 증가를 놓친다.", not_yet="")
+                 proved="손실만 보면 온도에 따른 손실 증가를 놓친다.", not_yet="연성·고정 손실 trace는 같은 물리 망의 정확 적분 출력이며 연성 mission은 열 원장(1e-6)으로 확인했다. 손실은 부하 배율 × P₀[1 + α(T_j − T_ref)]의 합성 식이라 전류·전압·스위칭 주파수에 따른 전도/스위칭 손실 분리가 없다 — 실제 mission 손실은 사건 기반 loss map(FL03)으로 다시 계산해야 한다.")
     edges = np.array([0, 2, 5, 10, 15, 20, 30, 50, 80, 120.0])
     hs = []
     for tag, cyc, lab, ok in (("c", cyc_c, "연성", ok_c), ("u", cyc_u, "비연성", ok_u)):
@@ -795,7 +795,7 @@ def run_mission(v: dict) -> Result:
         xs, ys, _ = _hist_steps([c[1] for c in cyc_ref], [c[2] for c in cyc_ref], medges)
         res.add_series("hTm", f"T_mean별 사이클 수 ({lab_ref})", "cycles", xs, ys)
         res.add_plot("p_hTm", "사이클 평균 온도 T_mean histogram", ["hTm"], x_label="T_mean", x_unit="°C", y_label="사이클", y_unit="cycles", kind="xy", level="B",
-                     proved="같은 ΔT라도 평균 온도가 다르면 손상 속도가 다를 수 있어 두 축을 따로 센다.", not_yet="")
+                     proved="같은 ΔT라도 평균 온도가 다르면 손상 속도가 다를 수 있어 두 축을 따로 센다.", not_yet="사이클은 ASTM E1049 예제를 재현하는 rainflow로 세었고 사이클 합 = (반전점 수 − 1)/2를 확인했다. 평균 온도만 세고 고온 유지 시간(dwell)·가열 속도는 세지 않았으며, 이 histogram을 수명으로 바꾸려면 package별로 보정된 power cycling 모델이 필요하다(calibrated 수명은 MISSING_INPUT).")
     if Dm.size:
         xs, ys, _ = _hist_steps(Dm, np.ones_like(Dm), np.linspace(min(0.5, float(Dm.min())), max(1.5, float(Dm.max()) * 1.05), 15))
         res.add_series("hD", f"상대 손상 proxy 분포 ({Dm.size}/{N})", "samples", xs, ys)
