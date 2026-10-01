@@ -97,6 +97,20 @@ def test_switching_operating_points(td):
     assert {"CANDIDATE_FHA_ONLY", "FAIL_CONSTRAINT", "SCREEN_ONLY", "NOT_EVALUABLE"} <= codes
 
 
+def test_reported_11kW_point_really_gives_11kW(td):
+    # On a slope of about -1.6 kW/Hz the midpoint of a 1 Hz bracket was 11.63 kW (+5.7 %), and the reported
+    # currents and capacitor peaks belonged to that power (found by the Octave cross-check). The point is now
+    # refined until the power is within 0.1 %; Octave's exact 11 kW point is 148004.862 Hz with C peaks
+    # 817.5 V and 771.6 V (matlab/xc_cllc_*.m, ode45 + Newton shooting written from the E05 state equations).
+    assert metric(td, "P_sw_hi") == pytest.approx(11000.0, rel=1e-3)
+    assert metric(td, "f_sw_hi") == pytest.approx(148004.862, abs=0.5)
+    assert metric(td, "vC1_pk") == pytest.approx(817.5, abs=0.1)
+    assert metric(td, "vC2_pk") == pytest.approx(771.6, abs=0.1)
+    # and it is almost neutrally stable in the lossless model: Floquet |lambda| about 0.99998
+    assert 0.9999 < metric(td, "rho_sw_hi") < 1.0
+    assert any(v["code"] == "MARGINAL" and "중립 안정" in v["why"] for v in td["verdicts"])
+
+
 def test_losses_reduce_the_sensitivity():
     lossy = run("time_domain", "lossy")
     assert 147.0e3 < metric(lossy, "f_sw_hi") < 148.0e3

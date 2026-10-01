@@ -15,6 +15,7 @@ from __future__ import annotations
 import math
 
 import numpy as np
+from scipy.optimize import brentq
 
 from ..engine.switched import simulate
 from ..model.labspec import Experiment, Lab, Prediction, Question, TextbookRef
@@ -426,10 +427,11 @@ def _td_point(tank: Tank, Vlink: float, f: float, n: float, Vbat: float, P: floa
 
 
 def _td_search(tank, Vlink, n, Vbat, P, f0, direction, f_lo, f_hi, max_steps=60):
-    """Walk from f0 along ``direction`` (+1/-1) by continuation until the switching power crosses P, then
-    bisect to 1 Hz.  Each point is warm-started (chord Newton) from the nearest converged orbit; a failed
-    step is retried with a quarter of the step (the power can fall by kW per Hz close to resonance).
-    Returns (f or None, reason, evaluations)."""
+    """Walk from f0 along ``direction`` (+1/-1) by continuation until the switching power crosses P, bisect
+    to 1 Hz, then refine with Brent's method until the power is within 0.1 % of P.  Each point is
+    warm-started (chord Newton) from the nearest converged orbit; a failed step is retried with a quarter of
+    the step (the power can fall by kW per Hz close to resonance, so a 1 Hz bracket midpoint can be several
+    per cent off P - found by the Octave cross-check).  Returns (f or None, reason, evaluations)."""
     start = _td_cold(tank, Vlink, f0, n, Vbat, P)
     if start is None:
         return None, "시작점 주기해 실패", []
@@ -470,7 +472,22 @@ def _td_search(tank, Vlink, n, Vbat, P, f0, direction, f_lo, f_hi, max_steps=60)
                     b = m
                 else:
                     a = m
-            return 0.5 * (a.sys.fs + b.sys.fs), "", ev
+            # Brent on P(f) - P inside the 1 Hz bracket, each evaluation warm-started from the bracket end a
+            best = {"pt": a if abs(a.P - P) <= abs(b.P - P) else b}
+
+            def g(f: float) -> float:
+                m = advance(a, f)
+                if m is None:
+                    raise RuntimeError(f)
+                if abs(m.P - P) < abs(best["pt"].P - P):
+                    best["pt"] = m
+                return m.P - P
+
+            try:
+                f_root = brentq(g, a.sys.fs, b.sys.fs, xtol=1e-4, rtol=1e-12, maxiter=60)
+            except (RuntimeError, ValueError):
+                f_root = best["pt"].sys.fs
+            return f_root, "", ev
         if f in (f_lo, f_hi):
             return None, f"범위 끝 {f / 1e3:.0f} kHz까지 {P / 1e3:g} kW에 도달하지 않음 (P = {cur.P / 1e3:.2f} kW)", ev
         prev = cur
@@ -522,17 +539,23 @@ def run_time_domain(v: dict) -> Result:
                 if pp is not None and pm is not None:
                     sens = (pp.P - pm.P) / (2 * d)
                     break
-            op_rows.append([f"{name} {Vbat:g}/{Vlink:g}", branch, f"{r['f'] / 1e3:.3f} kHz", f"{f_sw / 1e3:.3f} kHz", f"{s2['I1_rms']:.2f} A", f"{sens * 1e3 / 1e3:+.1f} kW/kHz", ZVS_KO[zs["status"]]])
+            rho2 = float(per2.rho)
+            n_decay = -1.0 / math.log(rho2) if 0.0 < rho2 < 1.0 else float("inf")
+            op_rows.append([f"{name} {Vbat:g}/{Vlink:g}", branch, f"{r['f'] / 1e3:.3f} kHz", f"{f_sw:.3f} Hz", f"{s2['P_rect'] / 1e3:.4f} kW", f"{s2['I1_rms']:.2f} A", f"{sens * 1e3 / 1e3:+.1f} kW/kHz", f"{rho2:.6f}", ZVS_KO[zs["status"]]])
             if name == "고전압":
                 tag = "lo" if r["slope_per_Hz"] > 0 else "hi"
-                res.add_metric(f"f_sw_{tag}", f"고전압 {branch} 스위칭 11 kW 주파수", f_sw, "Hz", basis=f"FHA {r['f'] / 1e3:.3f} kHz")
+                res.add_metric(f"f_sw_{tag}", f"고전압 {branch} 스위칭 11 kW 주파수", f_sw, "Hz", basis=f"FHA {r['f'] / 1e3:.3f} kHz; 1 Hz 이분 후 Brent로 |P − {P / 1e3:g} kW| ≤ 0.1 %")
+                res.add_metric(f"P_sw_{tag}", "그 주파수에서 다시 푼 스위칭 전력", s2["P_rect"], "W", ref=P, ref_label=f"목표 {P / 1e3:g} kW", tol=1e-3, basis="탐색 정밀도 확인 (1 Hz 구간 중점만 쓰면 이 경사에서 수 % 차이)")
                 res.add_metric(f"sens_{tag}", f"고전압 {branch} dP/df (스위칭)", sens * 1e3, "W/kHz", basis="±2 Hz 중앙차분 (연속 추적)")
+                res.add_metric(f"rho_sw_{tag}", f"고전압 {branch} 동작점의 Floquet |λ|max", rho2, "", basis=f"교란이 1/e로 줄어드는 데 약 {n_decay:.0f}주기" if math.isfinite(n_decay) else "감쇠하지 않음")
                 if abs(sens) * 1e3 > 20 * P / 100:  # more than 20 % of P per kHz
-                    verdicts.append(("MARGINAL", f"고전압 {branch} 동작점 {f_sw / 1e3:.3f} kHz: dP/df = {sens:+.0f} W/Hz — 10 Hz 오차가 {abs(sens) * 10 / P * 100:.1f} % 전력 오차"))
+                    verdicts.append(("MARGINAL", f"고전압 {branch} 동작점 {f_sw / 1e3:.4f} kHz: dP/df = {sens:+.0f} W/Hz — 10 Hz 오차가 {abs(sens) * 10 / P * 100:.1f} % 전력 오차"))
+                if rho2 > 0.9999:
+                    verdicts.append(("MARGINAL", f"고전압 {branch} 동작점은 거의 중립 안정이다: Floquet |λ|max = {rho2:.7f}, 교란이 1/e로 줄어드는 데 약 {n_decay:.0f}주기 (무손실 이상 모델)"))
     res.tables.append(Table("t_td", "FHA 해 주파수에서의 스위칭 결과 (강한 link·배터리, 이상 소자)", ["corner", "FHA 해", "branch", "스위칭 전력", "I₁,rms", "정류 off", "Floquet |λ|max"], rows,
                             note="FHA는 이 주파수에서 11 kW를 예측한다. 양쪽 포트가 강한 전압원이면 전력은 작은 위상 차로 정해져 FHA의 기본파 위상 가정 오차가 큰 전력 오차가 된다."))
-    res.tables.append(Table("t_op", "스위칭 모델에서 11 kW를 주는 주파수 (같은 branch를 따라 탐색)", ["corner", "branch", "FHA 해", "스위칭 동작점", "I₁,rms", "dP/df", "ZVS screen"], op_rows,
-                            note=f"탐색: FHA 해에서 출발해 전력 오차를 줄이는 방향으로 걷고 교차 구간을 1 Hz까지 이분. ZVS는 합성 C_oss·t_d = {v['td'] * 1e9:g} ns screen (SCREEN_ONLY)."))
+    res.tables.append(Table("t_op", "스위칭 모델에서 11 kW를 주는 주파수 (같은 branch를 따라 탐색)", ["corner", "branch", "FHA 해", "스위칭 동작점", "그 점의 전력", "I₁,rms", "dP/df", "Floquet |λ|max", "ZVS screen"], op_rows,
+                            note=f"탐색: FHA 해에서 출발해 전력 오차를 줄이는 방향으로 걷고, 교차 구간을 1 Hz까지 이분한 뒤 Brent법으로 |P − {P / 1e3:g} kW| ≤ 0.1 %까지 좁힌다 (경사가 kW/Hz이면 1 Hz 구간의 중점은 수 % 틀린다). ZVS는 합성 C_oss·t_d = {v['td'] * 1e9:g} ns screen (SCREEN_ONLY)."))
     # power curve at the high corner: FHA vs switching
     Vbat, Vlink = v["Vbat_hi"], v["Vlink_hi"]
     g_req = n * Vbat / Vlink

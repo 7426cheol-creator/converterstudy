@@ -84,7 +84,7 @@ for c = 1:2
   for j = 1:numel(fc)
     q = local_point(p, Vl, Vb, fc(j), [], true);
     row = local_row(td, sprintf('%g/%g', Vb, Vl), sprintf('%.3f kHz', fc(j) / 1e3));
-    kw = local_num(row{4}, '([0-9]+\.[0-9]+) kW');
+    kw = local_num(row{xc_col(d, 't_td', '스위칭 전력')}, '([0-9]+\.[0-9]+) kW');
     rows{end + 1} = xc_row(sprintf('%sP_%g_%g', tag, Vb, Vl), d, sprintf('battery power at the %g/%g V FHA root (%.3f kHz), table t_td', Vb, Vl, fc(j) / 1e3), 'W', ...
       kw * 1e3, q.sum.P_rect, 5 + rel * kw * 1e3, 'abs', [m0 '; table prints kW with 2 decimals'], q.t); %#ok<AGROW>
     rows = [rows, local_table_rows(d, tag, sprintf('%g_%g', Vb, Vl), row, q, m0)]; %#ok<AGROW>
@@ -102,14 +102,16 @@ rows{end + 1} = xc_row([tag 'vC1_pk_fsw'], d, 'C1 voltage peak at the exported 1
 rows{end + 1} = xc_row([tag 'vC2_pk_fsw'], d, 'C2'' voltage peak (primary-referred) at the exported 11 kW frequency', 'V', ...
   xc_get(d, 'metric', 'vC2_pk'), qs.sum.vC2_pk, rel, 'rel', m1, t_w); %#ok<AGROW>
 orow = local_row(op, '920/850', sprintf('%.3f kHz', fr(2) / 1e3));   % row of the upper-branch root
-i1 = local_num(orow{5}, '([0-9]+\.[0-9]+) A');
+i1 = local_num(orow{xc_col(d, 't_op', 'I₁,rms')}, '([0-9]+\.[0-9]+) A');
 rows{end + 1} = xc_row([tag 'I1rms_fsw'], d, 'I1 rms at the exported 11 kW frequency, table t_op', 'A', ...
   i1, qs.sum.I1_rms, 0.005 + rel * i1, 'abs', [m1 '; table prints 2 decimals'], t_w); %#ok<AGROW>
 
 % slope by the app's own definition: (P(f + 2 Hz) - P(f - 2 Hz)) / 4 Hz, warm starts
 t0 = tic;
-qp = local_point(p, Vlink, Vbat, fsw + 2, qs, false);
-qm = local_point(p, Vlink, Vbat, fsw - 2, qs, false);
+% continuation, not a direct jump: above the 11 kW point the power falls by ~1.7 kW per Hz and a 2 Hz jump can
+% leave Newton's basin (as the app's own continuation does, with step reduction)
+qp = local_walk(p, Vlink, Vbat, qs, fsw + 2);
+qm = local_walk(p, Vlink, Vbat, qs, fsw - 2);
 sens = (qp.sum.P_rect - qm.sum.P_rect) / 4;                % W/Hz
 t_s = toc(t0);
 tol_s = rel * (abs(qp.sum.P_rect) + abs(qm.sum.P_rect)) / 4 * 1e3;
@@ -117,14 +119,14 @@ rows{end + 1} = xc_row([tag 'sens_fsw'], d, 'dP/df at the 11 kW point, +-2 Hz ce
   xc_get(d, 'metric', 'sens_hi'), sens * 1e3, tol_s, 'abs', [m1 '; tolerance from the two powers (1e-5 rel each)'], t_s); %#ok<AGROW>
 % power at the exported frequency against the target, within the app's bisection half-width
 rows{end + 1} = xc_row([tag 'P_at_fsw'], d, sprintf('battery power at the exported f_sw_hi (target %g W)', P), 'W', ...
-  P, qs.sum.P_rect, 0.5 * abs(sens), 'abs', [m1 '; tolerance = 0.5 Hz (app bisection half-width) x |dP/df|'], t_w, 'app target power (FL10 input P)'); %#ok<AGROW>
+  P, qs.sum.P_rect, 1e-3 * P + rel * P, 'abs', [m1 '; the app refines this point until |P - target| <= 0.1 % (Brent after a 1 Hz bisection)'], t_w, 'app target power (FL10 input P)'); %#ok<AGROW>
 
 % this model's own 11 kW frequency on the same branch
 t0 = tic;
 [f_star, q_star] = local_root(p, Vlink, Vbat, qs, fsw, @(q) q.sum.P_rect - P, 0.25);
 t_r = toc(t0);
 rows{end + 1} = xc_row([tag 'f_11kW'], d, sprintf('frequency of %g W on the upper branch (this model: P = %.3f W there)', P, q_star.sum.P_rect), 'Hz', ...
-  fsw, f_star, 0.5 + 1e-4, 'abs', [m0 '; bracketing root search to 1e-4 Hz; app bisects to 1 Hz'], t_r); %#ok<AGROW>
+  fsw, f_star, 0.05, 'abs', [m0 '; bracketing root search to 1e-4 Hz; the app refines to |P - target| <= 0.1 %. Tolerance: near-neutral Floquet |lambda| ~ 0.99998 can amplify the 1e-8 shooting residual ~6e4x, i.e. ~7 W or ~4 mHz at 1.7 kW/Hz; 0.05 Hz leaves a 10x margin'], t_r); %#ok<AGROW>
 end
 
 % ======================================================================
@@ -329,9 +331,9 @@ end
 function rows = local_table_rows(d, tag, name, row, q, m0)
 % I1 rms, rectifier off share and Floquet |lambda|max printed in table t_td
 rows = {};
-i1 = local_num(row{5}, '^([0-9]+\.[0-9]+) A');
-off = local_num(row{6}, '([0-9]+\.[0-9]+) %') / 100;
-rho = str2double(row{7});
+i1 = local_num(row{xc_col(d, 't_td', 'I₁,rms')}, '^([0-9]+\.[0-9]+) A');
+off = local_num(row{xc_col(d, 't_td', '정류 off')}, '([0-9]+\.[0-9]+) %') / 100;
+rho = str2double(row{xc_col(d, 't_td', 'Floquet |λ|max')});
 rows{end + 1} = xc_row(sprintf('%sI1rms_%s', tag, name), d, sprintf('I1 rms (table t_td, %s)', row{2}), 'A', ...
   i1, q.sum.I1_rms, 0.005 + 1e-5 * i1, 'abs', [m0 '; table prints 2 decimals'], q.t);
 rows{end + 1} = xc_row(sprintf('%soff_%s', tag, name), d, sprintf('rectifier off share (table t_td, %s)', row{2}), '', ...
