@@ -244,8 +244,10 @@ def run_switching(v: dict) -> Result:
                  proved="다이오드 도통/차단을 guard event로 정확히 찾고, off 구간에는 i₂ = 0 제약으로 L_r+L_m이 함께 공진한다.",
                  not_yet="dead time·C_oss·SR 타이밍 없음 (이상 스위치).")
     res.add_plot("p_v", "전압: 도통 중 v_m = ±n·V_o로 clamp, off 구간에는 떠 있다", ["v1", "vm", "v2"], y_label="전압", y_unit="V", bands=bands, group="llc", level="C",
-                 proved="정류기 입력 노드가 off 구간에 clamp 사이에서 떠 있음을 보인다 (floating node).", not_yet="")
-    res.add_plot("p_c", "C_r 전압과 출력 전압", ["vC1", "vo"], y_label="전압", y_unit="V", bands=bands, group="llc", level="C", proved="", not_yet="")
+                 proved="정류기 입력 노드가 off 구간에 clamp 사이에서 떠 있음을 보인다 (floating node).", not_yet="정류기 접합 용량이 없는 이상 다이오드라서, 실제로는 off 구간의 떠 있는 노드가 정류기 용량과 공진하며 링잉한다. 이 그래프는 그 링잉을 보이지 않는다.")
+    res.add_plot("p_c", "C_r 전압과 출력 전압", ["vC1", "vo"], y_label="전압", y_unit="V", bands=bands, group="llc", level="C",
+                 proved="같은 정확 주기해에서 C_r 전압의 swing과 출력 전압을 읽는다. C_r 전압 peak는 부품 전압 정격 확인의 입력이 된다.",
+                 not_yet="C_r의 ESR·온도 계수·전압 의존 용량은 없고, 출력 리플은 이상 C와 저항 부하 기준이다.")
     # checks
     led = energy_ledger(tr, sysl, 0.0, T, ["p_in"], ["p_load"], ["p_R"], rated_power=max(abs(s["P_in"]), 1.0))
     res.add_check(ledger_check(led))
@@ -314,7 +316,9 @@ def run_curve(v: dict) -> Result:
     res.add_series("ie", "상승 edge 전류 i_r(0)", "A", [float(Fs[i]) for i in ok], [ie[i] for i in ok], style="points")
     res.add_plot("p_curve", f"gain 곡선: 스위칭 해 vs FHA (Q = {v['Q']:g})", ["g_td", "g_fha"], x_label="F = f/f_r", x_unit="", y_label="gain", y_unit="", kind="xy", level="C + A", vlines=[{"x": 1.0, "label": "f_r"}],
                  proved="각 주파수에서 정류기 포함 주기해(shooting)를 구해 FHA 곡선과 겹쳤다.", not_yet="dead time·C_oss·손실이 없는 이상 모델. 실제 gain peak 위치는 이 요소들로 더 움직인다.")
-    res.add_plot("p_off", "정류 off 구간 비율: f_r 아래에서 커진다", ["off"], x_label="F", x_unit="", y_label="비율", y_unit="", kind="xy", level="C", proved="", not_yet="")
+    res.add_plot("p_off", "정류 off 구간 비율: f_r 아래에서 커진다", ["off"], x_label="F", x_unit="", y_label="비율", y_unit="", kind="xy", level="C",
+                 proved="주파수마다 정류기 포함 주기해에서 off 구간(i₂ = 0)의 비율을 직접 쟀다. 이 비율이 커지는 f_r 아래 영역이 FHA(연속 도통 가정)와 스위칭 gain이 갈라지는 곳이다.",
+                 not_yet="off 비율은 이상 다이오드 기준이다. 실제 정류기 용량과 SR 타이밍은 off 구간의 공진과 길이를 바꾼다.")
     res.add_plot("p_edge", "1차 edge 전류: 음수여야 ZVS 방향", ["ie"], x_label="F", x_unit="", y_label="i_r(0)", y_unit="A", kind="xy", level="C", hlines=[{"y": 0.0, "label": "0"}, {"y": -2 * _qoss(v) / v["td"], "label": "전하 screen 최소 전류"}],
                  proved="edge 전류 부호와 크기를 주파수별로 보였다.", not_yet="SCREEN_ONLY — 실제 ZVS는 노드 용량 모델(EX02) 필요.")
     res.tables.append(Table("t_curve", "주파수별 비교", ["F", "FHA |H|", "스위칭 gain", "차이", "정류 off", "edge 전류", "FHA 입력"], rows))
@@ -376,7 +380,7 @@ def run_zvs(v: dict) -> Result:
     res.add_plot("p_ie", f"ZVS 방향 edge 전류 −i_r(0) vs 부하 (F = {v['F']:g})", [f"ie_{Lm * 1e6:g}" for Lm in Lms], x_label="Q (부하)", x_unit="", y_label="−i_r(0)", y_unit="A", kind="xy", log_x=True, level="C",
                  hlines=[{"y": i_min, "label": f"전하 screen 최소 {i_min:.2f} A"}, {"y": 0.0, "label": "0"}],
                  proved="경부하에서 edge 전류는 여자전류 peak(≈ nV_oT/(4L_m))로 수렴하고 부하와 거의 무관하다.", not_yet="SCREEN_ONLY: 전류를 edge 값으로 고정한 전하 비교.")
-    res.add_plot("p_ir", "공진 전류 RMS vs 부하: L_m을 줄이면 순환전류 비용", [f"ir_{Lm * 1e6:g}" for Lm in Lms], x_label="Q (부하)", x_unit="", y_label="I_r,rms", y_unit="A", kind="xy", log_x=True, level="C", proved="", not_yet="손실은 계산하지 않았다 (R_DS(on)·자성체 데이터 없음).")
+    res.add_plot("p_ir", "공진 전류 RMS vs 부하: L_m을 줄이면 순환전류 비용", [f"ir_{Lm * 1e6:g}" for Lm in Lms], x_label="Q (부하)", x_unit="", y_label="I_r,rms", y_unit="A", kind="xy", log_x=True, level="C", proved="L_m별로 같은 부하(Q) 범위의 공진 전류 RMS를 정류기 포함 주기해로 계산했다. L_m을 줄이면 경부하에서도 RMS가 크게 남는다(여자 순환전류).", not_yet="손실은 계산하지 않았다 (R_DS(on)·자성체 데이터 없음).")
     res.tables.append(Table("t_zvs", "L_m × 부하별 screen", ["L_m", "Q", "P", "edge 전류", "FHA 입력", "screen", "I_r,rms"], rows,
                             note=f"필요 전하 2Q_oss({v['Vin']:g} V) = {2 * _qoss(v) * 1e9:.1f} nC, t_d = {v['td'] * 1e9:g} ns → 최소 {i_min:.2f} A (합성값). FHA inductive와 screen 통과는 다른 판정이다."))
     res.verdict("SCREEN_ONLY", "ZVS는 edge 전류 부호·전하 screen (합성 C_oss, 일정 전류 가정)")

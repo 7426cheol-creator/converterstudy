@@ -619,7 +619,7 @@ def run_buck_ripple(v: dict) -> Result:
                  proved="용량성 성분(전류의 적분)과 ESR 성분(전류 자체)의 극값 시각이 달라, 파형 합의 pp가 단순 합보다 작다는 것을 정확 해로 보였다.",
                  not_yet="ESL(스위칭 edge의 spike)·커패시터 온도·측정 대역폭은 포함하지 않았다. 측정 리플은 probe 방식에 크게 의존한다.")
     res.add_plot("p_ic", "커패시터 전류", ["iC"], y_label="i_C", y_unit="A", bands=bands, group="rp", level="C",
-                 proved="i_C는 인덕터 리플에서 부하전류 변동을 뺀 삼각파다.", not_yet="")
+                 proved="i_C는 인덕터 리플에서 부하전류 변동을 뺀 삼각파다.", not_yet="커패시터 RMS 전류로 발열·수명을 판단하려면 ESR(주파수·온도)과 ripple 정격 데이터가 필요하다. 스위칭 edge의 고주파 성분(ESL·배선 L의 spike)은 이상 스위치 모델에 없다.")
     res.circuit = {"diagram": _buck_circuit(v["rect"], v).to_json(), "intervals": bands, "plot_group": "rp"}
     res.verdict("PASS_WITHIN_MODEL", "리플 성분별 손계산과 정확 해 일치; 총 리플은 파형 합으로 판정")
     res.assumptions += ["ESR은 주파수 무관 상수, ESL 없음", "C는 이상 선형"]
@@ -830,7 +830,7 @@ def run_boost_rhpz(v: dict) -> Result:
                  proved="duty를 올린 직후 출력(주기평균)이 먼저 떨어졌다가 오르는 역응답을 스위칭 모델과 평균모델이 함께 보였다. 이것이 duty→v_o 경로의 RHP zero의 시간영역 모습이다.",
                  not_yet="폐루프 제어·전류모드·지연은 없다. 부하가 저항이 아니거나 DCM이면 영점 위치와 응답이 달라진다.")
     res.add_plot("p_step_i", "인덕터 전류는 즉시 증가를 시작한다", ["il_sw", "il_cyc", "il_avg"], x_label="step 이후 시간", y_label="i_L", y_unit="A", level="B+C", group="st", vlines=[{"x": 0.0, "label": "step"}],
-                 proved="duty→i_L 경로에는 RHP zero가 없어 전류는 처음부터 올바른 방향으로 움직인다.", not_yet="")
+                 proved="duty→i_L 경로에는 RHP zero가 없어 전류는 처음부터 올바른 방향으로 움직인다.", not_yet="전류가 즉시 오른다는 것이 전류모드 제어의 안정성을 보장하지는 않는다. 기울기 보상·샘플링 지연·센서 대역은 이 모델에 없다(FL06).")
     # Bode (A)
     freqs = np.geomspace(10, 200e3, 300)
     Dd = D0
@@ -846,7 +846,7 @@ def run_boost_rhpz(v: dict) -> Result:
                  vlines=[{"x": fz, "label": f"f_RHPZ {fz / 1e3:.2f} kHz"}, {"x": f0, "label": f"f_0 {f0:.0f} Hz"}],
                  proved="이상 CCM 평균모델의 소신호 전달함수에서 RHP zero 위치를 계산했다.", not_yet="ESR 영점·손실·지연·샘플링은 포함하지 않았다(FL06).")
     res.add_plot("p_bode_p", "위상: RHP zero는 크기를 올리면서 위상을 더 늦춘다", ["gvd_ph", "gid_ph"], x_label="f", x_unit="Hz", y_label="위상", y_unit="deg", kind="xy", log_x=True, group="bode",
-                 vlines=[{"x": fz, "label": "f_RHPZ"}], proved="G_vd는 −270°까지 내려가고(RHP zero), G_id는 LHP zero로 위상이 회복된다.", not_yet="")
+                 vlines=[{"x": fz, "label": "f_RHPZ"}], proved="G_vd는 −270°까지 내려가고(RHP zero), G_id는 LHP zero로 위상이 회복된다.", not_yet="이상 CCM 평균모델(A)의 위상이다. ESR 영점·손실 감쇠·PWM/샘플링 지연의 추가 위상은 없어서, 위상여유 설계에는 FL06의 지연 포함 모델이나 측정이 필요하다.")
     c = Circuit("boost", 640, 280, title="Boost")
     vi = c.add("vsource", "Vin", 60, 140, 90, "V_in", f"{Vin:g} V")
     li = c.add("inductor", "L", 170, 60, 0, "L", f"{L * 1e6:g} µH")

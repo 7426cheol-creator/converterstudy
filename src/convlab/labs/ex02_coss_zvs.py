@@ -361,7 +361,7 @@ def run_qe(v: dict) -> Result:
                  markers=[{"x": Vb, "y": Cs, "label": "Coss(V_bus)"}, {"x": Vb, "y": Qc / Vb, "label": "C_o(tr)"}, {"x": Vb, "y": 2 * Ec / Vb**2, "label": "C_o(er)"}],
                  proved="같은 소자에서도 미분용량·시간등가·에너지등가 커패시턴스가 서로 다르다는 것을 적분으로 보였다.", not_yet="합성 C(v)이며 특정 소자의 측정 곡선이 아니다. 온도·lot 편차 미포함.")
     res.add_plot("p_q", "전하: 전환시간을 정한다", ["Q", "Qlin"], x_label="V_DS", x_unit="V", y_label="Q", y_unit="C", kind="xy", level="A",
-                 proved="Coss 한 점 × V는 필요한 전하를 크게 과소평가한다 → dead time 과소 설계로 이어진다.", not_yet="")
+                 proved="Coss 한 점 × V는 필요한 전하를 크게 과소평가한다 → dead time 과소 설계로 이어진다.", not_yet="합성 C(v) = 2 nF/√(1 + v/40 V)의 적분이다. 실제 소자의 C_oss(v)·온도 의존·데이터시트 측정 조건은 MISSING_INPUT이며, 이 결론의 크기는 합성 소자에 한한다.")
     res.add_plot("p_e", "에너지: 저장에너지와 hard-switching 손실의 재료", ["E", "Elin"], x_label="V_DS", x_unit="V", y_label="E", y_unit="J", kind="xy", level="A",
                  proved="E_oss는 ∫v·C dv이며 한 점 ½CV²와 다르다.", not_yet="어떤 회로에서 이 에너지가 실제로 손실되는지는 회로 경로가 정한다(실험 2·3).")
     res.verdict("PASS_WITHIN_MODEL", "Q_oss·E_oss 닫힌 식이 독립 수치적분과 일치하고 교재 값을 재현")
@@ -426,7 +426,7 @@ def run_hb_cc(v: dict) -> Result:
     vv2 = [min(abs(I) * tt / (2 * Cs + Cpar), Vb) if I > 0 else 0.0 for tt in ts]
     res.add_series("v_node_pt", "v_node (Coss(V_bus) 한 점, 선형)", "V", ts.tolist(), vv2, dash=True)
     res.add_plot("p_v", "dead time 동안의 스위치 노드 전압", ["v_node", "v_node_pt"], y_label="v_node", y_unit="V", level="A", vlines=[{"x": td, "label": "t_d (turn-on)"}, {"x": t_full, "label": "도달 (비선형)"}],
-                 proved="비선형 C에서는 저전압 구간의 큰 C 때문에 초기 상승이 느리고, 한 점 선형 모델보다 늦게 도달한다.", not_yet="")
+                 proved="비선형 C에서는 저전압 구간의 큰 C 때문에 초기 상승이 느리고, 한 점 선형 모델보다 늦게 도달한다.", not_yet="정전류 가정의 전하 screen이다(SCREEN_ONLY). 전환 중 전류가 변하는 경로는 resonant_transition에서 따로 풀며, gate 동역학·링잉·역회복은 없다.")
     res.tables.append(
         Table(
             "t_dt",
@@ -633,7 +633,7 @@ def run_resonant(v: dict) -> Result:
                  proved="dead time 동안 실제로 변하는 전류로 노드를 움직여 turn-on 직전 V_DS를 사건 단위로 보고했다.",
                  not_yet="합성 C(v)·이상 diode clamp·즉시 채널 전환 가정의 D 수준 경향 결과다. 실제 소자 turn-on 파형·링잉·EMI는 아니다.")
     res.add_plot("p_ti", "인덕터 전류 (dead time 동안 변한다)", ["i"], y_label="i", y_unit="A", bands=bands, vlines=vl, group="tr", level="D", hlines=[{"y": 0.0, "label": "0 A"}],
-                 proved="정전류 가정이 깨지는 정도를 보여준다: v_x에 따라 전류가 늘거나 줄어든다.", not_yet="")
+                 proved="정전류 가정이 깨지는 정도를 보여준다: v_x에 따라 전류가 늘거나 줄어든다.", not_yet="인덕터와 합성 C(v) 노드만의 전환이다. 실제 소자의 gate turn-off 지연, 채널 전류의 tail, 배선 L의 링잉은 포함하지 않았다.")
     res.tables.append(Table("t_events", "사건 타임라인 (turn-off 명령 기준)", ["시각 [ns]", "사건", "값"], [[e[0] * 1e9, e[1], e[2]] for e in tr.events], note="명령·실제 gate-off·노드 이동·rail 도달·turn-on 명령·실제 turn-on을 구분한다."))
     res.circuit = {"diagram": hb_circuit(v).to_json(), "intervals": bands, "plot_group": "tr"}
     if cls in ("ZVS", "ZVS_LATE_RETURN", "NEAR_ZVS"):

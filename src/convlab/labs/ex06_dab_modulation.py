@@ -157,7 +157,7 @@ def run_general(v: dict) -> Result:
     res.add_plot("p_i", "인덕터 전류: SPS vs width candidate", ["i_sps", "i_c"], y_label="i_L", y_unit="A", bands=bands, group="g", level="C", window=(0.0, T),
                  proved=f"같은 {P:g} W에서 candidate가 RMS를 {(1 - wc.Irms / ws.Irms) * 100:.2f} %, peak를 {(1 - wc.Ipk / ws.Ipk) * 100:.2f} % 낮춘다(정확 구간 적분, 스위칭 해로 교차검증).",
                  not_yet="global optimum이 아니다(0.1 간격 격자 + 첫 φ 근). ZVS·전체 효율 개선은 입증하지 않았다 — commutation 단계(실험 2·3)와 손실 모델이 필요하다.")
-    res.add_plot("p_v", "bridge 전압: w₁ < π이면 zero interval이 생긴다", ["v1", "v2"], y_label="전압", y_unit="V", bands=bands, group="g", level="C", proved="b(θ;w,φ) 정의대로 3-level 1차 전압과 2-level 2차 전압을 만들었다.", not_yet="")
+    res.add_plot("p_v", "bridge 전압: w₁ < π이면 zero interval이 생긴다", ["v1", "v2"], y_label="전압", y_unit="V", bands=bands, group="g", level="C", proved="b(θ;w,φ) 정의대로 3-level 1차 전압과 2-level 2차 전압을 만들었다.", not_yet="이상 bridge 전압이다. dead time 동안의 전압 왜곡(전류 방향에 따라 다름)과 zero-state 선택(어느 leg로 0 V를 만드는가)의 commutation 영향은 SCREEN_ONLY 범위다.")
     res.add_plot("p_g", "leg별 게이트 패턴", ["gA", "gB", "gC", "gD"], y_label="leg 상태 (위 = 상측 ON)", y_unit="", bands=bands, group="g", level="C",
                  proved=f"zero-state 패턴 ‘{v['pattern']}’: 같은 bridge 전압이라도 leg별 전환 시점과 전류가 달라진다.", not_yet="dead time은 그림에 없다(실험 3·4).")
     res.circuit = {"diagram": dab_circuit(V1, _VL(v), f"n={v['n']:.4g}", L, None).to_json(), "intervals": bands, "plot_group": "g"}
@@ -434,7 +434,7 @@ def run_impl(v: dict) -> Result:
     res.add_series("m_splice", "사이클 평균 (이어붙임)", "A", [(k + 0.5) * T for k in range(N)], mean_b, style="points")
     res.add_plot("p_tr", "모드 전환의 DC offset: 전환 시점이 결과를 바꾼다", ["i_abrupt", "i_splice"], y_label="i_L", y_unit="A", level="C", vlines=[{"x": k_sw * T, "label": "전환"}],
                  proved="w/φ를 순간 변경하면 전류가 새 정상 궤적에서 벗어나 DC offset이 남는다. 전환 시점을 궤적이 만나는 edge로 고르면 offset이 줄어든다.", not_yet="자속(L_m) offset과 폐루프 scheduler는 포함하지 않았다.")
-    res.add_plot("p_mean", "사이클 평균 전류", ["m_abrupt", "m_splice"], y_label="평균 i_L", y_unit="A", level="C", hlines=[{"y": 0.0, "label": "0"}], proved="offset은 이상 L에서 사라지지 않는다 (R이 있으면 L/R 감쇠).", not_yet="")
+    res.add_plot("p_mean", "사이클 평균 전류", ["m_abrupt", "m_splice"], y_label="평균 i_L", y_unit="A", level="C", hlines=[{"y": 0.0, "label": "0"}], proved="offset은 이상 L에서 사라지지 않는다 (R이 있으면 L/R 감쇠).", not_yet="offset의 크기는 전환 순간의 위상에 의존한다. 실제 변압기의 자화 offset(포화)과 DC 차단 C는 모델에 없으며, 전환 순서를 설계한 scheduler는 구현하지 않았다.")
     res.add_check(ledger_check(energy_ledger(tr_a, sys_a, 0.0, N * T, ["p1"], ["p2"], ["pR"], rated_power=P), what="즉시 전환 창: "))
     res.verdict("PASS_WITHIN_MODEL", "timer 감도·양자화·최소 펄스·전환 offset을 계산 (이상 bridge)")
     res.assumptions += ["이상 1-step 감도 (dithering·폐루프 없음)", "전환은 bridge 전압 패턴의 즉시 교체", f"R = {R:g} Ω"]

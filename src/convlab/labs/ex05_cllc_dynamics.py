@@ -233,8 +233,8 @@ def run_identity(v: dict) -> Result:
         res.add_metric("f0", "운전점 (V_o = 목표)", f0, "Hz")
         series_from_traj(res, tr, {"i1": ("i₁", "A"), "i2": ("i₂′ (1차 환산)", "A"), "i2_act": ("i₂ 실제 = n·i₂′", "A"), "v2": ("v₂′", "V")}, per_segment=40)
         bands = bands_from(tr, 0.0, T)
-        res.add_plot("p_ref", "환산 전류와 실제 전류: 같은 파형, n배 차이", ["i2", "i2_act"], y_label="전류", y_unit="A", bands=bands, group="id", level="C", proved="상태는 1차 환산값이고 표시할 때만 실제값으로 바꾼다.", not_yet="")
-        res.add_plot("p_v2", "정류기 입력 v₂′: 도통 중 ±n·V_o, off 구간에는 떠 있다", ["v2", "i1"], y_label="값", y_unit="", bands=bands, group="id", level="C", proved="off 구간에서도 항등식이 성립한다 (i₂ = 0).", not_yet="")
+        res.add_plot("p_ref", "환산 전류와 실제 전류: 같은 파형, n배 차이", ["i2", "i2_act"], y_label="전류", y_unit="A", bands=bands, group="id", level="C", proved="상태는 1차 환산값이고 표시할 때만 실제값으로 바꾼다.", not_yet="n배 환산은 이상 변압기 기준이다. 누설의 실제 배치(1·2차 분할), 권선 capacitance, 자화 branch 위치는 환산 T 모델의 가정이며 실측 식별(EX04 identification)이 필요하다.")
+        res.add_plot("p_v2", "정류기 입력 v₂′: 도통 중 ±n·V_o, off 구간에는 떠 있다", ["v2", "i1"], y_label="값", y_unit="", bands=bands, group="id", level="C", proved="off 구간에서도 항등식이 성립한다 (i₂ = 0).", not_yet="off 구간의 떠 있는 전압은 정류기 접합 용량이 없는 이상 모델의 값이다. 실제로는 이 노드가 정류기 용량과 공진하며 링잉한다.")
         res.circuit = {"diagram": resonant_circuit("CLLC", v["Vlink"], f"{n:g}", tank, "FB").to_json(), "intervals": bands, "plot_group": "id"}
     res.verdict("PASS_WITHIN_MODEL", "상태식이 모든 모드에서 교재 에너지 항등식을 만족한다 (부호·환산 검산)")
     res.verdict("INFO", "항등식은 모델의 부호·환산을 검산할 뿐 시간영역 해의 정확도나 설계 통과를 뜻하지 않는다")
@@ -425,7 +425,7 @@ def run_gvf(v: dict) -> Result:
             res.add_metric("peak_op", "운전점 |G_vf| 공진 peak", float(np.abs(G[k_pk])), "V/kHz", basis=f"{fm[k_pk]:.0f} Hz")
     res.add_plot("p_mag", "|G_vf| = |Δv_o/Δf_s| — 정상 기울기(DC)보다 공진 peak가 훨씬 크다", mags, x_label="변조 주파수", x_unit="Hz", y_label="|G_vf|", y_unit="V/kHz", kind="xy", log_x=True, log_y=True, level="C",
                  proved="Poincaré map 선형화(event 시각 포함)로 branch별 G_vf를 구했다.", not_yet="PWM/계산 지연·샘플링 방식은 제어기 쪽에서 더한다 (폐루프 실험).")
-    res.add_plot("p_ph", "∠G_vf", phs, x_label="변조 주파수", x_unit="Hz", y_label="위상", y_unit="deg", kind="xy", log_x=True, level="C", proved="DC 위상 180°는 음의 기울기(주파수↑ → V_o↓)를 뜻한다.", not_yet="")
+    res.add_plot("p_ph", "∠G_vf", phs, x_label="변조 주파수", x_unit="Hz", y_label="위상", y_unit="deg", kind="xy", log_x=True, level="C", proved="DC 위상 180°는 음의 기울기(주파수↑ → V_o↓)를 뜻한다.", not_yet="FM 주입으로 검증한 sampled small-signal 응답이며 운전점 한 곳의 선형 근사다. 큰 신호(포화·branch 이동)와 센서·PWM 분해능은 포함하지 않는다.")
     res.tables.append(Table("t_gvf", "branch별 G_vf 요약", ["점", "G_vf(0) [V/kHz]", "정상 기울기 [V/kHz]", "|G_vf| peak", "peak/DC"], rows,
                             note="G_vf(0)과 정상 기울기는 서로 다른 계산(선형 map vs 별도 주기해 차분). 정상 기울기만으로는 공진 peak·위상을 알 수 없다."))
     # FM injection on the nonlinear model vs the linear prediction (operating point)
@@ -531,7 +531,9 @@ def run_closed_loop(v: dict) -> Result:
     res.add_series("fc", "주파수 명령 − f₀", "Hz", ts, [f - f0 for f in fcs])
     res.add_plot("p_vo", f"부하 계단 (R_L × {v['load_step']:g}, {k_step}주기째) 후 출력 전압 — 비선형 스위칭 폐루프", ["vo"], x_label="t", x_unit="s", y_label="v_o", y_unit="V", level="C", hlines=[{"y": v["Vref"], "label": "목표"}],
                  proved="PI(1주기 계산 지연·주파수 포화·조건부 적분)를 비선형 스위칭 모델에 직접 연결해 시뮬레이션했다.", not_yet="센서 필터·PWM 분해능·SR 없음.")
-    res.add_plot("p_fc", f"주파수 명령의 변화 f_s − f₀ (f₀ = {f0 / 1e3:.3f} kHz, 포화 {v['f_min'] / 1e3:g}–{v['f_max'] / 1e3:g} kHz)", ["fc"], x_label="t", x_unit="s", y_label="f_s − f₀", y_unit="Hz", level="C", hlines=[{"y": 0.0, "label": "0"}], proved="", not_yet="")
+    res.add_plot("p_fc", f"주파수 명령의 변화 f_s − f₀ (f₀ = {f0 / 1e3:.3f} kHz, 포화 {v['f_min'] / 1e3:g}–{v['f_max'] / 1e3:g} kHz)", ["fc"], x_label="t", x_unit="s", y_label="f_s − f₀", y_unit="Hz", level="C", hlines=[{"y": 0.0, "label": "0"}],
+                 proved="같은 폐루프 시뮬레이션의 PI 출력(주파수 명령)이다. 포화에 닿는지와 적분이 멈추는지(조건부 적분)를 v_o 응답과 함께 읽을 수 있다.",
+                 not_yet="주파수 명령은 연속값이다. 실제 타이머의 주파수 분해능, 변경 시점의 위상 연속성, SR 타이밍 갱신은 모델에 없다.")
     # small-signal validation of the closed-loop linear map: a separate 0.5 V reference step, short window
     Kv = int(v["val_cycles"])
     dref = -0.5
@@ -654,7 +656,9 @@ def run_startup(v: dict) -> Result:
     hlines = [{"y": ss["i1_pk"], "label": "정상 peak"}] if ss else []
     res.add_plot("p_start", f"빈 출력 C 기동: {v['f_start'] / 1e3:g} kHz에서 {ramp}주기 동안 {f0 / 1e3:.1f} kHz로 램프", ["i1pk"], x_label="t", x_unit="s", y_label="i₁ peak", y_unit="A", level="C", hlines=hlines,
                  proved="출력 C가 0 V면 정류기가 즉시 도통해 tank가 단락 부하를 본다 — 시작 주파수의 tank 임피던스만이 전류를 제한한다.", not_yet="precharge·burst 기동·전류 제한 없음.")
-    res.add_plot("p_start_vo", "기동 중 출력 전압", ["vo_up"], x_label="t", x_unit="s", y_label="v_o", y_unit="V", level="C", proved="", not_yet="")
+    res.add_plot("p_start_vo", "기동 중 출력 전압", ["vo_up"], x_label="t", x_unit="s", y_label="v_o", y_unit="V", level="C",
+                 proved="빈 출력 C 기동에서 주기별 v_o를 보인다. 공진 근처를 낮은 v_o로 지날 때 생기는 overshoot의 시점을 i₁ peak 그래프와 맞춰 볼 수 있다.",
+                 not_yet="개루프 주파수 램프이며 precharge·burst·전류 제한 기동은 없다. 출력 C와 부하는 합성 값이다.")
     # B. battery already connected (stiff): ramp down from f_start, then hold the end frequency
     sb = ResonantSystem(tank, v["Vlink"], v["f_start"], n, "FB", "stiff", Vo=v["Vref"], key="ex05b")
     xb = np.zeros(sb.ns)
@@ -675,7 +679,9 @@ def run_startup(v: dict) -> Result:
     res.add_plot("p_batt", f"배터리({v['Vref']:g} V) 연결: {v['f_start'] / 1e3:g} → {f_end_b / 1e3:g} kHz 하강 ({Kb}주기) 후 유지 — 전력", ["p_b"], x_label="t", x_unit="s", y_label="주기 평균 전력", y_unit="W", level="C",
                  hlines=[{"y": v["P"], "label": f"{v['P'] / 1e3:g} kW"}], group="batt",
                  proved="배터리가 이미 있으면 높은 주파수에서는 정류기가 거의 도통하지 않다가, 공진 근처에서 tank 전류가 쌓이며 전력이 목표를 크게 넘는다.", not_yet="전류 제한·soft-start 알고리즘 없음 (개루프).")
-    res.add_plot("p_batt_f", "주파수 명령", ["f_b"], x_label="t", x_unit="s", y_label="f_s", y_unit="Hz", level="C", group="batt", proved="", not_yet="")
+    res.add_plot("p_batt_f", "주파수 명령", ["f_b"], x_label="t", x_unit="s", y_label="f_s", y_unit="Hz", level="C", group="batt",
+                 proved="배터리 연결 기동에서 쓴 주파수 명령(하강 램프 후 유지)이다. 전력 그래프의 각 시점이 어떤 주파수에서 생겼는지 대응시킨다.",
+                 not_yet="개루프 명령이다. 전력·전류 제한을 넣은 soft-start 알고리즘은 구현하지 않았다.")
     p_max_b = max(pb)
     res.add_metric("p_b_max", "배터리 연결 기동 중 최대 주기 전력", p_max_b, "W", basis=f"끝 주파수 {f_end_b / 1e3:g} kHz 유지 포함")
     # C. reverse at the low corner: battery-side bridge driven, stiff link

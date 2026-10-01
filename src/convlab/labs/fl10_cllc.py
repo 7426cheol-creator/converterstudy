@@ -288,7 +288,7 @@ def run_branch(v: dict) -> Result:
     res.add_plot("p_roots", "배터리 전압에 따른 두 해: fold에서 만나고 그 위로는 해가 없다", ["f_lo", "f_hi"], x_label="V_bat", x_unit="V", y_label="f_s", y_unit="Hz", kind="xy", level="A",
                  vlines=[{"x": Vfold, "label": "fold"}] if Vfold else [],
                  proved="각 배터리 전압에서 필요 gain을 만족하는 inductive 해를 모두 찾았다.", not_yet="FHA 곡선의 성질 — 스위칭 모델에서 이 구조가 유지되는지는 ‘시간영역 검증’과 EX05에서 본다.")
-    res.add_plot("p_slope", "gain 기울기: 부호가 반대이고 fold에서 0이 된다 (제어 이득 소멸)", ["s_lo", "s_hi"], x_label="V_bat", x_unit="V", y_label="d|H|/df (1/kHz)", y_unit="", kind="xy", level="A", hlines=[{"y": 0.0, "label": "0"}], proved="", not_yet="정상 기울기는 G_vf(0)일 뿐 — 위상·공진극·지연은 EX05.")
+    res.add_plot("p_slope", "gain 기울기: 부호가 반대이고 fold에서 0이 된다 (제어 이득 소멸)", ["s_lo", "s_hi"], x_label="V_bat", x_unit="V", y_label="d|H|/df (1/kHz)", y_unit="", kind="xy", level="A", hlines=[{"y": 0.0, "label": "0"}], proved="배터리 전압마다 두 FHA 해의 gain 기울기를 ±10 Hz 중앙차분으로 계산했다. 두 branch의 부호가 반대이고 fold(두 해가 만나는 V_bat)에서 0이 된다.", not_yet="정상 기울기는 G_vf(0)일 뿐 — 위상·공진극·지연은 EX05.")
     # two command policies over a battery ramp up past the fold and back down
     ramp = [float(x) for x in np.linspace(v["Vbat_from"], v["Vbat_to"], 14)] + [float(x) for x in np.linspace(v["Vbat_to"], v["Vbat_from"], 14)[1:]]
     first_cmd, lock_cmd, lock_last = [], [], None
@@ -557,8 +557,8 @@ def run_time_domain(v: dict) -> Result:
         tr = simulate(sysc, per.q0, per.x0, 0.0, 2 * T)
         series_from_traj(res, tr, {"i1": ("i₁ (1차)", "A"), "i2": ("i₂′ (정류, 1차 환산)", "A"), "im": ("i_m", "A"), "v1": ("v₁", "V"), "v2": ("v₂′ (정류기 입력)", "V"), "vC1": ("v_C1", "V"), "vC2": ("v_C2′", "V")}, per_segment=40)
         bands = bands_from(tr, 0.0, 2 * T)
-        res.add_plot("p_i", f"고전압 위 branch 스위칭 동작점 {f_show / 1e3:.3f} kHz의 전류", ["i1", "i2", "im"], y_label="전류", y_unit="A", bands=bands, group="cllc", level="C", hlines=[{"y": 0.0, "label": "0"}], proved="강한 배터리에서 11 kW를 주는 스위칭 주기해", not_yet="")
-        res.add_plot("p_v", "전압과 공진 커패시터", ["v1", "v2", "vC1", "vC2"], y_label="전압", y_unit="V", bands=bands, group="cllc", level="C", proved="", not_yet="C₁·C₂′ 전압 peak는 소자 정격 확인 대상")
+        res.add_plot("p_i", f"고전압 위 branch 스위칭 동작점 {f_show / 1e3:.3f} kHz의 전류", ["i1", "i2", "im"], y_label="전류", y_unit="A", bands=bands, group="cllc", level="C", hlines=[{"y": 0.0, "label": "0"}], proved="강한 배터리에서 11 kW를 주는 스위칭 주기해", not_yet="이상 스위치·이상 다이오드의 주기해이며 ZVS는 edge 전류 부호와 전하 screen으로만 본다(SCREEN_ONLY). 이 동작점 근처는 dP/df가 매우 커서(지표 sens_hi) 실제 주파수 분해능과 손실이 동작점을 바꾼다.")
+        res.add_plot("p_v", "전압과 공진 커패시터", ["v1", "v2", "vC1", "vC2"], y_label="전압", y_unit="V", bands=bands, group="cllc", level="C", proved="같은 주기해에서 bridge 전압, 정류기 입력 전압, 두 공진 C의 전압을 함께 보인다. C₁·C₂′ 전압 peak는 이 정확 해에서 읽은 값이다.", not_yet="C₁·C₂′ 전압 peak는 소자 정격 확인 대상")
         led = energy_ledger(tr, sysc, 0.0, T, ["p_in"], ["p_rect"], ["p_R"], rated_power=P)
         res.add_check(ledger_check(led))
         xT = ivp_period(sysc, per.x0)

@@ -182,7 +182,7 @@ def run_sps(v: dict) -> Result:
     res.add_series("Pphi_pwl", "P(φ) 구간 적분", "W", chk.tolist(), [pwl_waves(V1, V2, L, fs, Modulation(PI, PI, x, SPS_TEXTBOOK_C1)).P2 for x in chk], style="points")
     res.add_plot("p_pphi", "전달전력 P(φ): 부호로 방향, |φ| ≤ π/2가 단조 제어 범위", ["Pphi", "Pphi_pwl"], x_label="φ", x_unit="rad", y_label="P", y_unit="W", kind="xy",
                  vlines=[{"x": PI / 2, "label": "π/2"}, {"x": -PI / 2, "label": "−π/2"}], markers=[{"x": phi, "y": w.P2, "label": "운전점"}], level="A",
-                 proved="φ < 0이면 전력이 LV→HV로 흐르고, |φ| > π/2에서는 같은 전력에 두 해가 있어 제어 부호가 바뀐다.", not_yet="")
+                 proved="φ < 0이면 전력이 LV→HV로 흐르고, |φ| > π/2에서는 같은 전력에 두 해가 있어 제어 부호가 바뀐다.", not_yet="이상 무손실 SPS 모델의 P(φ)이며 dead time의 위상 오차·전압 강하·손실은 없다. 경부하처럼 dead time이 φ에 비해 큰 영역에서는 실제 P(φ)가 이 곡선에서 벗어난다.")
     c = dab_circuit(V1, v["VL"], f"{v['Np']}:{v['Ns']}", L, Lm)
     res.circuit = {"diagram": c.to_json(), "intervals": bands, "plot_group": "dab"}
     res.assumptions += ["이상 full bridge 두 개(SPS, 50 % duty), 이상 변압기 n = N_p/N_s, 직렬 L은 1차 환산", "dead time·노드 용량 없음", "R, L_m은 입력했을 때만 포함"]
@@ -257,7 +257,7 @@ def run_zero_power(v: dict) -> Result:
     res.add_plot("p_i", "0 W의 전류: L 순환전류와 여자전류", ["iL"] + (["im", "i2"] if Lm else []), y_label="전류", y_unit="A", bands=bands, group="zp", level="C",
                  proved="v_L = ±(V₁−V₂′)가 삼각 순환전류를 만든다. 여자전류는 2차 전압이 L_m에 걸려 생기는 별개의 전류다.",
                  not_yet="자화 전류의 DC offset·자속 불균형은 ‘기동 offset’ 실험에서 본다.")
-    res.add_plot("p_v", "인덕터 전압", ["vL"], y_label="v_L", y_unit="V", bands=bands, group="zp", level="C", proved="φ=0에서도 v_L이 0이 아니다.", not_yet="")
+    res.add_plot("p_v", "인덕터 전압", ["vL"], y_label="v_L", y_unit="V", bands=bands, group="zp", level="C", proved="φ=0에서도 v_L이 0이 아니다.", not_yet="P = 0에서도 흐르는 이 순환전류의 손실과 ZVS 영향은 이 그래프로 판정하지 않는다. 손실은 별도 손실 모델이 필요하고, ZVS는 이상 스위치 모델에서 NOT_EVALUABLE이다.")
     res.circuit = {"diagram": dab_circuit(V1, v["VL"], f"{v['Np']}:{v['Ns']}", L, Lm).to_json(), "intervals": bands, "plot_group": "zp"}
     res.verdict("PASS_WITHIN_MODEL", "0 W 순환전류와 여자전류를 분리해 재현 (이상 스위치)")
     res.assumptions += ["이상 bridge, 선형 L·L_m", "손실은 R_est로 후처리한 추정치 (전력단 미결합)"]
@@ -317,7 +317,7 @@ def run_corners(v: dict) -> Result:
     res.add_plot("p_irms", f"9개 전압 corner의 RMS ({P:g} W/모듈)", ["map_irms"], x_label="V_H", x_unit="V", y_label="V_L", y_unit="V", kind="map", level="A",
                  markers=[{"x": v["VH"], "y": v["VL"], "label": "nominal"}],
                  proved="전압비가 맞지 않는 corner에서 같은 전력의 RMS가 커지고, 낮은 V_H·V_L corner에서는 φ가 커진다.", not_yet="ZVS는 부호·전하 screen만 (SCREEN_ONLY).")
-    res.add_plot("p_phi", "필요 φ", ["map_phi"], x_label="V_H", x_unit="V", y_label="V_L", y_unit="V", kind="map", level="A", proved="φ가 π/2에 가까울수록 제어 여유와 RMS가 나빠진다.", not_yet="")
+    res.add_plot("p_phi", "필요 φ", ["map_phi"], x_label="V_H", x_unit="V", y_label="V_L", y_unit="V", kind="map", level="A", proved="φ가 π/2에 가까울수록 제어 여유와 RMS가 나빠진다.", not_yet="필요 φ는 이상 SPS 닫힌 식(A)의 값이다. 각 corner의 RMS·peak·ZVS 여유도 같은 이상 모델의 screen이며, 손실과 온도에 따른 L 변화는 포함하지 않았다.")
     res.tables.append(Table("t_c", "corner별 결과 (SCREEN_ONLY: 합성 C_oss·edge 전류 × dead time)", ["V_H [V]", "V_L [V]", "V₂′ [V]", "Pmax [W]", "φ [rad]", "I_rms [A]", "I_pk [A]", "1차 edge 전류 −i₀ [A]", "2차 edge 전류 i_φ [A]", "1차 screen", "2차 screen"], rows))
     res.add_check(Check("corner 전체: 닫힌 식 vs 구간 적분 (P, I_rms)", "PASS" if max_err < 1e-9 else "FAIL", max_err, "rel", 1e-9, path="9개 corner 각각 닫힌 식 φ로 PWL 정확 적분", independent=True))
     tb = _textbook_nominal(v) and abs(P - 1500) < 1e-9
@@ -415,7 +415,7 @@ def run_offset(v: dict) -> Result:
                  proved="0 초기조건으로 시작한 이상 DAB는 −i(0)만큼의 DC offset을 계속 유지하고, R이 있을 때만 L/R로 감쇠한다. 정상 기준해를 반대칭 조건으로 따로 정해야 하는 이유다.",
                  not_yet="실제 회로는 권선·스위치 저항, 제어, blocking capacitor로 offset이 제한된다. 자속 포화는 FL07.")
     res.add_plot("p_iL", "전류 파형 (시작부터)", ["iL"] + (["im"] if Lm else []), y_label="전류", y_unit="A", level="C",
-                 proved="offset이 파형 전체를 위로 민다: peak 전류와 한쪽 스위치 RMS가 커진다.", not_yet="")
+                 proved="offset이 파형 전체를 위로 민다: peak 전류와 한쪽 스위치 RMS가 커진다.", not_yet="offset의 감쇠는 회로 R(L/R 시정수)로만 정해진다. 실제 기동 순서(위상 ramp·soft-start)와 변압기 자화 offset에 의한 포화는 이 모델에 없다.")
     res.verdict("PASS_WITHIN_MODEL", "기동 offset·감쇠·비대칭 volt-second를 정확 스위칭 해로 재현")
     res.assumptions += ["0 초기조건 (precharge·soft-start 없음)", "비대칭은 1차 하강 edge 지연으로 모델"]
     res.not_valid_for += ["자속 포화·코어 손실", "실제 기동 시퀀스"]
