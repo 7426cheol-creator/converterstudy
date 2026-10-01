@@ -70,3 +70,28 @@ jobs:
           name: e2e-screens
           path: e2e/screens/
           if-no-files-found: ignore
+
+  octave:
+    name: Octave independent cross-check (matlab/xc_*.m)
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install GNU Octave
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends octave
+      - name: Install app
+        run: python -m pip install -e .
+      - name: Export the presets and run the Octave checks (fails on any FAIL item)
+        env:
+          PYTHON: python
+        run: bash verification/run_octave_crosscheck.sh
+      - name: Upload the Octave result
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: octave-crosscheck
+          path: matlab/results/octave_crosscheck.json
+          if-no-files-found: warn
