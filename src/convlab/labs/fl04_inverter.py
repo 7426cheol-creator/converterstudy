@@ -738,8 +738,11 @@ def run_dq_point(v: dict) -> Result:
                  hlines=[{"y": Va, "label": f"가용 {Va:.2f} V"}, {"y": -Va, "label": "−가용"}],
                  proved="abc 좌표에서 돌극 인덕턴스 행렬로 다시 계산한 상전압 peak가 dq 폐형식 |v|와 일치하고, 그 peak가 가용 전압에 거의 닿아 있다.",
                  not_yet="정현파 기본파만 본 정상상태다. PWM 리플·dead time·전류제어 과도는 실험 3과 FL06에서 본다.")
+    I_ph = math.hypot(v["id"], op["i_q"])
     res.add_plot("p_iabc1", "a상 전류 (같은 주기)", ["ia_abc"], y_label="i_a", y_unit="A", group="abc", level="A",
-                 proved="상전류 peak는 |i| = 472.27 A, RMS는 333.95 A다(phase peak와 RMS를 구분).", not_yet="")
+                 proved=f"상전류 peak는 |i| = {I_ph:.2f} A, RMS는 {I_ph / math.sqrt(2):.2f} A다(phase peak와 RMS를 구분).",
+                 not_yet="dq 운전점을 abc로 옮긴 선형 L_d·L_q 기본파 정상상태(A)이고, 근거는 위 전압 그림의 abc–dq 일치 검산이다. "
+                         "실험 3의 PWM 리플·dead time 왜곡이 얹힌 실제 peak와 그 peak에 대한 소자 SOA·열 판정은 다루지 않는다.")
     # alternatives at this bus
     Vt = Va - head
     alt = []
@@ -895,7 +898,9 @@ def run_dq_plane(v: dict) -> Result:
     res.add_series("m_I", "|i| (같은 토크)", "A", idc.tolist(), It.tolist())
     res.add_plot("p_current", "같은 토크를 내는 전류 크기", ["m_I"], x_label="i_d", x_unit="A", y_label="|i|", y_unit="A", kind="xy", level="A",
                  hlines=[{"y": Imax, "label": "전류 한계"}], vlines=[{"x": v["id"], "label": "지정"}], markers=[{"x": idm, "y": Im, "label": "MTPA (최소)"}],
-                 proved="MTPA에서 전류가 최소이고, 그보다 더 음의 i_d는 전류(동손·전도손실)를 늘린다. 약계자는 MTPA를 지나면서부터 공짜가 아니다.", not_yet="")
+                 proved="MTPA에서 전류가 최소이고, 그보다 더 음의 i_d는 전류(동손·전도손실)를 늘린다. 약계자는 MTPA를 지나면서부터 공짜가 아니다.",
+                 not_yet="최소점은 MTPA 폐형식과 토크 곡선 위 |i| 수치 최소화가 일치한다는 검산에 기대지만, 둘 다 선형 L_d·L_q·ψ_m 모델이다. "
+                         "포화로 L_q가 줄면 MTPA 위치와 최소 전류가 옮겨 가고, 철손·인버터 스위칭 손실의 차이는 이 곡선에 없다.")
     # capability vs speed
     rpms = np.linspace(max(200.0, 0.03 * v["rpm"]), 2.0 * v["rpm"], 60)
     T1 = capability(m, rpms, V1, Imax)
@@ -1084,7 +1089,8 @@ def run_switching(v: dict) -> Result:
                  proved="DC 전류는 스위칭 상태에 따라 상전류 조각이 이어진 펄스열이다. 평균은 P_AC/V_dc, AC 성분은 DC-link 커패시터가 감당하며 Kolar 폐형식과 비교했다.",
                  not_yet="DC 전원은 이상 전압원이다. 배터리·케이블 임피던스와 커패시터 ESR·공진은 없다.")
     res.add_plot("p_vab", "선간전압 v_ab: 펄스와 지령 기본파", ["vab", "vab_cmd"], y_label="v_ab", y_unit="V", bands=bands, group=g, level="C",
-                 proved="선간전압은 ±V_dc·0의 3준위 펄스이며 그 기본파가 지령과 같다는 것을 edge 시각의 해석 Fourier로 확인했다.", not_yet="")
+                 proved="선간전압은 ±V_dc·0의 3준위 펄스이며 그 기본파가 지령과 같다는 것을 edge 시각의 해석 Fourier로 확인했다.",
+                 not_yet="이상 스위치의 펄스라 dead time 전압 오차·상승시간·링잉·dv/dt가 없다. 그래서 선간전압의 절연 스트레스와 EMI는 이 그림으로 판단하지 않는다.")
     res.add_plot("p_torque", "전자기 토크", ["Te"], y_label="T_e", y_unit="Nm", bands=bands, group=g, level="C", hlines=[{"y": op["T"], "label": "요구"}],
                  proved="전류 리플이 토크 리플을 만들며 평균 토크는 요구값과 같다.", not_yet="기계 관성·축 공진·NVH는 모델 밖이다.")
     hs, amp = pulse_spectrum(edges, S0, Vdc, we, Te, min(3 * N + 6, 400))
