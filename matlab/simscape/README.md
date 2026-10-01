@@ -28,8 +28,8 @@ res = build_cllc(2, 'fha', struct('run', false));   % 빌드와 .slx 저장만
 |---|---|---|---|
 | `dab_nominal` | `build_dab('nominal')` | 1차 환산: 이상 bridge B1(±800 V) – ammeter – L 200 µH – ammeter – B2(±800 V, φ = export 값), 100 kHz, 12주기 | FL08 `sps_nominal/nominal`: Irms 2.019882 A, Ipk 2.094306 A, P₂ 1500 W (1e-3) |
 | `dab_mismatch` | `build_dab('mismatch')` | ±900 V / ±600 V, φ = 0, L_m 2 mH를 v₂′ 쪽에 | FL08 `zero_power_mismatch/mismatch`: Irms_L 2.165064 A, Ipk_L 3.75 A, I_m rms, i₂ rms (1e-3), P = 0 (±0.5 W) |
-| `cllc_branch1_fha`, `cllc_branch2_fha` | `build_cllc(b, 'fha')` | n = 0.93, 920/850 V, L_r1 = L_r2′ = 40 µH, C_r1 = C_r2′ = 28.1448 nF, L_m 200 µH; 기본파 사인 전원(4V_link/π)과 R_ac′; 136.099 / 147.061 kHz | 교재 13장: \|H\| = 1.006588, 1차 rms 14.390 / 14.765 A (1e-3) |
-| `cllc_branch1_switching`, `cllc_branch2_switching` | `build_cllc(b, 'switching')` | 같은 tank, 이상 bridge ±850 V, 다이오드 4개 정류, 환산 배터리 n·920 V | FL10/EX05 미병합 → P_out, 1차 rms는 PENDING_EXPECTED. 같은 실행 안의 전력 균형(bridge 전력 = 배터리 전력, 5e-3)만 PASS/FAIL |
+| `cllc_branch1_fha`, `cllc_branch2_fha` | `build_cllc(b, 'fha')` | n = 0.93, 920/850 V, L_r1 = L_r2′ = 40 µH, C_r1 = C_r2′ = 28.144773 nF (export 입력), L_m 200 µH; 기본파 사인 전원(4V_link/π)과 R_ac′; FHA 해 주파수는 빌더가 export 입력으로 다시 구함 | FL10 `fix_n093/textbook`: \|H\| = n·V_bat/V_link = 1.006588, FHA 1차 RMS `I1_lo`/`I1_hi` (1e-3) |
+| `cllc_branch1_switching`, `cllc_branch2_switching` | `build_cllc(b, 'switching')` | 같은 tank, 이상 bridge ±850 V, 다이오드 4개 정류, 환산 배터리 n·920 V, 10 ms (가장 느린 Floquet 승수 0.989) | FL10 `time_domain/textbook`: 배터리 전력 `P_td_lo`/`P_td_hi` (17.34 / 22.24 kW, 1e-3), 표 `t_td`의 1차 RMS (23.38 / 29.37 A), 같은 실행 안의 전력 균형 (5e-3) |
 | `ex02_commutation` | `build_ex02_commutation()` | 고정 rail 800 V, 비선형 C(v) = C₀/√(1+v/V₀) 두 소자, 일정 전류 4 A를 node에 | EX02 `hb_constant_current/textbook`: rail 도달 286.606 ns, t_d 끝 node 전압, turn-on V_ds (1e-3) |
 | `ex07_cpl_c100u`, `ex07_cpl_c1m` | `build_ex07_cpl(p)` | V_s 400 V – R 0.2 Ω – L 1 mH – C ∥ 이상 CPL 10 kW, 초기값 (P/V_e, V_e + 1 V) | EX07 `cpl_exact`: 극값에서 읽은 성장률·ω_d vs 극점 220.57 ± j3134.19 / −67.94 ± j991.24 (1e-2), 불안정 여부, 초기 상태 |
 
