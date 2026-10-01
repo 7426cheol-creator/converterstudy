@@ -6,7 +6,6 @@ __pycache__/
 build/
 dist/
 /results/
-/textbook/*.html
 /userdata/
 .DS_Store
 node_modules/

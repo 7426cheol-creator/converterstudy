@@ -11,7 +11,7 @@ run.bat       # Windows
 ```
 
 - 로그인, 클라우드, LLM API는 없습니다. 서버는 127.0.0.1에서만 받습니다.
-- 교재 HTML은 저장소에 넣지 않았습니다(공개 저장소). 갖고 있는 `Infineon_FAE_Expert_Integrated.html`을 `textbook/`에 두면 실습 화면의 교재 링크가 열립니다. 없어도 실습은 모두 동작합니다.
+- 교재는 `textbook/Infineon_FAE_Expert_Integrated.html`에 있습니다. 실습 화면의 📖 링크를 누르면 해당 장이 열립니다.
 
 ## 2. 신규 학습자: FL01 Buck (30–40분)
 

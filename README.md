@@ -22,7 +22,7 @@ run.bat             # Windows
 
 직접 설치하려면 `python -m pip install -e ".[test]"` 후 `python -m convlab serve`를 실행합니다.
 
-교재 HTML은 이 공개 저장소에 커밋하지 않습니다. 갖고 있는 파일을 `textbook/`에 두면 실습 화면에서 해당 장이 열립니다([textbook/README.md](textbook/README.md)).
+교재 HTML(v4.0)은 [textbook/](textbook/)에 있습니다. 브라우저로 바로 열 수 있고, 앱의 실습 화면에서는 📖 링크로 해당 장이 열립니다.
 
 ## 다시 실행하기
 
