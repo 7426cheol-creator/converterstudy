@@ -16,7 +16,7 @@
 | `verification/independent_reference_check.py` | 교재·지침 기준값을 표준 라이브러리만으로 재계산. 앱 코드를 import하지 않음 | 실행 | §6 |
 | `verification/run_octave_crosscheck.sh` | 교재 식을 MATLAB 언어로 다시 쓴 검산을 GNU Octave에서 실행 | 실행 (Octave 8.4.0) | §6, `matlab/results/octave_crosscheck.json` |
 | `e2e/smoke.mjs` | 실제 브라우저(Chromium)에서 모든 실험의 실행, 제안 변경, 예측, 답 저장, export, 기록 화면 | 실행 | §6 |
-| GitHub Actions CI | 위 Python 검증과 브라우저 스모크를 PR마다 실행 | workflow 작성. 마지막 push 이후 결과는 확인하지 못함(§4) | — |
+| GitHub Actions CI | 위 Python 검증, 브라우저 스모크, Octave 교차검증을 main push와 PR마다 실행 | 실행 | main b4e5282 run #1: 3개 job 모두 success (§4) |
 | MATLAB / Simulink / Simscape | 대표점의 독립 회로 시뮬레이션 | **NOT_RUN_ENVIRONMENT** | builder만 있음(§4) |
 | PSIM 12.0.2 | 수동 재구성 회로 | **NOT_RUN_ENVIRONMENT** | build sheet만 있음(§4) |
 | 하드웨어 측정 | 실물 validation | **없음** | — |
@@ -59,9 +59,9 @@
 - **PSIM 12.0.2: NOT_RUN_ENVIRONMENT.** PSIM이 없고 이 버전의 자동화 API를 가정하지 않았습니다.
   - `psim/`의 build sheet 7개를 손으로 회로를 만드는 용도로 둡니다: FL01, FL08, EX06, FL09, FL10, EX02, EX07.
   - 각 sheet에는 접속, 소자, gate 식, solver, 초기조건, probe, 앱 실행에서 가져온 기대값, 한계가 들어 있습니다.
-- **GitHub Actions 결과.** workflow(`.github/workflows/ci.yml`)는 저장소에 있습니다.
+- **GitHub Actions.** workflow는 `.github/workflows/ci.yml`에 있습니다.
   - 사용자의 GitHub 계정이 바뀌어 저장소를 `7426cheol-creator/converterstudy`로 옮겼고, 작업 브랜치 `ccr-947b03d9-ahvguh`로 push했습니다.
-  - CI는 main push와 PR에서 돕니다. 이 문서를 쓰는 시점에는 아직 PR이 없어 GitHub의 CI 결과는 없습니다. 같은 명령의 로컬 결과는 §6에 있습니다.
+  - CI는 main push와 PR에서 돕니다. main b4e5282의 첫 실행(run #1, 2026-10-01)에서 python(테스트·기준값 검산·run-all), e2e(브라우저 스모크), octave 3개 job이 모두 성공했습니다: https://github.com/7426cheol-creator/converterstudy/actions/runs/36805629002
 - **하드웨어.** 측정, 열화상, 규격 시험, 수명 시험은 없습니다. ‘통과’는 모두 합성 모델 안의 판정입니다.
 
 ## 5. 재현
@@ -91,6 +91,6 @@ python tools/gen_docs.py --results results             # 추적표·모델 카�
 | `independent_reference_check.py` | **99 checks, 0 failed** (표준 라이브러리만, convlab 미 import) |
 | Octave 교차검증 | **220 items: 220 PASS, 0 FAIL, 0 TODO** (Octave 8.4.0). 커밋 204298b에서 실행했고, 그 뒤 바뀐 코드는 FL12 추가와 문서뿐이며 Octave가 대조하는 실습은 바뀌지 않았다 |
 | 브라우저 스모크 | **101 experiments, 0 failures** (355 s). 실험마다 기준 실행, 제안 변경 적용, 예측 선택, 재실행, 결과 영역 점검, 레이아웃 점검을 하고, 답 저장·export 3종·기록 화면도 확인 |
-| GitHub Actions | 이 세션에서 결과 확인 못 함(§4) |
+| GitHub Actions | main b4e5282 run #1: python, e2e, octave 모두 success |
 
 실습별 실행 수, 상태, 기준값, 독립·회귀 check 수는 [TRACEABILITY.md](TRACEABILITY.md)에 있고, 실행 기록과 결과 파일 sha256은 [run_manifest.json](run_manifest.json)에 있습니다.

@@ -1,7 +1,7 @@
 {
  "kind": "project_state",
  "note": "이 파일은 저장소 작업 상태다. 학습자의 예측·답 기록은 ~/.convlab/progress.json (앱이 관리)이며 이 파일과 다르다.",
- "updated": "2026-10-01T02:10:00Z",
+ "updated": "2026-10-01T02:45:00Z",
  "app_version": "4.0.0",
  "contract_version": "4.0-reconstructed",
  "branch": "ccr-947b03d9-ahvguh",
@@ -42,11 +42,11 @@
   "검증: pytest 378 passed, run-all 223 runs·모든 preset 398 runs 실패 0, 표준 라이브러리 기준값 99/99, Octave 220/220, 브라우저 101개 실험 0 실패",
   "Simscape builder 스크립트(미실행), PSIM 12.0.2 build sheet 7개(미실행)",
   "CI workflow (python, 브라우저 e2e, octave)",
-  "문서: README, START_HERE, VERIFICATION, ERRATA(E-000~E-002, F-001~F-002), KNOWN_LIMITS, 생성 문서(추적표·모델 카드·테스트 독립성·run manifest·계약 재구성본)"
+  "문서: README, START_HERE, VERIFICATION, ERRATA(E-000~E-002, F-001~F-002), KNOWN_LIMITS, 생성 문서(추적표·모델 카드·테스트 독립성·run manifest·계약 재구성본)",
+  "GitHub: 7426cheol-creator/converterstudy main에 반영, CI run #1 (python, e2e, octave) 모두 success"
  ],
  "in_progress": [],
  "next": [
-  "main 대상 PR을 열거나 main에 반영하고, CI(python, e2e, octave) 결과 확인",
   "원본 패키지 파일(simulation_contract_v4.json 등)이 생기면 docs/contract 재구성본·기준값과 대조",
   "MATLAB/PSIM이 있는 환경에서 matlab/simscape builder와 psim build sheet로 대표점 대조"
  ],
@@ -60,10 +60,9 @@
   "e2e": "cd e2e && npm ci && node smoke.mjs --spawn"
  },
  "blockers": [
-  "PR 생성: claude.ai의 GitHub 커넥터가 재인증 전이라 세션에서 PR을 만들 수 없음 (push는 됨)",
   "MATLAB/Simulink/PSIM 미설치: NOT_RUN_ENVIRONMENT (Python 필수 기능과 무관)",
   "원본 패키지 파일 미제공 (ERRATA E-000)"
  ],
  "resume": "브랜치 ccr-947b03d9-ahvguh. `python -m pytest -q`, `python -m convlab run-all --out results`로 상태 확인 후 next부터.",
- "repository": "https://github.com/7426cheol-creator/converterstudy (branch ccr-947b03d9-ahvguh)"
+ "repository": "https://github.com/7426cheol-creator/converterstudy (main)"
 }
