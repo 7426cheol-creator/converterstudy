@@ -65,7 +65,8 @@ function sym(g, type, el) {
   }
 }
 
-export function renderCircuit(host, diagram) {
+export function renderCircuit(host, diagram, opts = {}) {
+  const linked = opts.linked !== false;
   const W = diagram.width || 640, H = diagram.height || 320;
   const wrap = document.createElement("div");
   wrap.className = "circuit";
@@ -162,7 +163,7 @@ export function renderCircuit(host, diagram) {
     for (const el of svg.querySelectorAll(".on,.dim")) el.classList.remove("on", "dim");
     const md = (diagram.modes || {})[key];
     if (!md) {
-      caption.innerHTML = key ? `<span class="chip mode">${esc(key)}</span>` : "파형 위에 커서를 올리면 그 순간의 도통 경로가 표시됩니다.";
+      caption.innerHTML = key ? `<span class="chip mode">${esc(key)}</span>` : linked ? "파형 위에 커서를 올리면 그 순간의 도통 경로가 표시됩니다." : "";
       return;
     }
     for (const id of md.active || []) if (nodes[id]) nodes[id].classList.add("on");
