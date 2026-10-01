@@ -587,6 +587,9 @@ def _scan_tests(lab_id: str) -> dict | None:
     return {"file": f"tests/{p.name}", "tests": n_tests, "literals": literals, "map": lines}
 
 
+HINT_S = {"fast": 3.0, "seconds": 10.0, "slow": 60.0}  # runtime classes of the authoring contract (upper bounds)
+
+
 def run_test_independence(v: dict) -> Result:
     from . import all_labs  # local import: the registry imports this module
 
@@ -605,9 +608,12 @@ def run_test_independence(v: dict) -> Result:
     run_rows, lab_sum = [], {}
     for _, lid, e, pk in order:
         s = lab_sum.setdefault(lid, {"runs": 0, "skipped": 0, "checks": 0, "indep": 0, "regr": 0, "PASS": 0, "FAIL": 0, "NOT_RUN": 0, "INFO": 0, "mref": 0, "mref_fail": 0, "status": set()})
-        if time.perf_counter() - t_start > budget:
+        # start a preset only if its runtime class still fits: a started preset may overrun the budget by
+        # at most one fast preset (<= FAST_S by the authoring contract), so elapsed <= budget + FAST_S
+        est = HINT_S.get(e.runtime_hint, HINT_S["slow"])
+        if time.perf_counter() - t_start + est - HINT_S["fast"] > budget:
             s["skipped"] += 1
-            run_rows.append([lid, e.key, pk, "—", "예산 초과로 미실행", "—", "NOT_RUN", ""])
+            run_rows.append([lid, e.key, pk, "—", f"예산 부족으로 미실행 (runtime_hint {e.runtime_hint} ≈ {est:g} s)", "—", "NOT_RUN", ""])
             continue
         try:
             vals, _, _ = resolve_params(e.params, e.presets, pk, {})
@@ -661,6 +667,7 @@ def run_test_independence(v: dict) -> Result:
     tot_ind = sum(s["indep"] for s in lab_sum.values())
     res.add_metric("labs", "발견한 실습 수", len(labs), "", basis=", ".join(sorted(labs)))
     res.add_metric("runs", "실행한 기준 preset", tot_runs, "", basis=f"예산 {budget:g} s 중 {elapsed:.1f} s 사용; 미실행 {tot_skip}")
+    res.add_metric("elapsed", "실행 시간", elapsed, "s", basis=f"상한 = 예산 {budget:g} s + fast preset 하나(≤ {HINT_S['fast']:g} s)")
     res.add_metric("checks", "실행된 check 수", tot_checks, "")
     res.add_metric("indep_frac", "독립 check 비율", tot_ind / tot_checks if tot_checks else float("nan"), "")
     res.add_metric("fails", "실패 check + 기준값 metric 실패", fails, "")
@@ -674,10 +681,11 @@ def run_test_independence(v: dict) -> Result:
                  not_yet="독립 check도 같은 가정(합성 입력·이상 소자)을 공유하므로 실물 validation이 아니다. 예산 안에서 실행하지 못한 preset은 정적 스캔만 있다.")
     if tot_skip:
         res.warnings.append(f"시간 예산 {budget:g} s 안에서 {tot_skip}개 기준 preset을 실행하지 못했다 (budget_s를 늘리면 모두 실행).")
+        res.verdict("NOT_EVALUABLE", f"예산 {budget:g} s 안에서 실행하지 못한 기준 preset {tot_skip}개는 판정하지 않았다 — 정적 스캔만 있다 (‘full’ preset은 전부 실행, 수 분 소요)")
     if fails:
         res.verdict("FAIL_CONSTRAINT", f"실행한 검증 중 {fails}개가 실패했다 — 해당 실습의 수치 검증을 먼저 고친다")
     else:
-        res.verdict("PASS_WITHIN_MODEL", f"실행한 {tot_runs}개 기준 preset의 {tot_checks}개 check가 모두 통과·정보 (독립 {tot_ind}개). 실물 validation은 아니다.")
+        res.verdict("PASS_WITHIN_MODEL", f"실행한 {tot_runs}개 기준 preset의 {tot_checks}개 check가 모두 통과·정보 (독립 {tot_ind}개){f', 미실행 {tot_skip}개는 제외' if tot_skip else ''}. 실물 validation은 아니다.")
     res.assumptions += ["기준 preset만 실행 (fast 실험 먼저, 시간 예산 안에서)", "소스 스캔은 Check(independent=상수)만 셈 — 계산된 flag는 ‘동적’"]
     res.not_valid_for += ["hardware validation", "test가 실제로 얼마나 독립인지의 의미 판정 (선언과 구조만 셈)"]
     res.interpretation = (
@@ -933,15 +941,16 @@ EXPERIMENTS = [
             "실습별 test-independence 표와 모델 카드(모델 수준·주장 한계)를 만든다. 통과는 verification이며 hardware validation이 아니다."
         ),
         params=[
-            Param("budget_s", "실행 시간 예산", "s", 8.0, "s", vmin=0.5, vmax=3600, source="ASSUMED", source_note="fast 실험 먼저; 늘리면 전부 실행"),
+            Param("budget_s", "실행 시간 예산", "s", 8.0, "s", vmin=0.5, vmax=3600, source="ASSUMED", source_note="fast 실험 먼저; 실행 시간 ≤ 예산 + 3 s"),
         ],
         presets=[
             Preset("nominal", "예산 8 s", {}, "", ("nominal", "reference")),
-            Preset("full", "예산 600 s (전부 실행)", {"budget_s": 600.0}, "", ("variant",)),
+            Preset("wide", "예산 45 s (1분 안쪽)", {"budget_s": 45.0}, "대부분의 기준 preset", ("variant",)),
+            Preset("full", "예산 600 s — 전부 실행, 수 분 걸림", {"budget_s": 600.0}, "모든 실습의 기준 preset (수 분)", ("variant",)),
         ],
         run=run_test_independence,
         model_level="메타",
-        suggested_change="실행 시간 예산을 8 → 600 s로 늘려 모든 기준 preset을 실행한다.",
+        suggested_change="실행 시간 예산을 8 → 45 s로 늘려 더 많은 기준 preset을 실행한다 (전부는 ‘full’ preset, 수 분).",
         prediction=Prediction(
             "모든 check가 PASS라면 이 시뮬레이터가 실제 하드웨어를 맞힌다고 말할 수 있나?",
             ["예", "아니다 — verification이지 validation이 아니다", "독립 check만 있으면 예", "모르겠다"],
@@ -949,7 +958,7 @@ EXPERIMENTS = [
             "check는 방정식을 올바르게 풀었는지(닫힌 식 vs 독립 적분·solver·에너지 항등식)를 본다. 같은 합성 입력·이상 소자 가정을 공유하므로 실물 측정과의 일치(validation)는 아니다.",
             ["checks", "indep_frac"],
         ),
-        suggested={"budget_s": 600.0},
+        suggested={"budget_s": 45.0},
         student="시험지를 만든 사람이 답안지도 만들면 채점이 의미가 없다. 그래서 검산은 다른 방법(다른 식, 다른 적분 방법)으로 해야 하고, 그래도 그것은 ‘계산이 맞다’는 뜻이지 ‘현실과 같다’는 뜻은 아니다.",
         expert=(
             "‘독립’은 두 쪽이 공식을 공유하지 않는 비교(닫힌 식 vs 구간 적분, 행렬지수 vs 손으로 쓴 ODE, 상태식 vs 포트 에너지 항등식, GUM vs Monte Carlo)다. 같은 helper를 두 번 부른 것은 회귀다. "
