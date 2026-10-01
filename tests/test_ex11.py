@@ -172,9 +172,23 @@ def test_test_independence_map_runs_the_labs_and_scans_the_repository():
     assert metric(js, "labs") >= 4
     assert metric(js, "runs") >= 1
     assert metric(js, "fails") == 0
-    assert js["status"]["code"] == "PASS_WITHIN_MODEL"
+    assert js["status"]["code"] == "PASS_WITHIN_MODEL"  # headline = worst outcome
+    assert "NOT_EVALUABLE" in codes(js)  # presets skipped by the budget are a scope note, not a pass
     tests_rows = next(t for t in js["tables"] if t["key"] == "t_tests")["rows"]
     assert any(r[0] == "EX11" and r[2] >= 10 for r in tests_rows)
+
+
+def test_test_independence_stays_inside_its_time_budget():
+    # a preset starts only if its runtime class fits, so elapsed <= budget + one fast preset (3 s);
+    # the extra 3 s here is slack for a loaded test machine
+    js = run("test_independence", "nominal", budget_s="2 s")
+    assert metric(js, "elapsed") <= 2.0 + 3.0 + 3.0
+    exp = get_lab("EX11").experiment("test_independence")
+    assert exp.suggested["budget_s"] <= 45.0  # the UI's suggested change must finish within about a minute
+    assert "full" not in exp.reference_presets
+    assert exp.runtime_hint == "seconds"
+    vals, _, _ = resolve_params(exp.params, exp.presets, exp.reference_presets[0], {})
+    assert vals["budget_s"] + 3.0 <= 10.0 + 1.0  # the reference preset fits the "seconds" runtime class
 
 
 def test_all_reference_presets_checks_pass():

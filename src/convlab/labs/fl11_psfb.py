@@ -1257,11 +1257,13 @@ def run_psfb_vs_dab(v: dict) -> Result:
                  proved="PSFB 1차 전류는 부하전류의 반사(사각파 + commutation 경사)이고, DAB는 두 사각파 전압 차이가 만든 사다리꼴/삼각 전류다. 같은 전력에서 RMS·peak·edge 전류가 다르다.",
                  not_yet="자화전류, dead time, 스위칭 전환 파형은 둘 다 없다. 손실·효율 비교가 아니다.")
     res.add_plot("c_v", "bridge 전압: PSFB v_AB (leg 사이 phase) vs DAB v1·v2' (bridge 사이 phase)", ["vab", "dab_v1", "dab_v2"], y_label="전압 (1차)", y_unit="V", bands=bands, group="cmp", level="C + PWL",
-                 proved="PSFB는 한 bridge 안의 두 leg 위상으로 ±V_in/0 세 레벨을 만들고, DAB는 두 bridge가 각각 50 % 사각파이며 그 사이 위상이 전력을 정한다.", not_yet="")
+                 proved="PSFB는 한 bridge 안의 두 leg 위상으로 ±V_in/0 세 레벨을 만들고, DAB는 두 bridge가 각각 50 % 사각파이며 그 사이 위상이 전력을 정한다. DAB 쪽 위상은 닫힌 식 역산과 PWL 전력 적분의 근이 일치하는 check로 확인했다.",
+                 not_yet="두 파형 모두 이상 스위치의 계단 전압이다. dead time 동안 노드 전압이 Coss를 따라 움직이는 구간·ringing·ZVS 여부는 이 그림이 보이지 않는다(PSFB lagging leg ZVS는 zvs_screen의 에너지 screen만, DAB는 EX02/EX06). 같은 위상이라도 두 converter의 제어 변수 의미가 다르다는 것까지만 보였다.")
     res.add_plot("c_sec", "2차 소자 전류: PSFB SR vs DAB 2차 switch", ["iSR1", "dab_isw2"], y_label="전류 (2차)", y_unit="A", bands=bands, group="cmp", level="C + PWL",
                  proved="PSFB SR은 출력 인덕터 전류(거의 DC)를 반주기씩 나르고, DAB 2차 switch는 n배로 커진 교류 인덕터 전류를 나른다.", not_yet="SR 타이밍·역전류, DAB 2차 ZVS 전하는 포함하지 않았다.")
     res.add_plot("c_p", "입력 순간전력: zero-power 구간과 backflow", ["psfb_pin", "dab_pin"], y_label="p_in", y_unit="W", bands=bands, group="cmp", level="C + PWL", hlines=[{"y": 0.0, "label": "0 W"}],
-                 proved="PSFB는 freewheel 동안 입력전력이 0이지만 1차 전류가 순환하고, commutation 전반에는 에너지가 입력으로 되돌아간다. DAB는 전류 부호가 늦게 바뀌는 구간에 backflow가 있다.", not_yet="")
+                 proved="PSFB는 freewheel 동안 입력전력이 0이지만 1차 전류가 순환하고, commutation 전반에는 에너지가 입력으로 되돌아간다. DAB는 전류 부호가 늦게 바뀌는 구간에 backflow가 있다. 두 순간전력의 주기 평균이 출력전력과 같다는 것은 DAB ∫v1·i = ∫v2′·i check와 PSFB 에너지 장부 check가 뒷받침한다.",
+                 not_yet="backflow 에너지는 무손실 파형에서 잰 순환 에너지일 뿐 손실이 아니다. 그 전류가 만드는 도통·스위칭 손실과 효율 차이는 소자·자성체 자료가 없어 계산하지 않았다(MISSING_INPUT). 입력 capacitor ripple·EMI 영향도 이 그림의 범위 밖이다.")
     res.circuit = {"diagram": psfb_circuit({**v, **p}, sys.rect).to_json(), "intervals": bands, "plot_group": "cmp"}
     if not res.verdicts:
         res.verdict("PASS_WITHIN_MODEL", "같은 800→48 V·1.5 kW에서 PSFB(C)와 DAB(A/PWL)의 전류·전압·zero-power 구간을 비교 (손실·ZVS 판정 아님)")
