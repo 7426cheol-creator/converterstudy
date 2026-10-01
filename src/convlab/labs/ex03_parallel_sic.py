@@ -139,7 +139,7 @@ def run_static(v: dict) -> Result:
     conv_err = [float(np.max(np.abs(h[0] - In))) for h in hist]
     res.add_series("conv", "반복별 최대 전류 오차", "A", list(range(1, len(conv_err) + 1)), [max(e, 1e-16) for e in conv_err], style="points")
     res.add_plot("p_conv", "전열 반복의 수렴", ["conv"], x_label="반복", x_unit="", y_label="|ΔI|", y_unit="A", kind="xy", log_y=True, level="A",
-                 proved="이 조건의 전열 되먹임은 약해서 반복이 빠르게 수렴한다.", not_yet="")
+                 proved="이 조건의 전열 되먹임은 약해서 반복이 빠르게 수렴한다.", not_yet="반복 해는 다변수 Newton(hybr) 해와 1e-6 A 이내로 비교했다. 선형 온도계수 α와 branch별 독립 R_th의 정적 모델이라 큰 α·약한 냉각에서의 수렴 실패나 branch 사이 열 결합(EX08)은 이 그림에 없다.")
     rows = [[k + 1, R[k] * 1e3, float(Ik[k]), float(Pk[k]), Rth[k], float(In[k]), float(Tn[k]), float(Pn[k])] for k in range(4)]
     res.tables.append(Table("t_branch", "branch별 결과 (branch-resolved)", ["branch", "R [mΩ]", "I 등온 [A]", "P 등온 [W]", "R_th [K/W]", "I 전열 [A]", "T_j [°C]", "P 전열 [W]"], rows,
                             note="모듈 평균(100 A·40 W)만 보면 가장 먼저 stress를 받는 branch를 놓친다."))
@@ -307,10 +307,10 @@ def run_dpt_deskew(v: dict) -> Result:
         res.add_series(f"wp{int(s_ * 1e9)}", f"v·i_m {lab}", "W", tw.tolist(), (np.interp(tw, tk, vk) * np.interp(tw, tk + s_, ik)).tolist(), dash=s_ != 0)
     bands = [{"x0": float(tw[0]), "x1": 0.0, "mode": "pre", "label": "전이 전"}, {"x0": 0.0, "x1": tr, "mode": "trans", "label": "전이 t_r"}, {"x0": tr, "x1": float(tw[-1]), "mode": "post", "label": "전이 후"}]
     res.add_plot("p_w", "합성 turn-on: v 하강·i 상승 (전류 채널 이동)", ["wv"], y_label="v", y_unit="V", bands=bands, level="A", group="w", window=(-pre, tr + post),
-                 proved="전압 채널은 그대로 두고 전류 채널만 옮긴다.", not_yet="")
-    res.add_plot("p_wi", "전류 채널 (−5 / 0 / +5 ns)", ["wi-5", "wi0", "wi5"], y_label="i", y_unit="A", bands=bands, level="A", group="w", window=(-pre, tr + post), proved="", not_yet="")
+                 proved="전압 채널은 그대로 두고 전류 채널만 옮긴다.", not_yet="전압 채널은 지연·이득 오차가 없는 기준으로 두었다(대역 제한의 영향은 probe 대역폭 그림에서 따로 본다). 선형 v 하강의 합성 파형이라 실제 turn-on의 전압 링잉·완만한 tail·C_oss 방전 구간은 없다.")
+    res.add_plot("p_wi", "전류 채널 (−5 / 0 / +5 ns)", ["wi-5", "wi0", "wi5"], y_label="i", y_unit="A", bands=bands, level="A", group="w", window=(-pre, tr + post), proved="같은 전류 파형을 시간축으로만 −5/0/+5 ns 옮긴 세 채널이다. 앞당긴 채널은 v가 아직 V인 전이 전 구간에서 이미 흐르며, 세 경우의 E는 PWL 정확 적분과 손계산 닫힌 식이 1e-12로 일치한다.", not_yet="deskew 오차를 주파수와 무관한 시간 이동 하나로 단순화했다. 실제 probe의 위상 지연·gain·offset 오차는 대역폭 그림과 저장 설정(gain·offset)에서 따로 다루며, 교정 없이 실제 skew 값을 알 수는 없다.")
     res.add_plot("p_wp", "순간전력 v·i_m과 적분창", ["wp-5", "wp0", "wp5"], y_label="p", y_unit="W", bands=bands, level="A", group="w", window=(-pre, tr + post),
-                 proved="−5 ns에서는 전이 전(v = V)에 이미 전류가 흘러 전력이 생긴다 — 창이 그 구간을 포함해야 +41.99 %가 된다.", not_yet="")
+                 proved="−5 ns에서는 전이 전(v = V)에 이미 전류가 흘러 전력이 생긴다 — 창이 그 구간을 포함해야 +41.99 %가 된다.", not_yet="이 합성 파형은 전이 뒤 v = 0이라 창 끝(W_post)이 E에 영향을 주지 않는다. 실제 파형에서는 링잉 꼬리와 v_DS(on)·I 전도 성분 때문에 창 끝도 E를 바꾸므로 창 정의를 결과와 함께 저장해야 한다.")
     # probe bandwidth: exact first-order response to the PWL channels
     tf = np.linspace(-pre, tr + post, 6001)
     tkb, vkb, ikb = _wave_knots(V, I, tr, -pre - 1e-9, tr + post + 1e-9)
@@ -593,13 +593,13 @@ def run_dynamic(v: dict) -> Result:
     res.add_plot("p_on_g", "turn-on: branch별 local v_GS (die)", [f"vgs{k}" for k in range(4)], y_label="v_GS", y_unit="V", bands=b_on, group="on", level="D",
                  proved="각 die의 v_GS는 자기 gate loop와 common-source 전압에 따라 다르게 오른다.", not_yet="die 전압은 측정할 수 없다 — 측정은 Kelvin·power-source 기준으로 한다.")
     res.add_plot("p_on_ref", "local gate 기준: Kelvin 핀 vs power-source 기준 (branch 1·4)", ["gK1", "gP1", "gK4", "gP4"], y_label="v_GS", y_unit="V", bands=b_on, group="on", level="D",
-                 proved="같은 gate라도 측정 기준점에 따라 L_s·di/dt만큼 다르게 보인다 — 측정 기준을 적지 않은 v_GS 비교는 의미가 없다.", not_yet="")
+                 proved="같은 gate라도 측정 기준점에 따라 L_s·di/dt만큼 다르게 보인다 — 측정 기준을 적지 않은 v_GS 비교는 의미가 없다.", not_yet="두 기준의 차이는 branch L_s·di/dt이며 시뮬레이션 최대값을 L_s × 최대 di/dt와 나란히 표시했고, 셀 전체 에너지 원장(1e-5)으로 모델 일관성을 확인했다. L_s를 집중 인덕턴스 하나로 두었으므로 probe의 대역·CM 제거비·ground lead와 패키지 안에서 Kelvin 핀이 die source와 분리되는 정도는 모델에 없다.")
     res.add_plot("p_on_csi", "gate 루프에 걸리는 L_s,k·di_s,k/dt", [f"csi{k}" for k in range(4)], y_label="Δv", y_unit="V", bands=b_on, group="on", level="D", hlines=[{"y": 4.0, "label": "교재 screen 4 V"}],
                  proved=f"branch common-source inductance가 turn-on 동안 최대 {csi.max():.3g} V를 만든다 (screen 4 V와 같은 규모, 실제 di/dt에 비례).", not_yet="극성·loop 위치에 따라 되먹임 부호가 달라 단순 가산하지 않는다.")
     res.add_plot("p_off_i", "turn-off: branch별 전류와 차동 링잉", [f"iof{k}" for k in range(4)] + ["iavg_of"], y_label="i", y_unit="A", bands=b_off, group="off", level="D",
                  proved="turn-off 뒤 branch 전류가 서로 반대로 흔들리는 차동 성분은 모듈 전류 합에는 거의 보이지 않는다.", not_yet="감쇠는 합성 등가가 정한다.")
     res.add_plot("p_off_v", "turn-off: branch별 v_DS", [f"vdo{k}" for k in range(4)], y_label="v_DS", y_unit="V", bands=b_off, group="off", level="D", hlines=[{"y": v["Vbus"], "label": "V_bus"}],
-                 proved="branch drain inductance가 다르면 die별 overshoot도 다르다.", not_yet="")
+                 proved="branch drain inductance가 다르면 die별 overshoot도 다르다.", not_yet="branch별 v_DS는 같은 셀의 에너지 원장(1e-5)으로 확인했다. overshoot 크기는 합성 L_d·k_M과 R_p‖L_b 감쇠 등가가 정하며, 실제 die 커패시턴스 곡선·온도·역회복과 측정점(단자 vs die)에 따른 차이는 포함하지 않는다.")
     res.add_plot("p_hold", "on 상태: 인덕턴스 분담에서 저항 분담으로 (L/R 이완)", [f"ihold{k}" for k in range(4)] + [f"stat{k}" for k in range(4)], y_label="i", y_unit="A", group="hold", level="D",
                  proved="switching 직후의 분담은 인덕턴스·타이밍이 정하고, 수 µs에 걸쳐 저항(정적) 분담으로 이완한다.", not_yet="온도 상승에 따른 R 변화는 넣지 않았다 (실험 1).")
     res.add_series("M_sp", "k_M별 branch peak 차", "A", kms, spreadM, style="points")

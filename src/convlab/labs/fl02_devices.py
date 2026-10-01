@@ -1585,9 +1585,9 @@ def run_vgs_spike(v: dict) -> Result:
                  proved="실제 turn-on이면 상측 채널 전류(shoot-through)가 생기고 DC-link 전류가 그만큼 더 흐른다. 겉보기 스파이크만이면 채널 전류는 0이다.",
                  not_yet="이 합성 소자의 V_th·C_gd/C_gs 비가 결과를 정한다. 실제 소자는 온도에 따라 V_th가 낮아진다.")
     res.add_plot("p_v", "dv/dt와 di/dt의 원천: DUT turn-on", ["v_ds", "v_dsH"], y_label="v", y_unit="V", bands=bands, group="sp", level="D",
-                 proved="상측 v_DS가 V_bus로 오르는 dv/dt가 C_gd를 통해 상측 gate로 전하를 밀어 넣는다.", not_yet="")
+                 proved="상측 v_DS가 V_bus로 오르는 dv/dt가 C_gd를 통해 상측 gate로 전하를 밀어 넣는다.", not_yet="이 turn-on 사건은 포트·소산·저장에너지 원장(잔차 < 1e-5)으로 닫혔다. dv/dt 크기는 합성 die의 C_gd(v)·C_ds(v)와 구동 R_g, 고정 T_j가 정하며, 실제 소자의 커패시턴스 곡선·역회복·온도 의존과 probe 대역 제한은 포함하지 않는다.")
     res.add_plot("p_art", "겉보기 전압 L_sH·di_HS/dt", ["art"], y_label="Δv", y_unit="V", bands=bands, group="sp", level="D",
-                 proved="두 probe 기준의 차이는 정확히 공통 source inductance의 유도전압이다.", not_yet="")
+                 proved="두 probe 기준의 차이는 정확히 공통 source inductance의 유도전압이다.", not_yet="차이 전압은 출력식의 L_sH·di/dt와 표본 전류의 수치 미분이 2 % 이내로 일치해 확인했다. L_sH를 집중 인덕턴스 하나로 두었으므로 패키지 내부의 분포·상호 인덕턴스와 probe의 공통모드 오차·대역 제한은 이 겉보기 전압에 들어 있지 않다.")
     res.circuit = {"diagram": _dpt_circuit(v).to_json(), "intervals": bands, "plot_group": "sp"}
     res.add_metric("Qst_rel", "shoot-through 전하 / Q_oss,H(V_bus)", s0["Qst"] / s0["Qoss"], "", basis="판정 기준: ≥ 5 % 실제 turn-on, 0.5–5 % 부분 turn-on (학습용 기준)")
     if cls == "REAL":

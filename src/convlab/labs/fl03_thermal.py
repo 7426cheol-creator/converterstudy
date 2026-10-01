@@ -232,11 +232,11 @@ def run_rc_step(v: dict) -> Result:
                  proved=f"{te:g} s의 T_j는 {T_te:.6g} °C이고 {T_fin:g} °C는 t → ∞의 값이다. 정상상태 식을 과도 시점에 쓰면 틀린다.",
                  not_yet="단일 RC는 한 시정수의 근사다. 실제 소자는 여러 층(die·solder·substrate·방열판)의 시정수를 가진다 (실험 4).")
     res.add_plot("p_q", "냉각 경계로 나가는 열류", ["q_R"], y_label="열류", y_unit="W", level="C", group="step", bands=[{"x0": 0.0, "x1": t_end, "mode": "on", "label": "손실 인가"}],
-                 proved="초기에는 손실 대부분이 C_th를 데우는 데 쓰이고, 시간이 지나야 경계로 나가는 열이 손실과 같아진다.", not_yet="")
+                 proved="초기에는 손실 대부분이 C_th를 데우는 데 쓰이고, 시간이 지나야 경계로 나가는 열이 손실과 같아진다.", not_yet="열 원장(잔차 < 1e-6)이 확인하는 것은 이 단일 노드 안의 손실 = 저장 증가 + 경계 열류뿐이다. 냉각 경계를 고정 온도 T_b로 두었으므로 방열판·냉각수의 온도 상승과 층별 열 분배는 이 그림에 없다(실험 4).")
     tz = np.geomspace(1e-3 * tau, 20 * tau, 200)
     res.add_series("Zth", "Z_th(t) = R(1 − e^(−t/τ))", "K/W", tz.tolist(), (R * (1 - np.exp(-tz / tau))).tolist())
     res.add_plot("p_zth", "열 임피던스 Z_th(t) (로그 시간)", ["Zth"], x_label="t", x_unit="s", y_label="Z_th", y_unit="K/W", kind="xy", log_x=True, level="A",
-                 markers=[{"x": te, "y": R * (1 - math.exp(-te / tau)), "label": f"{te:g} s"}], proved="짧은 펄스는 R_th가 아니라 Z_th(t_pulse)만큼만 온도를 올린다.", not_yet="")
+                 markers=[{"x": te, "y": R * (1 - math.exp(-te / tau)), "label": f"{te:g} s"}], proved="짧은 펄스는 R_th가 아니라 Z_th(t_pulse)만큼만 온도를 올린다.", not_yet="곡선은 닫힌 식이며 같은 식이 평가 시점에서 행렬지수 적분과 1e-12로 일치한다. 단일 시정수의 Z_th라서, 여러 층의 시정수가 섞이는 실제 소자의 짧은 펄스 영역과 반복 펄스의 중첩은 다루지 않는다(실험 4).")
     # same average loss, different pulse lengths
     D = v["duty"]
     t_p = max(12 * tau, 3 * v["T_slow"])
@@ -377,14 +377,14 @@ def run_electrothermal(v: dict) -> Result:
                  proved="손실이 온도와 함께 커지면 같은 조건에서 더 뜨겁고, 과부하 동안의 상승이 고정 손실보다 크다. 루프 이득이 1 이상인 구간에서는 온도가 발산한다.",
                  not_yet="α는 전체 손실에 한 선형 온도계수를 준 합성 가정이다. 실제 전도·스위칭 손실은 각자의 온도 의존성을 가진다. 적용범위 밖 궤적은 그리지 않았다.")
     res.add_plot("p_P", "손실 P(T_j)", ["Pc", "Pu"], y_label="P", y_unit="W", bands=bands, level="C", group="et",
-                 proved="같은 전류라도 T_j가 오르면 R_DS(on)이 커져 손실이 늘어난다(되먹임).", not_yet="")
+                 proved="같은 전류라도 T_j가 오르면 R_DS(on)이 커져 손실이 늘어난다(되먹임).", not_yet=f"연성 손실 trace는 행렬지수 정확 적분의 출력이며 구간별 RK4 끝값(1e-7)과 열 원장(1e-6)으로 확인했다. 손실 곡선은 P₀[1 + α(T_j − T_ref)] 한 직선이라 R_DS(on)의 실제 온도 곡선이나 스위칭 손실의 다른 온도 의존성은 없고, 적용범위 {Tmax:g} °C 밖의 손실은 그리지 않았다.")
     res.add_plot("p_it", "고정점 반복의 수렴·발산", ["it"], x_label="반복 k", x_unit="", y_label="T_j", y_unit="°C", kind="xy", level="A",
                  proved="반복 오차는 매번 g배가 된다: g < 1이면 수렴, g ≥ 1이면 발산한다.", not_yet="선형 α 모델의 결과다. 비선형 손실 곡선에서는 국소 기울기가 g 역할을 한다.")
     gs = np.linspace(0, 0.95, 60)
     res.add_series("sens", "ΔT / (R·P₀) = 1/(1 − g)", "", gs.tolist(), (1 / (1 - gs)).tolist())
     res.add_plot("p_sens", "루프 이득에 따른 온도 민감도", ["sens"], x_label="g = α·R_th·P", x_unit="", y_label="증폭", y_unit="", kind="xy", level="A",
                  markers=[{"x": g0, "y": 1 / (1 - g0), "label": f"g = {g0:.3g}"}] if g0 < 0.95 else [], vlines=[{"x": 1.0, "label": "g = 1"}],
-                 proved="분모 1 − g가 작아질수록 같은 손실 오차가 온도에 크게 증폭된다.", not_yet="")
+                 proved="분모 1 − g가 작아질수록 같은 손실 오차가 온도에 크게 증폭된다.", not_yet="곡선은 닫힌 식 1/(1 − g)이며, g < 1인 현재 조건의 값은 고정점 반복과 정확 과도의 장시간 값이 닫힌 식과 일치해 확인된다. 단일 노드·선형 α의 증폭률이라 다층 열망이나 비선형 손실 곡선에서는 해 근처의 국소 기울기로 g를 다시 구해야 한다.")
     # numerical trap: explicit Euler with a user step on the same coupled transient
     dt = v["dt_euler"]
     T = v["Tb"]
@@ -409,7 +409,7 @@ def run_electrothermal(v: dict) -> Result:
     lam = max(abs(1 + dt * net.mode(q).A[0, 0]) for q in range(len(segs)))
     res.add_plot("p_euler", "수치 함정: 명시적 Euler의 시간 step", ["euler", "Tc_full"], y_label="T_j", y_unit="°C", level="C", group="eu",
                  proved=f"증폭률 |1 + Δt·A| = {lam:.3g}: 1보다 크면 물리는 안정해도 수치해가 진동·발산한다. 발산한 반복이 곧 열폭주는 아니다.",
-                 not_yet="")
+                 not_yet="명시적 Euler를 같은 연성 과도의 정확 해(행렬지수)와 겹쳐 비교했다. 단일 노드라 증폭률이 |1 + Δt·A| 하나로 정해지며, 다노드 강성 열망에서는 가장 빠른 열 시정수가 step 한계를 정한다 — 암시적·가변 step 적분기는 비교하지 않았다.")
     # RK4 path on the coupled transient (independent of the engine): segment by segment
     Tk = v["Tb"]
     knots = [sg[0] for sg in segs] + [t_end]
@@ -614,7 +614,7 @@ def run_loss_map(v: dict) -> Result:
                  not_yet="이상 정현 전류에 사건 에너지를 붙인 postprocessed 추정이다. 전류 리플·dead time에 의한 전압 오차·온도 변동은 결합하지 않았다.")
     hl = [{"y": MAP_I[-1], "label": f"map 상한 {MAP_I[-1]:g} A"}, {"y": -MAP_I[-1], "label": f"−{MAP_I[-1]:g} A"}]
     res.add_plot("p_i", "상 전류와 loss map 범위", ["i_ph"], x_label="전기각", x_unit="deg", y_label="i", y_unit="A", kind="xy", bands=bands, level="A", group="ev", hlines=hl,
-                 proved="map 범위를 넘는 전류의 사건은 외삽하지 않고 미지원으로 센다.", not_yet="")
+                 proved="map 범위를 넘는 전류의 사건은 외삽하지 않고 미지원으로 센다.", not_yet="상 전류는 이상 정현파 I_pk·sin이며 map 상한은 합성 격자의 경계다(격자점 재현은 회귀 확인). 전류 리플·과도 피크 전류와 실제 소자의 SOA·단락 한계는 이 범위 판정에 들어 있지 않다.")
     Ii = np.linspace(0, MAP_I[-1], 61)
     for Tq, tag in ((25.0, "25"), (Tj, "op"), (175.0, "175")):
         if MAP_T[0] <= Tq <= MAP_T[-1]:
@@ -838,11 +838,11 @@ def run_foster_cauer(v: dict) -> Result:
     res.add_series("dB", "(b) − (a)", "K", tz.tolist(), dB.tolist())
     res.add_series("dC", "(c) − (a)", "K", tz.tolist(), dC.tolist())
     res.add_plot("p_err", "연결 방식별 T_j 오차", ["dB", "dC"], x_label="t", x_unit="s", y_label="ΔT_j", y_unit="K", kind="xy", log_x=True, level="C",
-                 proved="변환(Cauer)으로 연결하면 오차가 피팅 잔차 수준으로 줄어든다.", not_yet="")
+                 proved="변환(Cauer)으로 연결하면 오차가 피팅 잔차 수준으로 줄어든다.", not_yet="(c)의 작은 오차는 ‘변환된 Cauer 연결 ≈ 물리 사다리’ 검사(피팅 잔차에 비례한 허용치)로 확인했다. 이 합성 예는 진짜 망이 사다리라 변환이 맞지만, 실제 모듈에서 피팅 Foster로 만든 Cauer는 port impedance만 재현하고 층·계면 위치는 보장하지 않는다.")
     res.add_series("Tca", "(a) 물리 case 온도", "°C", tz.tolist(), Tcase_a.tolist())
     res.add_series("Tcb", "(b) 잘못된 연결의 case 온도", "°C", tz.tolist(), Tcase_b.tolist())
     res.add_plot("p_case", "case 온도: 물리 경로 vs Foster 끝 노드", ["Tca", "Tcb"], x_label="t", x_unit="s", y_label="T_case", y_unit="°C", kind="xy", log_x=True, level="C",
-                 proved="물리 경로에서는 case가 die를 통과한 열로 천천히 데워지지만, Foster 끝 노드는 t = 0⁺에 P·R_TIM만큼 뛴다.", not_yet="")
+                 proved="물리 경로에서는 case가 die를 통과한 열로 천천히 데워지지만, Foster 끝 노드는 t = 0⁺에 P·R_TIM만큼 뛴다.", not_yet="Foster 끝 노드의 t = 0⁺ 계단은 P·R_TIM(지표 case_jump)과 같다. 물리 case 온도는 R4와 R_TIM 사이 노드를 저항 분압으로 잡은 값이라 TIM 열용량·면내 온도 분포·열전대 위치에 따른 차이는 없다.")
     res.tables.append(Table("t_net", "열망 계수", ["표현", "R [K/W]", "C [J/K] 또는 τ [s]"], [
         ["물리 Cauer (합성, ASSUMED)", ", ".join(f"{x:.4g}" for x in R), "C: " + ", ".join(f"{x:.4g}" for x in C)],
         ["정확 Foster (고유값)", ", ".join(f"{x:.4g}" for x in Rf), "τ: " + ", ".join(f"{x:.4g}" for x in tf)],
