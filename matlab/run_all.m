@@ -24,7 +24,7 @@ if nargin < 2 || isempty(out_file)
 end
 addpath(here);
 
-checks = {'xc_dab', 'xc_ex06', 'xc_ex02', 'xc_ex07', 'xc_llc', 'xc_cllc', 'xc_fl05', 'xc_fl01'};
+checks = {'xc_dab', 'xc_ex06', 'xc_ex02', 'xc_ex07', 'xc_llc', 'xc_cllc', 'xc_cllc_td', 'xc_fl05', 'xc_fl01'};
 rows = {};
 groups = {};
 t_all = tic;
@@ -63,9 +63,11 @@ end
 meta.export_dir = local_rel(export_dir, root);
 meta.python_exports = local_exports(export_dir);
 meta.expected_values = ['Python exports (python -m convlab run LAB EXP --preset P); ' ...
-  'FL10 CLLC FHA rows use the textbook ch.13 printed values because FL10 is not merged yet.'];
+  'the FL10.tb.* rows compare with the textbook ch.13 printed values instead.'];
 meta.tolerance_policy = ['closed form 1e-9..1e-12 rel; ode45 / fzero 1e-8 rel; printed table or textbook ' ...
-  'values: half a unit of the last printed digit (abs); nonlinear growth-rate fits 1e-3 rel.'];
+  'values: half a unit of the last printed digit (abs); nonlinear growth-rate fits 1e-3 rel; CLLC switching ' ...
+  'model 1e-5 rel (ode45 RelTol 1e-10 self-consistency < 1e-9 rel, app shooting residual 1e-8 amplified by ' ...
+  'Floquet |lambda| up to 0.989); frequencies found by bisection: the bisection half-width.'];
 meta.checks = groups;
 meta.counts = struct('total', numel(rows), 'PASS', n_pass, 'FAIL', n_fail, 'TODO', n_todo);
 meta.runtime_s = round(toc(t_all) * 1e3) / 1e3;

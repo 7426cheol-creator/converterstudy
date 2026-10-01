@@ -6,13 +6,18 @@ function rows = xc_cllc(export_dir)
 %   Seed: n = 1, Lr1 = Lr2 = 40 uH, Cr1 = Cr2 = 28.1448 nF, Lm = 200 uH,
 %   fs = 120 ... 210 kHz, 11 kW. Modification A: n = 0.93, referred symmetry.
 %
-%   FL10 is not merged yet, so the expected values are the textbook's
-%   printed numbers, with half a unit of the last printed digit as tolerance.
-%   The time-domain item (FL10 / EX05) is a TODO hook at the end.
+%   Two sets of expected values:
+%   - the textbook's printed numbers (printed Cr1 = 28.1448 nF), tolerance half
+%     a unit of the last printed digit;
+%   - the FL10 exports (seed_fail seed, fix_n093 textbook; Cr1 = 28.144773 nF,
+%     f_r = 150 kHz), recomputed from the exported inputs; the roots and gains
+%     are root solves of the same analytic function, so 1e-9 relative covers
+%     both solvers.
+%   The switching (time-domain) model is checked in xc_cllc_td.
 
 rows = {};
 src = struct('lab', 'FL10', 'experiment', 'fha', 'preset', 'textbook', 'file', 'textbook ch.13');
-tb = 'textbook ch.13 printed value (FL10 export not merged yet)';
+tb = 'textbook ch.13 printed value';
 
 Lr1 = 40e-6;
 Cr1 = 28.1448e-9;
@@ -32,16 +37,16 @@ tank = local_tank(Lr1, Cr1, Lm, n, Lr1 / n ^ 2, Cr1 * n ^ 2, Vbat, P);
 Gmax = local_max_inductive_gain(tank, fgrid);
 t_s = toc(t0);
 m = 'grid scan of |H| and Im Zin over 120-210 kHz, fminbnd on interior peaks, fzero on the inductive edges';
-rows{end + 1} = xc_row('FL10.seed.Greq', src, 'required gain n Vbat/Vlink at 920/850 V', '', 1.082353, Greq, 5e-7, 'abs', 'n Vo/Vi', t_s, tb);
-rows{end + 1} = xc_row('FL10.seed.max_inductive_gain', src, 'max |H| in the inductive region, 120-210 kHz', '', 1.016401, Gmax, 5e-7, 'abs', m, t_s, tb);
-rows{end + 1} = xc_row('FL10.seed.no_solution', src, 'no inductive solution (max gain < required)', '', 1, double(Gmax < Greq), 0, 'bool', m, t_s, tb);
+rows{end + 1} = xc_row('FL10.tb.seed.Greq', src, 'required gain n Vbat/Vlink at 920/850 V', '', 1.082353, Greq, 5e-7, 'abs', 'n Vo/Vi', t_s, tb);
+rows{end + 1} = xc_row('FL10.tb.seed.max_inductive_gain', src, 'max |H| in the inductive region, 120-210 kHz', '', 1.016401, Gmax, 5e-7, 'abs', m, t_s, tb);
+rows{end + 1} = xc_row('FL10.tb.seed.no_solution', src, 'no inductive solution (max gain < required)', '', 1, double(Gmax < Greq), 0, 'bool', m, t_s, tb);
 
 % ---------------------------------------------------------------- modification A, n = 0.93
 n = 0.93;
 Lr2 = Lr1 / n ^ 2;                           % physical secondary values that keep
 Cr2 = Cr1 * n ^ 2;                           % the referred tank symmetric
-rows{end + 1} = xc_row('FL10.n093.Lr2', src, 'physical Lr2 = Lr1/n^2', 'H', 46.2481e-6, Lr2, 0.5e-10, 'abs', 'referred symmetry: n^2 Lr2 = Lr1', 0, tb);
-rows{end + 1} = xc_row('FL10.n093.Cr2', src, 'physical Cr2 = Cr1 n^2', 'F', 24.3424e-9, Cr2, 0.5e-13, 'abs', 'referred symmetry: Cr2/n^2 = Cr1', 0, tb);
+rows{end + 1} = xc_row('FL10.tb.n093.Lr2', src, 'physical Lr2 = Lr1/n^2', 'H', 46.2481e-6, Lr2, 0.5e-10, 'abs', 'referred symmetry: n^2 Lr2 = Lr1', 0, tb);
+rows{end + 1} = xc_row('FL10.tb.n093.Cr2', src, 'physical Cr2 = Cr1 n^2', 'F', 24.3424e-9, Cr2, 0.5e-13, 'abs', 'referred symmetry: Cr2/n^2 = Cr1', 0, tb);
 
 corners = [650, 700; 800, 800; 920, 850];    % [battery, link] in V
 g_tb = [0.863571, 0.930000, 1.006588];
@@ -54,7 +59,7 @@ for c = 1:size(corners, 1)
   Greq = n * Vbat / Vlink;
   fr = local_roots(tank, fgrid, Greq);
   t_c = toc(t0);
-  tag = sprintf('FL10.n093.%d_%d', Vbat, Vlink);
+  tag = sprintf('FL10.tb.n093.%d_%d', Vbat, Vlink);
   m = 'sign changes of |H| - Greq on a 9001-point grid, fzero, inductive (Im Zin > 0) roots kept';
   rows{end + 1} = xc_row([tag '.Greq'], src, sprintf('required gain at %d/%d V', Vbat, Vlink), '', g_tb(c), Greq, 5e-7, 'abs', 'n Vo/Vi', 0, tb); %#ok<AGROW>
   rows{end + 1} = xc_row([tag '.n_roots'], src, 'number of inductive FHA solutions in 120-210 kHz', '', numel(roots_tb{c}), numel(fr), 0, 'abs', m, t_c, tb); %#ok<AGROW>
@@ -77,38 +82,8 @@ for c = 1:size(corners, 1)
   end
 end
 
-% ---------------------------------------------------------------- 920/850 V roots to 0.01 Hz
-% The task lists the FL10 draft roots 136099.47 Hz and 147060.86 Hz, computed
-% with Cr1 set for fr = 150 kHz exactly (28.144773 nF; the textbook prints
-% 28.1448 nF, which moves the roots by less than 0.1 Hz).
-t0 = tic;
-Cr1x = 1 / ((2 * pi * 150e3) ^ 2 * Lr1);
-tank = local_tank(Lr1, Cr1x, Lm, n, Lr1 / n ^ 2, Cr1x * n ^ 2, 920, P);
-fr = local_roots(tank, fgrid, n * 920 / 850);
-t_x = toc(t0);
-m = 'as above with Cr1 = 1/((2 pi 150 kHz)^2 Lr1)';
-draft = [136099.47, 147060.86];
-ds = 'FL10 draft value listed in the task (FL10 export pending)';
-for j = 1:min(numel(fr), 2)
-  rows{end + 1} = xc_row(sprintf('FL10.n093.920_850.root%d.fr150k', j), src, sprintf('inductive FHA solution %d, Cr1 for fr = 150 kHz', j), 'Hz', draft(j), fr(j), 0.005 + 1e-6, 'abs', m, t_x, ds); %#ok<AGROW>
-end
-if numel(fr) ~= 2
-  rows{end + 1} = xc_row('FL10.n093.920_850.n_roots.fr150k', src, 'number of inductive FHA solutions', '', 2, numel(fr), 0, 'abs', m, t_x, ds);
-end
-
-% ---------------------------------------------------------------- TODO(FL10/EX05 time domain)
-% Hook for the switching / time-domain comparison. When FL10 (CLLC) and EX05
-% are merged:
-%   1. add their presets to the export list in verification/run_octave_crosscheck.sh;
-%   2. integrate the textbook E05 state model x = [i1, i2, vC1, vC2] with ode45
-%      (v_m from the node equation, v1 = +-Vlink, v2 from the rectifier mode)
-%      at both n = 0.93 branches of the 920/850 V corner, shooting for the
-%      periodic state (Phi_T(x0) = x0), and compare the exported switching
-%      results (output power / current, rms, capacitor peak voltages);
-%   3. replace the TODO row below by those comparison rows.
-rows{end + 1} = local_todo(src, 'FL10.time_domain.TODO', ...
-  'CLLC switching / time-domain comparison (FL10, EX05)', ...
-  'not written yet: FL10/EX05 not merged; FHA numbers above only');
+% ---------------------------------------------------------------- FL10 exports
+rows = [rows, local_exports(export_dir, fgrid)];
 end
 
 % ======================================================================
@@ -136,17 +111,19 @@ function Zin = local_Zin(tank, f)
 [~, Zin] = local_H(tank, f);
 end
 
-function G = local_max_inductive_gain(tank, fgrid)
+function [G, fG] = local_max_inductive_gain(tank, fgrid)
 [H, Zin] = local_H(tank, fgrid);
 g = abs(H);
 ind = imag(Zin) > 0;
 cand = [];
+fcand = [];
 % interior local maxima of |H| inside the inductive region
 for k = 2:numel(fgrid) - 1
   if ind(k) && g(k) >= g(k - 1) && g(k) >= g(k + 1)
     fb = fminbnd(@(f) -abs(local_H(tank, f)), fgrid(k - 1), fgrid(k + 1), optimset('TolX', 1e-6));
     if imag(local_Zin(tank, fb)) > 0
       cand(end + 1) = abs(local_H(tank, fb)); %#ok<AGROW>
+      fcand(end + 1) = fb; %#ok<AGROW>
     end
   end
 end
@@ -155,15 +132,22 @@ for k = 1:numel(fgrid) - 1
   if ind(k) ~= ind(k + 1)
     fe = fzero(@(f) imag(local_Zin(tank, f)), [fgrid(k), fgrid(k + 1)], optimset('TolX', 1e-9));
     cand(end + 1) = abs(local_H(tank, fe)); %#ok<AGROW>
+    fcand(end + 1) = fe; %#ok<AGROW>
   end
 end
 if ind(1)
   cand(end + 1) = g(1);
+  fcand(end + 1) = fgrid(1);
 end
 if ind(end)
   cand(end + 1) = g(end);
+  fcand(end + 1) = fgrid(end);
 end
-G = max([cand, -Inf]);
+[G, k] = max([cand, -Inf]);
+fG = NaN;
+if k <= numel(fcand)
+  fG = fcand(k);
+end
 end
 
 function fr = local_roots(tank, fgrid, Greq)
@@ -180,22 +164,92 @@ end
 fr = sort(fr);
 end
 
-function r = local_todo(src, item, quantity, note)
-r = struct();
-r.item = item;
-r.lab = src.lab;
-r.experiment = 'time_domain';
-r.preset = 'n093_920_850';
-r.quantity = quantity;
-r.unit = '';
-r.expected = NaN;
-r.expected_source = 'FL10 / EX05 export (pending)';
-r.octave_value = NaN;
-r.abs_error = NaN;
-r.rel_error = NaN;
-r.tol = NaN;
-r.tol_kind = 'todo';
-r.status = 'TODO';
-r.runtime_s = 0;
-r.method = note;
+function rows = local_exports(export_dir, fgrid)
+% FL10 FHA exports, recomputed from their own inputs
+rows = {};
+d = xc_load(export_dir, 'FL10', 'seed_fail', 'seed');
+L1 = xc_get(d, 'input', 'L1');
+C1 = xc_get(d, 'input', 'C1');
+Lm = xc_get(d, 'input', 'Lm');
+n = xc_get(d, 'input', 'n');
+P = xc_get(d, 'input', 'P');
+Vb = xc_get(d, 'input', 'Vbat_hi');
+Vl = xc_get(d, 'input', 'Vlink_hi');
+t0 = tic;
+tank = local_tank(L1, C1, Lm, n, L1 / n ^ 2, C1 * n ^ 2, Vb, P);
+[Gmax, fG] = local_max_inductive_gain(tank, fgrid);
+t_s = toc(t0);
+m = 'grid scan of |H| and Im Zin over 120-210 kHz, fminbnd on interior peaks, fzero on the inductive edges';
+rows{end + 1} = xc_row('FL10.seed.fr', d, 'f_r = 1/(2 pi sqrt(L1 C1))', 'Hz', xc_get(d, 'metric', 'fr'), 1 / (2 * pi * sqrt(L1 * C1)), 1e-12, 'rel', 'definition', 0);
+rows{end + 1} = xc_row('FL10.seed.g_req_hi', d, 'required gain n Vbat/Vlink at 920/850 V', '', xc_get(d, 'metric', 'g_req_hi'), n * Vb / Vl, 1e-12, 'rel', 'n Vo/Vi', 0);
+rows{end + 1} = xc_row('FL10.seed.gmax_hi', d, sprintf('max inductive |H| at 920/850 V (at %.2f kHz)', fG / 1e3), '', xc_get(d, 'metric', 'gmax_hi'), Gmax, 1e-9, 'rel', m, t_s);
+tab = xc_table(d, 't_corners');
+corners = {'650/700', '800/800', '920/850'};
+for c = 1:numel(corners)
+  row = local_find_row(tab, corners{c});
+  v = sscanf(corners{c}, '%f/%f');
+  tank = local_tank(L1, C1, Lm, n, L1 / n ^ 2, C1 * n ^ 2, v(1), P);
+  [Gc, fc] = local_max_inductive_gain(tank, fgrid);
+  tok = regexp(row{3}, '([0-9]+\.[0-9]+) @ ([0-9]+\.[0-9]+) kHz', 'tokens', 'once');
+  rows{end + 1} = xc_row(sprintf('FL10.seed.gmax_%s', strrep(corners{c}, '/', '_')), d, sprintf('max inductive |H| at %s V (table t_corners)', corners{c}), '', ...
+    str2double(tok{1}), Gc, 5e-7 + 1e-12, 'abs', [m '; table prints 6 decimals'], 0); %#ok<AGROW>
+  rows{end + 1} = xc_row(sprintf('FL10.seed.fgmax_%s', strrep(corners{c}, '/', '_')), d, sprintf('frequency of that maximum at %s V (table t_corners)', corners{c}), 'Hz', ...
+    str2double(tok{2}) * 1e3, fc, 5 + 1e-6, 'abs', [m '; table prints kHz with 2 decimals'], 0); %#ok<AGROW>
+end
+
+d = xc_load(export_dir, 'FL10', 'fix_n093', 'textbook');
+L1 = xc_get(d, 'input', 'L1');
+C1 = xc_get(d, 'input', 'C1');
+Lm = xc_get(d, 'input', 'Lm');
+n = xc_get(d, 'input', 'n');
+P = xc_get(d, 'input', 'P');
+L2 = L1 / n ^ 2;
+C2 = C1 * n ^ 2;
+rows{end + 1} = xc_row('FL10.n093.L2', d, 'physical L2 = L1/n^2', 'H', xc_get(d, 'metric', 'L2'), L2, 1e-12, 'rel', 'referred symmetry', 0);
+rows{end + 1} = xc_row('FL10.n093.C2', d, 'physical C2 = C1 n^2', 'F', xc_get(d, 'metric', 'C2'), C2, 1e-12, 'rel', 'referred symmetry', 0);
+ms = xc_metrics(d);
+names = {'lo', 'mid', 'hi'};
+m = 'sign changes of |H| - Greq on a 9001-point grid, fzero (TolX 1e-9 Hz), inductive roots kept';
+for c = 1:3
+  Vb = xc_get(d, 'input', ['Vbat_' names{c}]);
+  Vl = xc_get(d, 'input', ['Vlink_' names{c}]);
+  t0 = tic;
+  tank = local_tank(L1, C1, Lm, n, L2, C2, Vb, P);
+  fr = local_roots(tank, fgrid, n * Vb / Vl);
+  t_c = toc(t0);
+  key = sprintf('%g/%g V', Vb, Vl);
+  exp_f = [];
+  for k = 1:numel(ms)
+    if strncmp(ms{k}.key, 'f_', 2) && ~isempty(strfind(ms{k}.label, key))
+      exp_f(end + 1) = ms{k}.value; %#ok<AGROW>
+    end
+  end
+  exp_f = sort(exp_f);
+  rows{end + 1} = xc_row(sprintf('FL10.n093.%g_%g.n_roots', Vb, Vl), d, sprintf('number of inductive FHA solutions at %s', key), '', numel(exp_f), numel(fr), 0, 'abs', m, t_c); %#ok<AGROW>
+  for j = 1:min(numel(fr), numel(exp_f))
+    rows{end + 1} = xc_row(sprintf('FL10.n093.%g_%g.root%d', Vb, Vl, j), d, sprintf('inductive FHA solution %d at %s', j, key), 'Hz', exp_f(j), fr(j), 1e-9, 'rel', m, t_c); %#ok<AGROW>
+  end
+  if c == 3 && numel(fr) == 2
+    for j = 1:2
+      s = (abs(local_H(tank, fr(j) + 10)) - abs(local_H(tank, fr(j) - 10))) / 20 * 1e3;
+      I1 = 2 * sqrt(2) / pi * Vl / abs(local_Zin(tank, fr(j)));
+      kk = {'slope_lo', 'slope_hi'};
+      ki = {'I1_lo', 'I1_hi'};
+      rows{end + 1} = xc_row(sprintf('FL10.n093.920_850.slope%d', j), d, sprintf('d|H|/df at solution %d (+-10 Hz)', j), '1/kHz', xc_get(d, 'metric', kk{j}), s, 1e-6, 'rel', ...
+        'central difference of |H| over +-10 Hz (same definition as the app)', 0); %#ok<AGROW>
+      rows{end + 1} = xc_row(sprintf('FL10.n093.920_850.I1rms%d', j), d, sprintf('FHA primary series rms at solution %d', j), 'A', xc_get(d, 'metric', ki{j}), I1, 1e-9, 'rel', ...
+        'I1 = (2 sqrt(2)/pi) Vlink / |Zin|', 0); %#ok<AGROW>
+    end
+  end
+end
+end
+
+function row = local_find_row(tab, key)
+for k = 1:numel(tab)
+  if ~isempty(strfind(tab{k}{1}, key))
+    row = tab{k};
+    return;
+  end
+end
+error('xc:cllc', 'no table row with "%s"', key);
 end
