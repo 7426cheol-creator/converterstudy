@@ -1,7 +1,7 @@
 {
  "kind": "project_state",
  "note": "이 파일은 저장소 작업 상태다. 학습자의 예측·답 기록은 ~/.convlab/progress.json (앱이 관리)이며 이 파일과 다르다.",
- "updated": "2026-10-01T00:50:00Z",
+ "updated": "2026-10-01T01:55:00Z",
  "app_version": "4.0.0",
  "contract_version": "4.0-reconstructed",
  "branch": "ccr-947b03d9-ahvguh",
@@ -18,6 +18,7 @@
    "FL09",
    "FL10",
    "FL11",
+   "FL12",
    "EX01",
    "EX02",
    "EX03",
@@ -31,28 +32,23 @@
    "EX11",
    "EX12"
   ],
-  "in_progress": [
-   "FL12"
-  ],
+  "in_progress": [],
   "not_started": []
  },
  "done": [
   "정확한 구간 해석 엔진(행렬지수·사건·주기해), 스키마, 로컬 서버, 학습 화면",
-  "23개 실습: 회로·식·preset·예측·실행·그래프·판정·해설·면접 질문·export·테스트",
+  "24개 실습 전부: 회로·식·preset·예측·실행·그래프·판정·해설·면접 질문·export·테스트 (FL12·EX12는 rubric·기록만)",
   "모든 그래프에 ‘입증한 것 / 아직인 것’ 문단 (run-all이 계약으로 검사)",
-  "표준 라이브러리 기준값 검산 (verification/independent_reference_check.py)",
-  "Octave 교차검증 220/220 PASS (matlab/xc_*.m, CLLC 스위칭 독립 검산 포함) — FL09 표 버그를 찾아 고침",
+  "검증: pytest 378 passed, run-all 223 runs·모든 preset 398 runs 실패 0, 표준 라이브러리 기준값 99/99, Octave 220/220, 브라우저 101개 실험 0 실패",
   "Simscape builder 스크립트(미실행), PSIM 12.0.2 build sheet 7개(미실행)",
-  "CI workflow (python, 브라우저 e2e, octave), 브라우저 스모크 93개 실험 0 실패",
-  "문서: README, START_HERE, VERIFICATION, ERRATA(E-000~E-002, F-001~F-002), KNOWN_LIMITS, 생성 문서"
+  "CI workflow (python, 브라우저 e2e, octave)",
+  "문서: README, START_HERE, VERIFICATION, ERRATA(E-000~E-002, F-001~F-002), KNOWN_LIMITS, 생성 문서(추적표·모델 카드·테스트 독립성·run manifest·계약 재구성본)"
  ],
- "in_progress": [
-  "FL12 8개 사례 (rubric·기록만, 자동 채점 없음) — 사례 A·C 작성됨"
- ],
+ "in_progress": [],
  "next": [
-  "FL12 병합 후 테스트·run-all(--all-presets 포함)·브라우저 스모크",
-  "tools/gen_docs.py로 생성 문서 재생성, docs/VERIFICATION.md §6 수치 갱신",
-  "GitHub 접근이 복구되면 push, PR #1 CI 확인과 설명 갱신"
+  "새 저장소 7426cheol-creator/converterstudy가 이 세션에 연결되면 push하고 main 대상 draft PR 생성, CI 확인",
+  "원본 패키지 파일(simulation_contract_v4.json 등)이 생기면 docs/contract 재구성본·기준값과 대조",
+  "MATLAB/PSIM이 있는 환경에서 matlab/simscape builder와 psim build sheet로 대표점 대조"
  ],
  "commands": {
   "start": "./run.sh  (또는 python -m convlab serve)",
@@ -64,9 +60,9 @@
   "e2e": "cd e2e && npm ci && node smoke.mjs --spawn"
  },
  "blockers": [
-  "GitHub 접근 403 (2026-09-30 19:59 UTC부터): push와 PR 확인 불가. 사용자가 https://claude.ai/connect-github 에서 GitHub를 다시 연결해야 한다.",
+  "GitHub: 이 세션의 연결은 이전 계정이며 403. 새 계정(7426cheol-creator)을 https://claude.ai/connect-github 에서 연결하고 converterstudy에 Claude GitHub App을 설치해야 push 가능",
   "MATLAB/Simulink/PSIM 미설치: NOT_RUN_ENVIRONMENT (Python 필수 기능과 무관)",
   "원본 패키지 파일 미제공 (ERRATA E-000)"
  ],
- "resume": "이 파일의 next부터. 브랜치 ccr-947b03d9-ahvguh, `python -m pytest -q`와 `python -m convlab run-all --out results`로 현재 상태를 먼저 확인한다."
+ "resume": "브랜치 ccr-947b03d9-ahvguh. `python -m pytest -q`, `python -m convlab run-all --out results`로 상태 확인 후 next부터."
 }

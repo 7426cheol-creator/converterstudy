@@ -1,6 +1,6 @@
 # 테스트 독립성 지도 (Test independence map)
 
-생성: `tools/gen_docs.py` · run-all 2026-09-30T23:59:39
+생성: `tools/gen_docs.py` · run-all 2026-10-01T01:37:46
 
 **독립** = 서로 다른 식/적분기/표현으로 계산한 두 경로의 비교 (`Check.independent = True`). **회귀** = 같은 코드 경로의 재현성 확인. 교재 기준값은 테스트 파일에 숫자로 직접 적혀 있다 (`reference/` 모듈을 다시 부르지 않는다).
 
@@ -512,6 +512,267 @@
 - [PASS] (nominal) 에너지 잔차 (E_in − E_out − E_loss − ΔW) — 포트 에너지·저항 손실·저장에너지를 같은 구간에서 정확 적분 (상태식과 독립적으로 정의한 포트 전력)
 - [PASS] (stray_fail) 병렬 최적 N: 연속 해 vs 정수 sweep — dP/dN = 0 해석해 vs 정수 N 전수 계산
 - [PASS] (stray_fail) 에너지 잔차 (E_in − E_out − E_loss − ΔW) — 포트 에너지·저항 손실·저장에너지를 같은 구간에서 정확 적분 (상태식과 독립적으로 정의한 포트 전력)
+
+## FL12 · FAE 디버깅 — 파형보다 먼저 질문의 질을 높인다
+
+
+**case_a** — 독립 9 · 회귀 6
+
+- [PASS] (observed) gate loop: 닫힌 식 vs 독립 ODE (DOP853) — 구간별 지수 해 vs 같은 회로를 상태식으로 적분
+- [PASS] (observed) gate loop 에너지 잔차 (driver + Miller 주입 = R 손실 + ½CΔv²) — 해의 표본을 사다리꼴 적분한 포트·손실 에너지 vs 저장에너지 변화
+- [PASS] (observed) FL02 D 수준 cell도 같은 분리 논리를 보이나 — FL02 vgs_spike@artifact vs @real (비선형 C(v)·loop L을 가진 별도 모델)
+- [PASS] (kelvin) gate loop: 닫힌 식 vs 독립 ODE (DOP853) — 구간별 지수 해 vs 같은 회로를 상태식으로 적분
+- [PASS] (kelvin) gate loop 에너지 잔차 (driver + Miller 주입 = R 손실 + ½CΔv²) — 해의 표본을 사다리꼴 적분한 포트·손실 에너지 vs 저장에너지 변화
+- [PASS] (kelvin) FL02 D 수준 cell도 같은 분리 논리를 보이나 — FL02 vgs_spike@artifact vs @real (비선형 C(v)·loop L을 가진 별도 모델)
+- [PASS] (rg_off) gate loop: 닫힌 식 vs 독립 ODE (DOP853) — 구간별 지수 해 vs 같은 회로를 상태식으로 적분
+- [PASS] (rg_off) gate loop 에너지 잔차 (driver + Miller 주입 = R 손실 + ½CΔv²) — 해의 표본을 사다리꼴 적분한 포트·손실 에너지 vs 저장에너지 변화
+- [PASS] (rg_off) FL02 D 수준 cell도 같은 분리 논리를 보이나 — FL02 vgs_spike@artifact vs @real (비선형 C(v)·loop L을 가진 별도 모델)
+- [회귀 PASS] (observed) 모든 세계가 관측을 재현 (보정 잔차)
+- [회귀 PASS] (observed) 인용 수치가 실제 실행에서 왔는가
+- [회귀 PASS] (kelvin) 모든 세계가 관측을 재현 (보정 잔차)
+- [회귀 PASS] (kelvin) 인용 수치가 실제 실행에서 왔는가
+- [회귀 PASS] (rg_off) 모든 세계가 관측을 재현 (보정 잔차)
+- [회귀 PASS] (rg_off) 인용 수치가 실제 실행에서 왔는가
+
+**case_b** — 독립 15 · 회귀 3
+
+- [PASS] (observed) 선전류 400 V: 시간영역 Σv·i vs √3 식 — 상별 정현 v·i를 한 주기 평균해 P/η가 되는 전류 (FL05 helper) vs P/(√3VηPF)
+- [PASS] (observed) 선전류 360 V: 시간영역 Σv·i vs √3 식 — 상별 정현 v·i를 한 주기 평균해 P/η가 되는 전류 (FL05 helper) vs P/(√3VηPF)
+- [PASS] (observed) ripple: 자속좌표 해(선형 L) vs 닫힌 식 V_dc(1−x²)/(4Lf_s) — W(λ) 평균조건 brentq vs 4-wire 등가 해석식
+- [PASS] (observed) 포화 L의 peak: 자속좌표 정확해 vs ODE di/dt = v/L(i) — 구간선형 λ(i)의 해석 역함수 vs DOP853 적분 (on 구간)
+- [PASS] (observed) FL05 실행값 = 이 사례의 계산 — FL05 grid_boundary@nominal (별도 모듈) vs 이 사례의 P/(√3VηPF)
+- [PASS] (fs) 선전류 400 V: 시간영역 Σv·i vs √3 식 — 상별 정현 v·i를 한 주기 평균해 P/η가 되는 전류 (FL05 helper) vs P/(√3VηPF)
+- [PASS] (fs) 선전류 360 V: 시간영역 Σv·i vs √3 식 — 상별 정현 v·i를 한 주기 평균해 P/η가 되는 전류 (FL05 helper) vs P/(√3VηPF)
+- [PASS] (fs) ripple: 자속좌표 해(선형 L) vs 닫힌 식 V_dc(1−x²)/(4Lf_s) — W(λ) 평균조건 brentq vs 4-wire 등가 해석식
+- [PASS] (fs) 포화 L의 peak: 자속좌표 정확해 vs ODE di/dt = v/L(i) — 구간선형 λ(i)의 해석 역함수 vs DOP853 적분 (on 구간)
+- [PASS] (fs) FL05 실행값 = 이 사례의 계산 — FL05 grid_boundary@nominal (별도 모듈) vs 이 사례의 P/(√3VηPF)
+- [PASS] (probe) 선전류 400 V: 시간영역 Σv·i vs √3 식 — 상별 정현 v·i를 한 주기 평균해 P/η가 되는 전류 (FL05 helper) vs P/(√3VηPF)
+- [PASS] (probe) 선전류 360 V: 시간영역 Σv·i vs √3 식 — 상별 정현 v·i를 한 주기 평균해 P/η가 되는 전류 (FL05 helper) vs P/(√3VηPF)
+- [PASS] (probe) ripple: 자속좌표 해(선형 L) vs 닫힌 식 V_dc(1−x²)/(4Lf_s) — W(λ) 평균조건 brentq vs 4-wire 등가 해석식
+- [PASS] (probe) 포화 L의 peak: 자속좌표 정확해 vs ODE di/dt = v/L(i) — 구간선형 λ(i)의 해석 역함수 vs DOP853 적분 (on 구간)
+- [PASS] (probe) FL05 실행값 = 이 사례의 계산 — FL05 grid_boundary@nominal (별도 모듈) vs 이 사례의 P/(√3VηPF)
+- [회귀 PASS] (observed) 인용 수치가 실제 실행에서 왔는가
+- [회귀 PASS] (fs) 인용 수치가 실제 실행에서 왔는가
+- [회귀 PASS] (probe) 인용 수치가 실제 실행에서 왔는가
+
+**case_c** — 독립 15 · 회귀 3
+
+- [PASS] (observed) H1 RMS: 삼각파 닫힌 식 vs 구간선형 정확 적분 — \|V₁−V₂′\|/(4f_sL)/√3 vs PWL Σ Δt(i_a²+i_ai_b+i_b²)/3
+- [PASS] (observed) H1 RMS: 스위칭 엔진(행렬지수) vs 구간선형 — expm 전파·Kronecker 모멘트 vs PWL
+- [PASS] (observed) H2 여자전류 peak: V₂′T/(4L_m) vs 구간선형 — 닫힌 식 vs PWL 정점
+- [PASS] (observed) 에너지 잔차 (E_in − E_out − E_loss − ΔW) — 포트 에너지·저항 손실·저장에너지를 같은 구간에서 정확 적분 (상태식과 독립적으로 정의한 포트 전력)
+- [PASS] (observed) FL08 실행값 = 이 사례의 H1 계산 — FL08 zero_power_mismatch@mismatch (별도 모듈) vs 이 사례의 pwl_waves
+- [PASS] (ratio) H1 RMS: 삼각파 닫힌 식 vs 구간선형 정확 적분 — \|V₁−V₂′\|/(4f_sL)/√3 vs PWL Σ Δt(i_a²+i_ai_b+i_b²)/3
+- [PASS] (ratio) H1 RMS: 스위칭 엔진(행렬지수) vs 구간선형 — expm 전파·Kronecker 모멘트 vs PWL
+- [PASS] (ratio) H2 여자전류 peak: V₂′T/(4L_m) vs 구간선형 — 닫힌 식 vs PWL 정점
+- [PASS] (ratio) 에너지 잔차 (E_in − E_out − E_loss − ΔW) — 포트 에너지·저항 손실·저장에너지를 같은 구간에서 정확 적분 (상태식과 독립적으로 정의한 포트 전력)
+- [PASS] (ratio) FL08 실행값 = 이 사례의 H1 계산 — FL08 zero_power_mismatch@mismatch (별도 모듈) vs 이 사례의 pwl_waves
+- [PASS] (dc) H1 RMS: 삼각파 닫힌 식 vs 구간선형 정확 적분 — \|V₁−V₂′\|/(4f_sL)/√3 vs PWL Σ Δt(i_a²+i_ai_b+i_b²)/3
+- [PASS] (dc) H1 RMS: 스위칭 엔진(행렬지수) vs 구간선형 — expm 전파·Kronecker 모멘트 vs PWL
+- [PASS] (dc) H2 여자전류 peak: V₂′T/(4L_m) vs 구간선형 — 닫힌 식 vs PWL 정점
+- [PASS] (dc) 에너지 잔차 (E_in − E_out − E_loss − ΔW) — 포트 에너지·저항 손실·저장에너지를 같은 구간에서 정확 적분 (상태식과 독립적으로 정의한 포트 전력)
+- [PASS] (dc) FL08 실행값 = 이 사례의 H1 계산 — FL08 zero_power_mismatch@mismatch (별도 모듈) vs 이 사례의 pwl_waves
+- [회귀 PASS] (observed) 인용 수치가 실제 실행에서 왔는가
+- [회귀 PASS] (ratio) 인용 수치가 실제 실행에서 왔는가
+- [회귀 PASS] (dc) 인용 수치가 실제 실행에서 왔는가
+
+**case_d** — 독립 18 · 회귀 9
+
+- [PASS] (observed) 독립 경로: 상태식 + DOP853 한 주기 (경부하, 새 L_m) — affine 행렬·행렬지수 대신 상태식을 직접 적고 solve_ivp 이벤트로 다이오드 전환
+- [PASS] (observed) 에너지 잔차 (E_in − E_out − E_loss − ΔW) — 포트 에너지·저항 손실·저장에너지를 같은 구간에서 정확 적분 (상태식과 독립적으로 정의한 포트 전력)
+- [PASS] (observed) Q_oss(400 V) 기존 소자: EX02 닫힌 식 vs 수치 적분 — 2C₀V₀(√(1+V/V₀)−1) vs quad ∫C(v)dv
+- [PASS] (observed) Q_oss(400 V) H12 새 소자: EX02 닫힌 식 vs 수치 적분 — 2C₀V₀(√(1+V/V₀)−1) vs quad ∫C(v)dv
+- [PASS] (observed) H12 잔류 V_DS: EX02 v(q) 닫힌 식 vs ODE dv/dt = I/C_n(v) — brentq로 Q_n(v) = I·t_d를 푼 값 vs DOP853 적분
+- [PASS] (observed) FL09 실행의 f_r = 이 사례 tank의 f_r — FL09 fha_gain@textbook vs 이 사례의 Tank
+- [PASS] (restore_lm) 독립 경로: 상태식 + DOP853 한 주기 (경부하, 새 L_m) — affine 행렬·행렬지수 대신 상태식을 직접 적고 solve_ivp 이벤트로 다이오드 전환
+- [PASS] (restore_lm) 에너지 잔차 (E_in − E_out − E_loss − ΔW) — 포트 에너지·저항 손실·저장에너지를 같은 구간에서 정확 적분 (상태식과 독립적으로 정의한 포트 전력)
+- [PASS] (restore_lm) Q_oss(400 V) 기존 소자: EX02 닫힌 식 vs 수치 적분 — 2C₀V₀(√(1+V/V₀)−1) vs quad ∫C(v)dv
+- [PASS] (restore_lm) Q_oss(400 V) H12 새 소자: EX02 닫힌 식 vs 수치 적분 — 2C₀V₀(√(1+V/V₀)−1) vs quad ∫C(v)dv
+- [PASS] (restore_lm) H12 잔류 V_DS: EX02 v(q) 닫힌 식 vs ODE dv/dt = I/C_n(v) — brentq로 Q_n(v) = I·t_d를 푼 값 vs DOP853 적분
+- [PASS] (restore_lm) FL09 실행의 f_r = 이 사례 tank의 f_r — FL09 fha_gain@textbook vs 이 사례의 Tank
+- [PASS] (restore_dev) 독립 경로: 상태식 + DOP853 한 주기 (경부하, 새 L_m) — affine 행렬·행렬지수 대신 상태식을 직접 적고 solve_ivp 이벤트로 다이오드 전환
+- [PASS] (restore_dev) 에너지 잔차 (E_in − E_out − E_loss − ΔW) — 포트 에너지·저항 손실·저장에너지를 같은 구간에서 정확 적분 (상태식과 독립적으로 정의한 포트 전력)
+- [PASS] (restore_dev) Q_oss(400 V) 기존 소자: EX02 닫힌 식 vs 수치 적분 — 2C₀V₀(√(1+V/V₀)−1) vs quad ∫C(v)dv
+- [PASS] (restore_dev) Q_oss(400 V) H12 새 소자: EX02 닫힌 식 vs 수치 적분 — 2C₀V₀(√(1+V/V₀)−1) vs quad ∫C(v)dv
+- [PASS] (restore_dev) H12 잔류 V_DS: EX02 v(q) 닫힌 식 vs ODE dv/dt = I/C_n(v) — brentq로 Q_n(v) = I·t_d를 푼 값 vs DOP853 적분
+- [PASS] (restore_dev) FL09 실행의 f_r = 이 사례 tank의 f_r — FL09 fha_gain@textbook vs 이 사례의 Tank
+- [회귀 PASS] (observed) V_o 조절 (모든 운전점)
+- [회귀 PASS] (observed) 세 세계가 같은 관측(경부하 ΔP)을 재현
+- [회귀 PASS] (observed) 인용 수치가 실제 실행에서 왔는가
+- [회귀 PASS] (restore_lm) V_o 조절 (모든 운전점)
+- [회귀 PASS] (restore_lm) 세 세계가 같은 관측(경부하 ΔP)을 재현
+- [회귀 PASS] (restore_lm) 인용 수치가 실제 실행에서 왔는가
+- [회귀 PASS] (restore_dev) V_o 조절 (모든 운전점)
+- [회귀 PASS] (restore_dev) 세 세계가 같은 관측(경부하 ΔP)을 재현
+- [회귀 PASS] (restore_dev) 인용 수치가 실제 실행에서 왔는가
+
+**case_e** — 독립 15 · 회귀 9
+
+- [PASS] (observed) 독립 경로: 자속좌표 [λ, v_Cb] + 연속 PWL i(λ), DOP853 (H4 세계, 40주기) — 영역 guard 없이 자속을 상태로 적분 (엔진은 전류 상태 + 포화 guard + 행렬지수)
+- [PASS] (observed) 에너지 잔차 (E_in − E_out − E_loss − ΔW) — 포트 에너지·저항 손실·저장에너지를 같은 구간에서 정확 적분 (상태식과 독립적으로 정의한 포트 전력)
+- [PASS] (observed) 주기당 자속 이동: 이 모델 (R = 0, C_b 없음) vs FL07 flux_walk@textbook — SatBridge 정확 해 vs FL07 WalkCore 정확 해
+- [PASS] (observed) B_pk(대칭): 닫힌 식 vs FL07 실행 — V/(4 f N A_e) vs FL07 flux_walk@textbook
+- [PASS] (observed) L_m–C_b 공진: 이 사례 vs FL07 flux_walk@blocking — 1/(2π√(L_m C_b)) vs FL07 실행
+- [PASS] (vs) 독립 경로: 자속좌표 [λ, v_Cb] + 연속 PWL i(λ), DOP853 (H4 세계, 40주기) — 영역 guard 없이 자속을 상태로 적분 (엔진은 전류 상태 + 포화 guard + 행렬지수)
+- [PASS] (vs) 에너지 잔차 (E_in − E_out − E_loss − ΔW) — 포트 에너지·저항 손실·저장에너지를 같은 구간에서 정확 적분 (상태식과 독립적으로 정의한 포트 전력)
+- [PASS] (vs) 주기당 자속 이동: 이 모델 (R = 0, C_b 없음) vs FL07 flux_walk@textbook — SatBridge 정확 해 vs FL07 WalkCore 정확 해
+- [PASS] (vs) B_pk(대칭): 닫힌 식 vs FL07 실행 — V/(4 f N A_e) vs FL07 flux_walk@textbook
+- [PASS] (vs) L_m–C_b 공진: 이 사례 vs FL07 flux_walk@blocking — 1/(2π√(L_m C_b)) vs FL07 실행
+- [PASS] (gate) 독립 경로: 자속좌표 [λ, v_Cb] + 연속 PWL i(λ), DOP853 (H4 세계, 40주기) — 영역 guard 없이 자속을 상태로 적분 (엔진은 전류 상태 + 포화 guard + 행렬지수)
+- [PASS] (gate) 에너지 잔차 (E_in − E_out − E_loss − ΔW) — 포트 에너지·저항 손실·저장에너지를 같은 구간에서 정확 적분 (상태식과 독립적으로 정의한 포트 전력)
+- [PASS] (gate) 주기당 자속 이동: 이 모델 (R = 0, C_b 없음) vs FL07 flux_walk@textbook — SatBridge 정확 해 vs FL07 WalkCore 정확 해
+- [PASS] (gate) B_pk(대칭): 닫힌 식 vs FL07 실행 — V/(4 f N A_e) vs FL07 flux_walk@textbook
+- [PASS] (gate) L_m–C_b 공진: 이 사례 vs FL07 flux_walk@blocking — 1/(2π√(L_m C_b)) vs FL07 실행
+- [회귀 PASS] (observed) 세계들이 같은 관측(센서 최대값)을 재현
+- [회귀 PASS] (observed) 주기해 shooting 수렴 (대칭·H4)
+- [회귀 PASS] (observed) 인용 수치가 실제 실행에서 왔는가
+- [회귀 PASS] (vs) 세계들이 같은 관측(센서 최대값)을 재현
+- [회귀 PASS] (vs) 주기해 shooting 수렴 (대칭·H4)
+- [회귀 PASS] (vs) 인용 수치가 실제 실행에서 왔는가
+- [회귀 PASS] (gate) 세계들이 같은 관측(센서 최대값)을 재현
+- [회귀 PASS] (gate) 주기해 shooting 수렴 (대칭·H4)
+- [회귀 PASS] (gate) 인용 수치가 실제 실행에서 왔는가
+
+**case_f** — 독립 9 · 회귀 15
+
+- [PASS] (observed) u(전기 손실), ρ = 0: GUM vs Monte Carlo (200000개, seed 20261001) — 1차 전파 식 vs 상관 표본(Cholesky)의 표준편차
+- [PASS] (observed) u(열량): GUM 상대 합성 vs Monte Carlo (200000개) — 곱의 상대 불확도 합성 vs 네 입력 표본의 곱 (비선형 포함, 허용 1 %)
+- [PASS] (observed) H7 측정 시각: 닫힌 식 τ·ln(...) vs 열 회로 ODE 사건 — 지수 닫힌 식 vs C dT/dt = P − T/R_th DOP853 + event
+- [PASS] (heater) u(전기 손실), ρ = 0: GUM vs Monte Carlo (200000개, seed 20261001) — 1차 전파 식 vs 상관 표본(Cholesky)의 표준편차
+- [PASS] (heater) u(열량): GUM 상대 합성 vs Monte Carlo (200000개) — 곱의 상대 불확도 합성 vs 네 입력 표본의 곱 (비선형 포함, 허용 1 %)
+- [PASS] (heater) H7 측정 시각: 닫힌 식 τ·ln(...) vs 열 회로 ODE 사건 — 지수 닫힌 식 vs C dT/dt = P − T/R_th DOP853 + event
+- [PASS] (sync) u(전기 손실), ρ = 0: GUM vs Monte Carlo (200000개, seed 20261001) — 1차 전파 식 vs 상관 표본(Cholesky)의 표준편차
+- [PASS] (sync) u(열량): GUM 상대 합성 vs Monte Carlo (200000개) — 곱의 상대 불확도 합성 vs 네 입력 표본의 곱 (비선형 포함, 허용 1 %)
+- [PASS] (sync) H7 측정 시각: 닫힌 식 τ·ln(...) vs 열 회로 ODE 사건 — 지수 닫힌 식 vs C dT/dt = P − T/R_th DOP853 + event
+- [회귀 PASS] (observed) 세계들이 같은 관측(전기·열량 두 숫자)을 재현
+- [회귀 PASS] (observed) 이 사례의 GUM 식 vs EX11 실행 (독립 ρ = 0)
+- [회귀 PASS] (observed) 이 사례의 GUM 식 vs EX11 실행 (ρ = 0.9)
+- [회귀 PASS] (observed) DC-link ½CV²: 이 사례 vs EX10 실행
+- [회귀 PASS] (observed) 인용 수치가 실제 실행에서 왔는가
+- [회귀 PASS] (heater) 세계들이 같은 관측(전기·열량 두 숫자)을 재현
+- [회귀 PASS] (heater) 이 사례의 GUM 식 vs EX11 실행 (독립 ρ = 0)
+- [회귀 PASS] (heater) 이 사례의 GUM 식 vs EX11 실행 (ρ = 0.9)
+- [회귀 PASS] (heater) DC-link ½CV²: 이 사례 vs EX10 실행
+- [회귀 PASS] (heater) 인용 수치가 실제 실행에서 왔는가
+- [회귀 PASS] (sync) 세계들이 같은 관측(전기·열량 두 숫자)을 재현
+- [회귀 PASS] (sync) 이 사례의 GUM 식 vs EX11 실행 (독립 ρ = 0)
+- [회귀 PASS] (sync) 이 사례의 GUM 식 vs EX11 실행 (ρ = 0.9)
+- [회귀 PASS] (sync) DC-link ½CV²: 이 사례 vs EX10 실행
+- [회귀 PASS] (sync) 인용 수치가 실제 실행에서 왔는가
+
+**case_g** — 독립 9 · 회귀 12
+
+- [PASS] (observed) 독립 경로: 정확 Fourier 계수 vs FFT (65536점/주기, 홀수 차수 ≤ 300) — 구간별 부분적분 닫힌 식 vs 표본 FFT (aliasing만 차이)
+- [PASS] (observed) 독립 경로: D = 0.5 trapezoid의 홀수 고조파 (V/πk)\|sinc(πk t_r/T)\| — sinc 닫힌 식 vs 구간 적분
+- [PASS] (observed) cable 시험의 새 공진: Im Z(f) = 0 수치 근 vs 1/(2π√(L C)) 닫힌 식 — 경로 임피던스 허수부 근 vs 닫힌 식
+- [PASS] (rg) 독립 경로: 정확 Fourier 계수 vs FFT (65536점/주기, 홀수 차수 ≤ 300) — 구간별 부분적분 닫힌 식 vs 표본 FFT (aliasing만 차이)
+- [PASS] (rg) 독립 경로: D = 0.5 trapezoid의 홀수 고조파 (V/πk)\|sinc(πk t_r/T)\| — sinc 닫힌 식 vs 구간 적분
+- [PASS] (rg) cable 시험의 새 공진: Im Z(f) = 0 수치 근 vs 1/(2π√(L C)) 닫힌 식 — 경로 임피던스 허수부 근 vs 닫힌 식
+- [PASS] (cable) 독립 경로: 정확 Fourier 계수 vs FFT (65536점/주기, 홀수 차수 ≤ 300) — 구간별 부분적분 닫힌 식 vs 표본 FFT (aliasing만 차이)
+- [PASS] (cable) 독립 경로: D = 0.5 trapezoid의 홀수 고조파 (V/πk)\|sinc(πk t_r/T)\| — sinc 닫힌 식 vs 구간 적분
+- [PASS] (cable) cable 시험의 새 공진: Im Z(f) = 0 수치 근 vs 1/(2π√(L C)) 닫힌 식 — 경로 임피던스 허수부 근 vs 닫힌 식
+- [회귀 PASS] (observed) 세계들이 같은 관측(f_obs peak, 주변 + prom dB)을 재현
+- [회귀 PASS] (observed) C·dv/dt (100 pF × 50 kV/µs): 이 사례 vs EX09 실행
+- [회귀 PASS] (observed) 기본 loop 공진: 이 사례 vs EX09 실행
+- [회귀 PASS] (observed) 인용 수치가 실제 실행에서 왔는가
+- [회귀 PASS] (rg) 세계들이 같은 관측(f_obs peak, 주변 + prom dB)을 재현
+- [회귀 PASS] (rg) C·dv/dt (100 pF × 50 kV/µs): 이 사례 vs EX09 실행
+- [회귀 PASS] (rg) 기본 loop 공진: 이 사례 vs EX09 실행
+- [회귀 PASS] (rg) 인용 수치가 실제 실행에서 왔는가
+- [회귀 PASS] (cable) 세계들이 같은 관측(f_obs peak, 주변 + prom dB)을 재현
+- [회귀 PASS] (cable) C·dv/dt (100 pF × 50 kV/µs): 이 사례 vs EX09 실행
+- [회귀 PASS] (cable) 기본 loop 공진: 이 사례 vs EX09 실행
+- [회귀 PASS] (cable) 인용 수치가 실제 실행에서 왔는가
+
+**case_h** — 독립 21 · 회귀 9
+
+- [PASS] (observed) EX10 peak: 정확 엔진 vs RLC 닫힌 식 — 행렬지수·guard 엔진 vs V₀/(Lω_d)·e^{−αt}·sin ω_d t
+- [PASS] (observed) EX10 peak 시각: 엔진 di/dt = 0 근 vs atan(ω_d/α)/ω_d — 엔진 출력의 미분 근 vs 닫힌 식
+- [PASS] (observed) 에너지 잔차 (E_in − E_out − E_loss − ΔW) — 포트 에너지·저항 손실·저장에너지를 같은 구간에서 정확 적분 (상태식과 독립적으로 정의한 포트 전력)
+- [PASS] (observed) 에너지 잔차 (E_in − E_out − E_loss − ΔW) — 포트 에너지·저항 손실·저장에너지를 같은 구간에서 정확 적분 (상태식과 독립적으로 정의한 포트 전력)
+- [PASS] (observed) backfeed 정상 전류: 정확 엔진(25τ) vs 닫힌 식 — 시간 적분 끝값 vs DH 상태 평형 (V_b − V_f)/R_합
+- [PASS] (observed) C → 단락 경로 peak: 이 사례 엔진 vs EX10 실행 — Backfeed 시스템(battery 없음) vs EX10 rlc_fault@textbook
+- [PASS] (observed) 그 peak 시각: 이 사례 vs EX10 실행 — di/dt = 0 근 vs EX10 실행
+- [PASS] (ibat) EX10 peak: 정확 엔진 vs RLC 닫힌 식 — 행렬지수·guard 엔진 vs V₀/(Lω_d)·e^{−αt}·sin ω_d t
+- [PASS] (ibat) EX10 peak 시각: 엔진 di/dt = 0 근 vs atan(ω_d/α)/ω_d — 엔진 출력의 미분 근 vs 닫힌 식
+- [PASS] (ibat) 에너지 잔차 (E_in − E_out − E_loss − ΔW) — 포트 에너지·저항 손실·저장에너지를 같은 구간에서 정확 적분 (상태식과 독립적으로 정의한 포트 전력)
+- [PASS] (ibat) 에너지 잔차 (E_in − E_out − E_loss − ΔW) — 포트 에너지·저항 손실·저장에너지를 같은 구간에서 정확 적분 (상태식과 독립적으로 정의한 포트 전력)
+- [PASS] (ibat) backfeed 정상 전류: 정확 엔진(25τ) vs 닫힌 식 — 시간 적분 끝값 vs DH 상태 평형 (V_b − V_f)/R_합
+- [PASS] (ibat) C → 단락 경로 peak: 이 사례 엔진 vs EX10 실행 — Backfeed 시스템(battery 없음) vs EX10 rlc_fault@textbook
+- [PASS] (ibat) 그 peak 시각: 이 사례 vs EX10 실행 — di/dt = 0 근 vs EX10 실행
+- [PASS] (vbus) EX10 peak: 정확 엔진 vs RLC 닫힌 식 — 행렬지수·guard 엔진 vs V₀/(Lω_d)·e^{−αt}·sin ω_d t
+- [PASS] (vbus) EX10 peak 시각: 엔진 di/dt = 0 근 vs atan(ω_d/α)/ω_d — 엔진 출력의 미분 근 vs 닫힌 식
+- [PASS] (vbus) 에너지 잔차 (E_in − E_out − E_loss − ΔW) — 포트 에너지·저항 손실·저장에너지를 같은 구간에서 정확 적분 (상태식과 독립적으로 정의한 포트 전력)
+- [PASS] (vbus) 에너지 잔차 (E_in − E_out − E_loss − ΔW) — 포트 에너지·저항 손실·저장에너지를 같은 구간에서 정확 적분 (상태식과 독립적으로 정의한 포트 전력)
+- [PASS] (vbus) backfeed 정상 전류: 정확 엔진(25τ) vs 닫힌 식 — 시간 적분 끝값 vs DH 상태 평형 (V_b − V_f)/R_합
+- [PASS] (vbus) C → 단락 경로 peak: 이 사례 엔진 vs EX10 실행 — Backfeed 시스템(battery 없음) vs EX10 rlc_fault@textbook
+- [PASS] (vbus) 그 peak 시각: 이 사례 vs EX10 실행 — di/dt = 0 근 vs EX10 실행
+- [회귀 PASS] (observed) 세계들이 같은 관측(t_obs의 출력 전류)을 재현
+- [회귀 PASS] (observed) ½CV²: 이 사례 vs EX10 실행
+- [회귀 PASS] (observed) 인용 수치가 실제 실행에서 왔는가
+- [회귀 PASS] (ibat) 세계들이 같은 관측(t_obs의 출력 전류)을 재현
+- [회귀 PASS] (ibat) ½CV²: 이 사례 vs EX10 실행
+- [회귀 PASS] (ibat) 인용 수치가 실제 실행에서 왔는가
+- [회귀 PASS] (vbus) 세계들이 같은 관측(t_obs의 출력 전류)을 재현
+- [회귀 PASS] (vbus) ½CV²: 이 사례 vs EX10 실행
+- [회귀 PASS] (vbus) 인용 수치가 실제 실행에서 왔는가
+
+## EX01 · 설계영역·손실 지도·부품선정
+
+
+**loss_surface** — 독립 6 · 회귀 2
+
+- [PASS] (nominal) fit 구현: 잡음 없는 합성 참값 회복 (floor 모델) — 잡음 0 합성 데이터 → Levenberg–Marquardt fit vs 생성에 쓴 참값
+- [PASS] (nominal) power law: 정규방정식(lstsq) vs 반복 최소제곱(TRF) — 같은 목적함수를 다른 알고리즘으로 풀어 계수 비교
+- [PASS] (nominal) E_A(질의점) 불확도: delta method vs Monte Carlo 재fit (60회) — 선형화 공분산 전파 vs 잡음을 새로 뽑아 다시 fit한 표준편차 (σ 알려진 조건)
+- [PASS] (light) fit 구현: 잡음 없는 합성 참값 회복 (floor 모델) — 잡음 0 합성 데이터 → Levenberg–Marquardt fit vs 생성에 쓴 참값
+- [PASS] (light) power law: 정규방정식(lstsq) vs 반복 최소제곱(TRF) — 같은 목적함수를 다른 알고리즘으로 풀어 계수 비교
+- [PASS] (light) E_A(질의점) 불확도: delta method vs Monte Carlo 재fit (60회) — 선형화 공분산 전파 vs 잡음을 새로 뽑아 다시 fit한 표준편차 (σ 알려진 조건)
+- [회귀 PASS] (nominal) fit 곡면: 특성화 범위 안에서 양수·I와 V에 단조 증가
+- [회귀 PASS] (light) fit 곡면: 특성화 범위 안에서 양수·I와 V에 단조 증가
+
+**obc_cllc** — 독립 9 · 회귀 2
+
+- [PASS] (seed) FHA gain·입력 임피던스: 분압식 vs 체인(ABCD) 행렬 — Z_p 분압 대수 vs 직렬·병렬·직렬 2-port 행렬 곱 (reference)
+- [PASS] (seed) 극한: 대칭 tank의 f_r에서 \|H\| = 1 (부하 무관) — f_r = 1/(2π√(L_r C_r)) = 150.0000 kHz, 부하 1/5.5/11 kW
+- [PASS] (seed) 전력 항등식: Re(V_1·I_1*) = \|V_o′\|²/R_ac′ = P (무손실 tank) — 입력 phasor 전력 vs 부하 저항 전력 vs 지정 전력 (에너지 보존)
+- [PASS] (seed) T_j: 선형 PTC 닫힌 해 vs 고정점 반복 — T = (T_c + R_th(a(1−25α)+P_sw))/(1 − R_th a α) vs 반복 대입
+- [PASS] (n093) FHA gain·입력 임피던스: 분압식 vs 체인(ABCD) 행렬 — Z_p 분압 대수 vs 직렬·병렬·직렬 2-port 행렬 곱 (reference)
+- [PASS] (n093) 극한: 대칭 tank의 f_r에서 \|H\| = 1 (부하 무관) — f_r = 1/(2π√(L_r C_r)) = 150.0000 kHz, 부하 1/5.5/11 kW
+- [PASS] (n093) 전력 항등식: Re(V_1·I_1*) = \|V_o′\|²/R_ac′ = P (무손실 tank) — 입력 phasor 전력 vs 부하 저항 전력 vs 지정 전력 (에너지 보존)
+- [PASS] (n093) 오른쪽 분기 해: 격자+벡터 이분법 vs scalar brentq — 721점 격자 교차 + 48회 이분법 vs brentq(±200 Hz 구간)
+- [PASS] (n093) T_j: 선형 PTC 닫힌 해 vs 고정점 반복 — T = (T_c + R_th(a(1−25α)+P_sw))/(1 − R_th a α) vs 반복 대입
+- [회귀 PASS] (seed) 입력 제한 전력: 위상별 합 vs √3·V_LL·I·PF·η
+- [회귀 PASS] (n093) 입력 제한 전력: 위상별 합 vs √3·V_LL·I·PF·η
+
+**dab_lv** — 독립 4 · 회귀 0
+
+- [PASS] (nominal) DAB 파형: 구간 공식(벡터화) vs PWL 엔진 적분 — lab의 기울기·반대칭 구간 합 vs reference PWL 객체의 RMS·초기전류
+- [PASS] (nominal) 전달 전력: 2차 포트 구간 적분 vs SPS 닫힌 식 vs 지정 전력 — (2/T)∫v_2 i dt (구간 평균) vs V_1V_2′φ(1−φ/π)/(ωL)
+- [PASS] (L100) DAB 파형: 구간 공식(벡터화) vs PWL 엔진 적분 — lab의 기울기·반대칭 구간 합 vs reference PWL 객체의 RMS·초기전류
+- [PASS] (L100) 전달 전력: 2차 포트 구간 적분 vs SPS 닫힌 식 vs 지정 전력 — (2/T)∫v_2 i dt (구간 평균) vs V_1V_2′φ(1−φ/π)/(ωL)
+
+**sic_leg** — 독립 6 · 회귀 2
+
+- [PASS] (nominal) 전열 고정점: 반복 대입 vs Newton(fsolve) — 벡터화 고정점 반복 vs scipy fsolve (다른 알고리즘, 다른 시작점)
+- [PASS] (nominal) sine 평균 스위칭 에너지: Gauss–Legendre vs Beta 함수 닫힌 식 — (1/2π)∫E(I sin θ)dθ 48점 구적 vs E(I)·Γ((α+1)/2)/(2√π Γ(α/2+1)); sin^α의 끝점 특이성 때문에 구적 오차 ~1e-8
+- [PASS] (nominal) 극한: 온도계수 0이면 전열 분배 = 교재 정적 분배 — tc = 0에서 고정점 분배 vs 컨덕턴스 분배
+- [PASS] (fast) 전열 고정점: 반복 대입 vs Newton(fsolve) — 벡터화 고정점 반복 vs scipy fsolve (다른 알고리즘, 다른 시작점)
+- [PASS] (fast) sine 평균 스위칭 에너지: Gauss–Legendre vs Beta 함수 닫힌 식 — (1/2π)∫E(I sin θ)dθ 48점 구적 vs E(I)·Γ((α+1)/2)/(2√π Γ(α/2+1)); sin^α의 끝점 특이성 때문에 구적 오차 ~1e-8
+- [PASS] (fast) 극한: 온도계수 0이면 전열 분배 = 교재 정적 분배 — tc = 0에서 고정점 분배 vs 컨덕턴스 분배
+- [회귀 PASS] (nominal) 정적 분배: lab 컨덕턴스 분배 vs reference
+- [회귀 PASS] (fast) 정적 분배: lab 컨덕턴스 분배 vs reference
+
+**mission_ranking** — 독립 6 · 회귀 2
+
+- [PASS] (textbook) mission 효율: 에너지 합 vs E_out 가중 조화평균 — ΣE_out/(ΣE_out + ΣE_loss) vs ΣE_out/Σ(E_out/η_k) (reference)
+- [PASS] (textbook) mission 차이 불확도: Monte Carlo (N = 20000, seed 17) vs 전파식 — 상관 Gaussian 모델 오차 표본의 ΔE 표준편차 vs √(U_A² + U_B² − 2ρU_AU_B)
+- [PASS] (textbook) mission 운전점: FHA 출력 전력 = 지정 전력 — 각 운전점의 \|V_o′\|²/R_ac′ vs P (근 찾기 결과의 에너지 확인)
+- [PASS] (eoss_double) mission 효율: 에너지 합 vs E_out 가중 조화평균 — ΣE_out/(ΣE_out + ΣE_loss) vs ΣE_out/Σ(E_out/η_k) (reference)
+- [PASS] (eoss_double) mission 차이 불확도: Monte Carlo (N = 20000, seed 17) vs 전파식 — 상관 Gaussian 모델 오차 표본의 ΔE 표준편차 vs √(U_A² + U_B² − 2ρU_AU_B)
+- [PASS] (eoss_double) mission 운전점: FHA 출력 전력 = 지정 전력 — 각 운전점의 \|V_o′\|²/R_ac′ vs P (근 찾기 결과의 에너지 확인)
+- [회귀 PASS] (textbook) 시나리오 재현: 도출한 R_DS(on)으로 nominal 차이
+- [회귀 PASS] (eoss_double) 시나리오 재현: 도출한 R_DS(on)으로 nominal 차이
 
 ## EX02 · 비선형 Coss·dead time·ZVS — 에너지식 하나로 판정하지 않기
 

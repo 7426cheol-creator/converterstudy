@@ -1,5 +1,5 @@
 {
- "generated": "2026-09-30T23:59:39",
+ "generated": "2026-10-01T01:37:46",
  "environment": {
   "app_version": "4.0.0",
   "contract_version": "4.0-reconstructed",
@@ -25,7 +25,12 @@
     "FL01/FL01_buck_ccm_nominal.csv",
     "FL01/FL01_buck_ccm_nominal.html"
    ],
-   "runtime_s": 0.196
+   "sha256": {
+    "json": "db9e47926ffef1f63476119a3e7577fa14cc3859b5138a4f26e4cab1ecced653",
+    "csv": "cbcd5043c045c171741ec571b549f6267e603c8dbde50f9f465d65f59ca2647d",
+    "html": "ceb09a3b6cc53b749e9f7967a6309cf352a73d9893972217a08b2b920ae19bf5"
+   },
+   "runtime_s": 0.213
   },
   {
    "lab": "FL01",
@@ -43,7 +48,12 @@
     "FL01/FL01_buck_ccm_half_fs.csv",
     "FL01/FL01_buck_ccm_half_fs.html"
    ],
-   "runtime_s": 0.148
+   "sha256": {
+    "json": "224996b0101c3e58793969e1b7618f0d839327ca9af13e7313966a56837a0289",
+    "csv": "908fa9a4874243985575b2ba97b98aacd9f7fb6b28bed9ac6abc3665324c5c0e",
+    "html": "20a9afc63353bc6a3c1f058e50ebffb38f73064fcb788888abe9e8bdc37a576a"
+   },
+   "runtime_s": 0.158
   },
   {
    "lab": "FL01",
@@ -61,7 +71,12 @@
     "FL01/FL01_buck_ccm_lossy.csv",
     "FL01/FL01_buck_ccm_lossy.html"
    ],
-   "runtime_s": 0.197
+   "sha256": {
+    "json": "9d2e527de71be73ad7815be1c8864c146ef758fd24a7268c0c1a877672efb22c",
+    "csv": "a209aebad74f9107b1d3ca141f01bafef3a3731e6a07e0cd0b3af605e3a35d5b",
+    "html": "e28f15f49622742d6a8a5b10cd94ccc1b332e9109fd2d8ad9aa6fb2e16a91b06"
+   },
+   "runtime_s": 0.196
   },
   {
    "lab": "FL01",
@@ -79,7 +94,12 @@
     "FL01/FL01_buck_light_load_light.csv",
     "FL01/FL01_buck_light_load_light.html"
    ],
-   "runtime_s": 0.15
+   "sha256": {
+    "json": "fa1bd4699bd2e480e9c65229a905718422b127eb8807dbbd4306bda66991b225",
+    "csv": "bb4b88b9b0f73331d6d1f577b416d20aedd9d1be8aec0ff43215b559e473b031",
+    "html": "a1fa835552f7aeedda9ee2892f52a37f3bc07daf988ae917dd895143bd590ce2"
+   },
+   "runtime_s": 0.145
   },
   {
    "lab": "FL01",
@@ -97,7 +117,12 @@
     "FL01/FL01_buck_ripple_nominal.csv",
     "FL01/FL01_buck_ripple_nominal.html"
    ],
-   "runtime_s": 0.013
+   "sha256": {
+    "json": "c32e09be2a4b240737185e0d689135d43052cb40744df1aa930283acdd7b7e8e",
+    "csv": "190917196b5b854bbb0d9c3eeef527ce11d3dcf9bfd324bdd141f08a5a2b68ca",
+    "html": "5c24fcce05afeedad4e5aea316d451f045fa6683a7ad1484567d25d81ca16c96"
+   },
+   "runtime_s": 0.014
   },
   {
    "lab": "FL01",
@@ -115,7 +140,12 @@
     "FL01/FL01_boost_rhpz_nominal.csv",
     "FL01/FL01_boost_rhpz_nominal.html"
    ],
-   "runtime_s": 0.205
+   "sha256": {
+    "json": "34babbded0b591879d98d27e52cbecff7dc7a0366fe46f70929266cdd0ae7f88",
+    "csv": "0e5841cb0e140a4aeb8f306d6f9540bb90a22f40b95fb30a5116ba534d699167",
+    "html": "aaccbfcb89adc73fd3f00f2ba08beedbf3be9345ef9a1615858aad34dc9aacfd"
+   },
+   "runtime_s": 0.208
   },
   {
    "lab": "FL01",
@@ -133,7 +163,12 @@
     "FL01/FL01_boost_rhpz_light.csv",
     "FL01/FL01_boost_rhpz_light.html"
    ],
-   "runtime_s": 0.201
+   "sha256": {
+    "json": "af756566509416a58e9ba951982433f59cca92c6e21f43eba6109ad0b9fb25b9",
+    "csv": "7abb64af62c32d8501020b815e6f11d76a6c40838273d0c9cd74106a0605b459",
+    "html": "756a623ecbaa40bb56bdd585bc838d12b8e5f4440a067a6a9ed3f122ad212863"
+   },
+   "runtime_s": 0.218
   },
   {
    "lab": "FL02",
@@ -152,7 +187,12 @@
     "FL02/FL02_loss_ab_textbook.csv",
     "FL02/FL02_loss_ab_textbook.html"
    ],
-   "runtime_s": 0.005
+   "sha256": {
+    "json": "3035417f99e05d2b297ab39b735dec0ec1e464c4fbe517c351fe0ede98ad5bfd",
+    "csv": "768cabdb7ffc10654d7c812960efb54d826f46c30fad19844a9c3ec2691166b3",
+    "html": "b7876b444af3c1acbc393971bc32a400d7b290c9b82b6d3a27dea9ce9fc2ff86"
+   },
+   "runtime_s": 0.006
   },
   {
    "lab": "FL02",
@@ -171,6 +211,11 @@
     "FL02/FL02_loss_ab_f20k.csv",
     "FL02/FL02_loss_ab_f20k.html"
    ],
+   "sha256": {
+    "json": "3353c45be221db0f730b606c1aa96b07d776d63d43a772b920076beb34e2332d",
+    "csv": "ff8e8533f855504130553b7b7fe5470e2ad08e106d1059dac58439c36ac60782",
+    "html": "ed800a9ab803684f13c3aa618a4ceb8b6dc985c6b2bbf5d38f61d4133a93658a"
+   },
    "runtime_s": 0.005
   },
   {
@@ -190,7 +235,12 @@
     "FL02/FL02_loss_ab_coss_unknown_20k.csv",
     "FL02/FL02_loss_ab_coss_unknown_20k.html"
    ],
-   "runtime_s": 0.004
+   "sha256": {
+    "json": "943209c2cb56bc3cf76e2b909feab8ba82bb114574ee681d07105798ab1203de",
+    "csv": "87c3e39a02204e658d43e0598b45d50bcbec845285efdffe7cc20bc3d0699ca1",
+    "html": "30b01fe88f2db0cfeea835093b50f0970d41b56fb857f1f7154673187f5360dd"
+   },
+   "runtime_s": 0.005
   },
   {
    "lab": "FL02",
@@ -209,7 +259,12 @@
     "FL02/FL02_gate_protect_textbook.csv",
     "FL02/FL02_gate_protect_textbook.html"
    ],
-   "runtime_s": 0.022
+   "sha256": {
+    "json": "58ca5d161063bbf421b9accde19ba78649df127660a3c5c00f762f354b164382",
+    "csv": "225b7159918a6398758c0a7532a3dea81e1643d56136d98fa18cdc464cfc4582",
+    "html": "1b76abfdba8792ebe2e2e0aed1f1e2907072ab0f193187560e350e3b05406566"
+   },
+   "runtime_s": 0.023
   },
   {
    "lab": "FL02",
@@ -228,7 +283,12 @@
     "FL02/FL02_gate_protect_blank_long.csv",
     "FL02/FL02_gate_protect_blank_long.html"
    ],
-   "runtime_s": 0.021
+   "sha256": {
+    "json": "fc0263aa7d7442543d45e9ce37610c943865a78af9f1bab0c667b83be04d17ca",
+    "csv": "49fb55e6ce0e1d95abd74a22e21a2a768475340ea98da1cf5f070e46d39dd4ba",
+    "html": "6d04019a2000ee57cd4b4cb63119f82c31905b8f2ec69b30592128e86f8e576a"
+   },
+   "runtime_s": 0.022
   },
   {
    "lab": "FL02",
@@ -246,7 +306,12 @@
     "FL02/FL02_dpt_cell_nominal.csv",
     "FL02/FL02_dpt_cell_nominal.html"
    ],
-   "runtime_s": 1.917
+   "sha256": {
+    "json": "3ff54451525345004c1bc8af9c6a9aa68fcd76b6d4bb9f3a27d172b68a63b30d",
+    "csv": "78cafb5266981b1e93f088fd2e5a8bec508a9e96b90b3770760381ce0aa2012c",
+    "html": "79466a0ccd1d97ff25c8ee1a977e44ab33cc5fc6758c8069099951d5c2a1c925"
+   },
+   "runtime_s": 2.241
   },
   {
    "lab": "FL02",
@@ -264,7 +329,12 @@
     "FL02/FL02_dpt_cell_fast.csv",
     "FL02/FL02_dpt_cell_fast.html"
    ],
-   "runtime_s": 2.012
+   "sha256": {
+    "json": "486e311035e71f3d6bc92e50a0eeb1d41f40769f73dfb968578bad30c3f36610",
+    "csv": "f34eb27e1a62ca07c4a634b6f9792ad7eb48e96c9d03b3b3b5b3648c6ff45cde",
+    "html": "5c253291a914bba431c8dde0765d9e2358e2c3d8a3f5cc802fdc22e0acbce6db"
+   },
+   "runtime_s": 2.088
   },
   {
    "lab": "FL02",
@@ -282,7 +352,12 @@
     "FL02/FL02_dpt_cell_no_kelvin.csv",
     "FL02/FL02_dpt_cell_no_kelvin.html"
    ],
-   "runtime_s": 2.011
+   "sha256": {
+    "json": "551507d6db59787fe3b57ad974efd2be18b5d8aa277d92a2ecb1af32aab2ec9c",
+    "csv": "9d3e17eac68e226016a62011f7722ad39ae589a1970a25581dce05dcde0d2f5e",
+    "html": "c1b67319a9e03cafef837612d8a34a1f2dd97875d2e86a5dd9a1604e06d305ad"
+   },
+   "runtime_s": 2.266
   },
   {
    "lab": "FL02",
@@ -301,7 +376,12 @@
     "FL02/FL02_vgs_spike_artifact.csv",
     "FL02/FL02_vgs_spike_artifact.html"
    ],
-   "runtime_s": 0.883
+   "sha256": {
+    "json": "ab8d137b9c6c737f55706b803e71adb90c2028166091d60d89b710530f35b747",
+    "csv": "e2cfcc3052a354bfbcbdbfd23fb5536812971e95313f26724c982a3230bf8628",
+    "html": "012042d28a985bcc314f92b009a2334d54b4a711a89510569f13b5fc95548f9c"
+   },
+   "runtime_s": 1.009
   },
   {
    "lab": "FL02",
@@ -319,7 +399,12 @@
     "FL02/FL02_vgs_spike_real.csv",
     "FL02/FL02_vgs_spike_real.html"
    ],
-   "runtime_s": 0.847
+   "sha256": {
+    "json": "c57406fdc03986b24337dbf693bbd18ecebbe524ecba972a00d08ca23759b687",
+    "csv": "8ad9bc68ad8c8721f15b7eca42305782105bd098ccf7f89f8f15005ca5d7b282",
+    "html": "6618a7523e2b17a15892f3bc05e648e2e2c971f69b158f65f677b29795d29f87"
+   },
+   "runtime_s": 1.006
   },
   {
    "lab": "FL02",
@@ -337,7 +422,12 @@
     "FL02/FL02_vgs_spike_clamp.csv",
     "FL02/FL02_vgs_spike_clamp.html"
    ],
-   "runtime_s": 0.879
+   "sha256": {
+    "json": "5e6a34c6f5bae416022b9fe3237cf346afee889488b1c991a44d21a76586d0a2",
+    "csv": "b443e27d7edffddb241f8f41af76d978624090664bc67b5b4e62e4105c779ad8",
+    "html": "6c5a9b69dd28aada88d373db35f95d0809afb910c472a2910e949d5dbdefb2eb"
+   },
+   "runtime_s": 1.008
   },
   {
    "lab": "FL03",
@@ -355,7 +445,12 @@
     "FL03/FL03_rc_step_textbook.csv",
     "FL03/FL03_rc_step_textbook.html"
    ],
-   "runtime_s": 0.074
+   "sha256": {
+    "json": "032630a109fd725bc50e4c1ebecd2750af4934d92a8beaffab1820165a697a40",
+    "csv": "b8257d170631be5eeb3902dcd4e7532bb0c99721774806f50dc69209b3fb9ec7",
+    "html": "579b3ff90f4be0642fff01e92d41523476d45b13deea59cefba758db07f227a9"
+   },
+   "runtime_s": 0.078
   },
   {
    "lab": "FL03",
@@ -373,7 +468,12 @@
     "FL03/FL03_electrothermal_nominal.csv",
     "FL03/FL03_electrothermal_nominal.html"
    ],
-   "runtime_s": 0.33
+   "sha256": {
+    "json": "e72e94ee8e278a65c9322c9141ae31cb39f60b618a7ecaab10045ef5b2c63753",
+    "csv": "51aa7ad4da61dc77155616ceee36ec60f8c98f3b5314cab4dc35fdaad214660e",
+    "html": "582b7308ece2c2ca539d9b98be28551cd201960f87616a386197afed5fb3aa1d"
+   },
+   "runtime_s": 0.353
   },
   {
    "lab": "FL03",
@@ -391,7 +491,12 @@
     "FL03/FL03_electrothermal_sensitive.csv",
     "FL03/FL03_electrothermal_sensitive.html"
    ],
-   "runtime_s": 0.279
+   "sha256": {
+    "json": "bf8b61becadd8fbe5ff1238a2aa10d93f8407ddc667fe66d8567f2da20e712ac",
+    "csv": "5180d47accf703e7a22cf787ae8900c4ac5569bda93a847b80e33d30b652e3a8",
+    "html": "e9bc710b0cd5a2afc872787e9a1290e6a8f20bc05f3a6be7aa56a849d6dc3f7e"
+   },
+   "runtime_s": 0.331
   },
   {
    "lab": "FL03",
@@ -410,7 +515,12 @@
     "FL03/FL03_electrothermal_runaway.csv",
     "FL03/FL03_electrothermal_runaway.html"
    ],
-   "runtime_s": 0.21
+   "sha256": {
+    "json": "85abeee5cfa1b4880066324416a2c6e62bae436ef10b8b1553ec34d276cc0b10",
+    "csv": "4e46621601658f198f345b0b9bab0ebac2ddd58a829833dc4de064ff1b924651",
+    "html": "df2f285e34bb59a1c9913ab9dc556bd8b441fb87d97b09862c2ad391f0c2e6ee"
+   },
+   "runtime_s": 0.209
   },
   {
    "lab": "FL03",
@@ -428,7 +538,12 @@
     "FL03/FL03_loss_map_nominal.csv",
     "FL03/FL03_loss_map_nominal.html"
    ],
-   "runtime_s": 0.2
+   "sha256": {
+    "json": "04f70b276eada16f9ea32c5f9dff15eee3ad2410aaaadabbef8ecde233d513ff",
+    "csv": "e9bd133115e11aa9482284fdf944e5e5c1199244ce2388fff590c6123619bef5",
+    "html": "fa7acbaca1709d3c8a290db604422c7e6c47acc57acc47b3d778f62b0da71971"
+   },
+   "runtime_s": 0.21
   },
   {
    "lab": "FL03",
@@ -446,6 +561,11 @@
     "FL03/FL03_loss_map_over_I.csv",
     "FL03/FL03_loss_map_over_I.html"
    ],
+   "sha256": {
+    "json": "cb75f862018e5736e501db8eb4ab7d3d1c2af4a353f2f695ad058e8de30c2972",
+    "csv": "a7937b727543cbe007820499e167c06099e6a82405515d40ea5bb19f805e1cc3",
+    "html": "bd1e6c13a3f86bd68eac11988182ca0b137a6f39e83392e99f463c477480c2db"
+   },
    "runtime_s": 0.123
   },
   {
@@ -464,7 +584,12 @@
     "FL03/FL03_foster_cauer_nominal.csv",
     "FL03/FL03_foster_cauer_nominal.html"
    ],
-   "runtime_s": 0.048
+   "sha256": {
+    "json": "86d7af04ff5073c56d465687277a08227d1e8e4eec668483193504f274c1a0b6",
+    "csv": "1db33a0f9464ee8ccc456a7ec28ae51b4e1886a1e3ecb02198659eb78fb24cbb",
+    "html": "2ec662fdf37ce3606030a89ee6c3b6270b245193db4ecb3a172825e3f85a1bac"
+   },
+   "runtime_s": 0.049
   },
   {
    "lab": "FL03",
@@ -482,6 +607,11 @@
     "FL03/FL03_foster_cauer_small_sink.csv",
     "FL03/FL03_foster_cauer_small_sink.html"
    ],
+   "sha256": {
+    "json": "0aa32378ded8f84e6d9de7290e187402960c098b44ea3f75834622e1031057c5",
+    "csv": "d320c6c2be3bb447325d30c8b6b5fae70edf78caa6b4fb104165176ccb4d2e8a",
+    "html": "a0d003a005d3937d6e0ba591e0086237f6f1f7507e2fb4619b2b94a277c73285"
+   },
    "runtime_s": 0.048
   },
   {
@@ -500,7 +630,12 @@
     "FL04/FL04_dq_point_nominal.csv",
     "FL04/FL04_dq_point_nominal.html"
    ],
-   "runtime_s": 0.11
+   "sha256": {
+    "json": "d1a208010e2daba43ceb349b2f57b454548c1ab799fb33fc217794d5f44cb759",
+    "csv": "032f0a197b1dd9f5ef14fde31da3ee3945d52938a356cbeffb20d28484d72899",
+    "html": "34e361e570ec4c965b8d200903a6fb12a5b8f58b0809122f9454c6732cf86fad"
+   },
+   "runtime_s": 0.109
   },
   {
    "lab": "FL04",
@@ -518,7 +653,12 @@
     "FL04/FL04_dq_point_sag760.csv",
     "FL04/FL04_dq_point_sag760.html"
    ],
-   "runtime_s": 0.107
+   "sha256": {
+    "json": "e0e3a54d14adf46d4f3c839315debe2c79a172023bcf71ad9fe23c362965907a",
+    "csv": "16d9d51506c73bbcf575ab2623f4316428cb7951cf05a540af36d901be6fdf99",
+    "html": "12e144d52993fe8dbbf55bf24996f6066d656313cd2bbc4dab8067ccbb576090"
+   },
+   "runtime_s": 0.112
   },
   {
    "lab": "FL04",
@@ -536,7 +676,12 @@
     "FL04/FL04_dq_point_mtpa.csv",
     "FL04/FL04_dq_point_mtpa.html"
    ],
-   "runtime_s": 0.105
+   "sha256": {
+    "json": "b9b6c2b1972b7fa96c0970fd52e33deeed961e97be2420d1411101e9571971ad",
+    "csv": "3b55205466034f417c5bd0bb71a74ae9244a14c7675b0a8b32bb92998b8396ea",
+    "html": "d05fbb713fdc0e551f727d3c5c48a5252e08ab122fc5e4a2e7306ee68b0fa26f"
+   },
+   "runtime_s": 0.116
   },
   {
    "lab": "FL04",
@@ -555,7 +700,12 @@
     "FL04/FL04_dq_plane_nominal.csv",
     "FL04/FL04_dq_plane_nominal.html"
    ],
-   "runtime_s": 0.228
+   "sha256": {
+    "json": "1f2167985c66684675a084f3e73b964c57a022fc3048ab60431381745048c1ff",
+    "csv": "f8e6c9faf6f8a7ffb28b4f0a43ca7f9e8e0902d7e82e341b3480d85dde9c73e1",
+    "html": "6fb0174e3fb7fb55bd5823415c0c63250d11c9c3cf4c79dc4c249171b6c7d4b1"
+   },
+   "runtime_s": 0.244
   },
   {
    "lab": "FL04",
@@ -574,7 +724,12 @@
     "FL04/FL04_dq_plane_fast.csv",
     "FL04/FL04_dq_plane_fast.html"
    ],
-   "runtime_s": 0.242
+   "sha256": {
+    "json": "79f5960eaf0c19e3581fd6bb54125f59976832ed0eb27c8bb3d49d7e5976727a",
+    "csv": "e1bf19c0196401b917a09fe3f681f8b0236e1e9fa12cf3050d435a7cb12d4a8a",
+    "html": "3a698eb6fdfbaa413d2b34bcf9045abcb78a561db217f4251aa4c455232e2b2b"
+   },
+   "runtime_s": 0.272
   },
   {
    "lab": "FL04",
@@ -592,7 +747,12 @@
     "FL04/FL04_inverter_switching_nominal.csv",
     "FL04/FL04_inverter_switching_nominal.html"
    ],
-   "runtime_s": 0.424
+   "sha256": {
+    "json": "4477acfb87b266c94dadb9757332e5c1fa866131dfdd8e46fe9e2cb1b0faa838",
+    "csv": "e53c8012cb88731ada681bb613c48385631ac257b670f53ada25c891dee12650",
+    "html": "07ac0592273d72ed92f29f84d54f6ea8754c5a475ce08e982c00f600ccc72060"
+   },
+   "runtime_s": 0.421
   },
   {
    "lab": "FL04",
@@ -610,7 +770,12 @@
     "FL04/FL04_inverter_switching_N27.csv",
     "FL04/FL04_inverter_switching_N27.html"
    ],
-   "runtime_s": 0.501
+   "sha256": {
+    "json": "179a7702d466bb94075bacc9d5e7bdc7a91681cefdaa79d42408d56bbd8b324c",
+    "csv": "fa191ef7f45218b59bbbbb023a22afab2aa4d700e533b9190b432442eba51c10",
+    "html": "bbe2e45403495a30873ded4af99e7eef287c0637666012f6d3ce33ea88cfa494"
+   },
+   "runtime_s": 0.507
   },
   {
    "lab": "FL04",
@@ -629,7 +794,12 @@
     "FL04/FL04_inverter_switching_spwm.csv",
     "FL04/FL04_inverter_switching_spwm.html"
    ],
-   "runtime_s": 0.317
+   "sha256": {
+    "json": "c2f6c943dc34553b213529ad06f5eda2be2ce33a9e93cd3660a4b6f54495341d",
+    "csv": "56e0ecc809077bce977f5bf57b721558e7afd4388d54732f7fd50d7558d50198",
+    "html": "b4a2895d886b2469f84d5c366be5176fdacee1dd73cbb490ae2b4c09d5ccf696"
+   },
+   "runtime_s": 0.397
   },
   {
    "lab": "FL04",
@@ -647,7 +817,12 @@
     "FL04/FL04_inverter_switching_sag760.csv",
     "FL04/FL04_inverter_switching_sag760.html"
    ],
-   "runtime_s": 0.445
+   "sha256": {
+    "json": "7753dd2d6eb764f5db44a716ccf8f76fd762488ec3791d3a4c2b2f8550a14ee0",
+    "csv": "997711bc776d84eaca5ae57789af7c15e519a8f1af433dcf682b5d0d1a868f40",
+    "html": "7498a70053bc66f07968b1219dd5d5ff6965c5d29fbe806eb34d5c17cc1c30cb"
+   },
+   "runtime_s": 0.43
   },
   {
    "lab": "FL05",
@@ -667,7 +842,12 @@
     "FL05/FL05_grid_boundary_nominal.csv",
     "FL05/FL05_grid_boundary_nominal.html"
    ],
-   "runtime_s": 0.01
+   "sha256": {
+    "json": "5d271bc4673939deee2c69b6e36a9dd78fa8e338114a9aebe44b82bd0f386e7f",
+    "csv": "5c47786a9c9a848a5402e9ec98f2e35d6b8ab4d9b86c8ec733897459534a3673",
+    "html": "ab4605b561fa42e4729e285bef1f7eb78dda7bf48cf972ae22879c6db661e484"
+   },
+   "runtime_s": 0.009
   },
   {
    "lab": "FL05",
@@ -685,6 +865,11 @@
     "FL05/FL05_grid_boundary_svpwm.csv",
     "FL05/FL05_grid_boundary_svpwm.html"
    ],
+   "sha256": {
+    "json": "0541d01c784f08ccba753ed92adad242f6253a843ead1974457666f581d93fe4",
+    "csv": "0cd6bb34e127a314bd3541a465683adc8167530a49baccf6710cd3fb64cae7d5",
+    "html": "bb0ab31fc8faa15c462578ecaf73e57d9c243209c99df1b16d910c779d4e51bd"
+   },
    "runtime_s": 0.009
   },
   {
@@ -703,7 +888,12 @@
     "FL05/FL05_pf_thd_nominal.csv",
     "FL05/FL05_pf_thd_nominal.html"
    ],
-   "runtime_s": 0.017
+   "sha256": {
+    "json": "2f56b94e7ba51a1516db91369edb5115da7c601496ce31971bafa370a72b62c9",
+    "csv": "4202b7756ac3218a7876bf149868eec1669af8613392593995c2f954c1bebb51",
+    "html": "356646453f5ac4eefe163eabbbd14a0b7eeda4dde4156956f2b25c2237c3b1bb"
+   },
+   "runtime_s": 0.016
   },
   {
    "lab": "FL05",
@@ -721,7 +911,12 @@
     "FL05/FL05_pf_thd_offset.csv",
     "FL05/FL05_pf_thd_offset.html"
    ],
-   "runtime_s": 0.014
+   "sha256": {
+    "json": "8d364fff4e796ff4b6758ddabdd3804fe1a84a555ea7ea527a9514cfd1ddb478",
+    "csv": "fd83b77257e11edbd81b31813c80cc1f26e86dc6e69b135ea0b7cdf3a7f00c1d",
+    "html": "68fca42c168fe90f5766acd3657b3fb358384800959ce59b50a1fb1e6f9eb129"
+   },
+   "runtime_s": 0.016
   },
   {
    "lab": "FL05",
@@ -739,7 +934,12 @@
     "FL05/FL05_pf_thd_unsync.csv",
     "FL05/FL05_pf_thd_unsync.html"
    ],
-   "runtime_s": 0.015
+   "sha256": {
+    "json": "0fc7a6a0b00663b642fdcb66f89dc2285c529bfc8fc6eac390b2e1d349cd281f",
+    "csv": "f785c9f212b4ec9f966211d500e1ee0da73118b28ba2380f8bc55ae92b370023",
+    "html": "e953046ff4e69666930f73100d3c444e3f13f7c1a8916a66174c5d287b642d93"
+   },
+   "runtime_s": 0.016
   },
   {
    "lab": "FL05",
@@ -757,7 +957,12 @@
     "FL05/FL05_boost_pfc_nominal.csv",
     "FL05/FL05_boost_pfc_nominal.html"
    ],
-   "runtime_s": 1.734
+   "sha256": {
+    "json": "fa4c14144d733c6c1635475c399c0da3bd2e300cab9e88d7ed0bad8d2a8e982f",
+    "csv": "b52233eb5a48d54d47d59000d707cdadb2c568fab3ef6e21869274b6f40d222d",
+    "html": "e4dd6dbdb39c41c9368637eded0de0b29df18b3b5cd41231ae635a2092752995"
+   },
+   "runtime_s": 1.755
   },
   {
    "lab": "FL05",
@@ -775,7 +980,12 @@
     "FL05/FL05_boost_pfc_fast_v.csv",
     "FL05/FL05_boost_pfc_fast_v.html"
    ],
-   "runtime_s": 1.687
+   "sha256": {
+    "json": "6ce18693606245f62d66db514bde5a99bd0aebe9a5c30a3ec2a872bd636f7d88",
+    "csv": "e05176aed1c2e139662f2c65e3a5e411ceb3605dafdfd73c7a2fa7c8e074ce20",
+    "html": "09849dd77fb9f54916c1e4b6e5b7e742446bcf150fc13816e9cf73cb22003fe7"
+   },
+   "runtime_s": 1.825
   },
   {
    "lab": "FL05",
@@ -793,7 +1003,12 @@
     "FL05/FL05_boost_pfc_light.csv",
     "FL05/FL05_boost_pfc_light.html"
    ],
-   "runtime_s": 5.697
+   "sha256": {
+    "json": "d68af85ea09b1b3b19b59182f4655371558da2d5b3db36626397a9c213ffa2ba",
+    "csv": "4f2242decf3fe8e112d5dd4b5f45bbe4d685655e1150a2ad7bcb27357b4881d8",
+    "html": "3ffd70f1ae3c9bd4f3b76a113e40ee3e3b8d4d214c4231c7cdc5e4d50731a698"
+   },
+   "runtime_s": 6.058
   },
   {
    "lab": "FL05",
@@ -811,7 +1026,12 @@
     "FL05/FL05_dclink_power_nominal.csv",
     "FL05/FL05_dclink_power_nominal.html"
    ],
-   "runtime_s": 0.142
+   "sha256": {
+    "json": "44f94e3f2969a81bbe0f839a4055083bc86938e7ad6fac183acdcaab4013d4d0",
+    "csv": "33d616440a3f0e8c68a99dacc3766b021682ca1635aed617281a679ff6b9e51a",
+    "html": "68fe781ac7f42426908220b6fb8b434d0956971de2ea8486b91518b6ad587275"
+   },
+   "runtime_s": 0.149
   },
   {
    "lab": "FL05",
@@ -829,7 +1049,12 @@
     "FL05/FL05_dclink_power_unbalance.csv",
     "FL05/FL05_dclink_power_unbalance.html"
    ],
-   "runtime_s": 0.131
+   "sha256": {
+    "json": "82b9d52fb409dcaaf2f5fc08c267e21c33d96a6a51e4947906eee0fa0250537c",
+    "csv": "4cc63f086037663269cc075900663f2c62d8a68158deef5f385f71241200bb9b",
+    "html": "d806a7281fdf818ebee1958de5387839a33aa043c36f8b27cc1e72d038439f48"
+   },
+   "runtime_s": 0.175
   },
   {
    "lab": "FL05",
@@ -847,7 +1072,12 @@
     "FL05/FL05_dclink_power_small_c.csv",
     "FL05/FL05_dclink_power_small_c.html"
    ],
-   "runtime_s": 0.158
+   "sha256": {
+    "json": "7f5d8c0793de6a0a738b930e90c504e420c5f7fc6aaf06268d00eb5ccfce8479",
+    "csv": "7aa2b0a090919bf055ab323899927e979b4e33f970e96f2c2d6f5064b8536d7a",
+    "html": "c94c6fe8fb723b418db42e01b793059b46acf79e545035b308eb0f6877e007ae"
+   },
+   "runtime_s": 0.189
   },
   {
    "lab": "FL06",
@@ -865,7 +1095,12 @@
     "FL06/FL06_pi_design_nominal.csv",
     "FL06/FL06_pi_design_nominal.html"
    ],
-   "runtime_s": 0.023
+   "sha256": {
+    "json": "d90ee19500eb7563bd9d292d76b5a3e5e5b020a31eda4acc28bba7443b9db131",
+    "csv": "6aba06f41769159005654a502adf3428478eba49ac76e31b3dd1bb89cac9d70e",
+    "html": "4c54a24f7db8dbc1ca1cf8169139987071494535595e4fdfb003f65cb7538bf9"
+   },
+   "runtime_s": 0.028
   },
   {
    "lab": "FL06",
@@ -883,6 +1118,11 @@
     "FL06/FL06_pi_design_duty.csv",
     "FL06/FL06_pi_design_duty.html"
    ],
+   "sha256": {
+    "json": "f7f60cababdd0f347461e936fc67c8204c941db23e14d05a90025a5966eaa367",
+    "csv": "ce6d778fbcb012cce5b97204e323956844a8cc44a90d773a67006dc82165e930",
+    "html": "1c8268ffee34d0d2d103928f81978171ae39257bbbf7476f54a19cd2ab89ae38"
+   },
    "runtime_s": 0.024
   },
   {
@@ -901,7 +1141,12 @@
     "FL06/FL06_pi_design_unit_error.csv",
     "FL06/FL06_pi_design_unit_error.html"
    ],
-   "runtime_s": 0.023
+   "sha256": {
+    "json": "4ac5fd59439f97cf02310efd1aaa307a89cb5b7f9b441de0ebdade0c5850bf00",
+    "csv": "cf8a11a58bfadd0547ac80103eaf858c76b0941e133daa39590213678e0e4fd4",
+    "html": "dc20b32017d1ba76a9e1a68f7916c1c58e888ef373efe39f1f78c970ebb345c4"
+   },
+   "runtime_s": 0.025
   },
   {
    "lab": "FL06",
@@ -919,7 +1164,12 @@
     "FL06/FL06_discrete_loop_load_step.csv",
     "FL06/FL06_discrete_loop_load_step.html"
    ],
-   "runtime_s": 0.13
+   "sha256": {
+    "json": "de765b95046eca6a15aa105956baf285fca5c7b480b746d80a9a0215e7b13e65",
+    "csv": "488a4a61820645bb8ee40bfd56c637762da28f2dd12a3ddf3c24a36cad7d946e",
+    "html": "76daf65a01cfa532ba97fdf3c8f57c1c34acd7b1a9061f9781f6d5bf47386d35"
+   },
+   "runtime_s": 0.139
   },
   {
    "lab": "FL06",
@@ -937,7 +1187,12 @@
     "FL06/FL06_discrete_loop_input_dip.csv",
     "FL06/FL06_discrete_loop_input_dip.html"
    ],
-   "runtime_s": 0.168
+   "sha256": {
+    "json": "f2de6b42f98ca5d26e1250efc4dee0ffdcdd5b4ea5f2159f849ae8c849b1d94e",
+    "csv": "ecce2afa081502f87472cbd910343f7e2294939961e4568c7690f1e0efaa0e09",
+    "html": "61903ddec7b435d365b9b34d02cec6b9ae60a4846afbd6a05440284fdb9c32b5"
+   },
+   "runtime_s": 0.134
   },
   {
    "lab": "FL06",
@@ -955,7 +1210,12 @@
     "FL06/FL06_discrete_loop_current_limit.csv",
     "FL06/FL06_discrete_loop_current_limit.html"
    ],
-   "runtime_s": 0.142
+   "sha256": {
+    "json": "4395d0c770bb5aa70a7e7d92b988e180437684a24651d91e54ea0a6ba5d2350b",
+    "csv": "8ca0159110fc0605f8102c22fa9f6e98fea3c1aa4898a26f43d7170661e53571",
+    "html": "f38cd0bc9dbc097d4f7c815caf79184765666167d7b3edfff9672849294e2237"
+   },
+   "runtime_s": 0.14
   },
   {
    "lab": "FL06",
@@ -973,7 +1233,12 @@
     "FL06/FL06_discrete_loop_sensor_offset.csv",
     "FL06/FL06_discrete_loop_sensor_offset.html"
    ],
-   "runtime_s": 0.18
+   "sha256": {
+    "json": "0bc7097f231eb3d20e2e8e4b14c3bf6de1f3ed871e32cf07f0117ed013bf738a",
+    "csv": "0aa670829daf6159ab3b84da464952dd9176724252c888c04131a4f6bc01d098",
+    "html": "4584cd9720aa6d1eb963564ac2c1320d177460703f9db7fbee8a4fe55ceebc16"
+   },
+   "runtime_s": 0.207
   },
   {
    "lab": "FL06",
@@ -991,7 +1256,12 @@
     "FL06/FL06_discrete_loop_extra_delay.csv",
     "FL06/FL06_discrete_loop_extra_delay.html"
    ],
-   "runtime_s": 0.181
+   "sha256": {
+    "json": "2075058718878c2083bde5d49093b62ca94ee22b4b550b4e346f66234f1f4df7",
+    "csv": "1bc65d38b04c96d1c6764d62818ec11c93594318819cfd84088e7ef224dd0184",
+    "html": "ee8723cb667eb6cc029cd9f2b8c4719f4556b4859fd2543b6184696fb908c63d"
+   },
+   "runtime_s": 0.182
   },
   {
    "lab": "FL06",
@@ -1009,7 +1279,12 @@
     "FL06/FL06_dq_sign_correct.csv",
     "FL06/FL06_dq_sign_correct.html"
    ],
-   "runtime_s": 0.24
+   "sha256": {
+    "json": "a172738f77acbe45570d5521fc2451f299fd13083a23b50d377a20ef0ec91a7a",
+    "csv": "943c5416c02c4e783c0021eb680a0ab46315826e3d583efbf66bcf494952b88f",
+    "html": "0def7335d0e54feaf1671e4c20e06a2e13f83c90a3f38732cea373bf18ff3ef6"
+   },
+   "runtime_s": 0.276
   },
   {
    "lab": "FL06",
@@ -1027,7 +1302,12 @@
     "FL06/FL06_dq_sign_reversed.csv",
     "FL06/FL06_dq_sign_reversed.html"
    ],
-   "runtime_s": 0.039
+   "sha256": {
+    "json": "ef5b0b500e9d2433d5e583cae90d6eaa5df1f6993c7f4686522ffd39d23d386b",
+    "csv": "8b837b46f77e3cd74d145d5d29fb02f7ecb2b853eb33853e9ab5e74ed0d4fced",
+    "html": "bae46555bcd012d11b5e52173d8ab04ba095eab5b95a0a8524035925c1f46874"
+   },
+   "runtime_s": 0.037
   },
   {
    "lab": "FL06",
@@ -1045,7 +1325,12 @@
     "FL06/FL06_dq_sign_reactive.csv",
     "FL06/FL06_dq_sign_reactive.html"
    ],
-   "runtime_s": 0.272
+   "sha256": {
+    "json": "ad680c80480eedbcc2625d1060ef646ed1754e3760c2ee6eba9d7136284eafb6",
+    "csv": "f688f8f6afa7badb729641188a65ec36f880f9de9c346d63ec482e69c3b15cbd",
+    "html": "2ba64bcfe36af86d251b2ebb38d72d17b448a2f2c0007974bb5a61d111a68555"
+   },
+   "runtime_s": 0.237
   },
   {
    "lab": "FL07",
@@ -1064,7 +1349,12 @@
     "FL07/FL07_winding_flux_textbook.csv",
     "FL07/FL07_winding_flux_textbook.html"
    ],
-   "runtime_s": 0.071
+   "sha256": {
+    "json": "8e443122a8b4e56959156a130666b4a79b422c49a213cb01d44d6a94c829774d",
+    "csv": "dea84b84397f7c3ebd2a8b7a3550a52733e044036a41de3f55616e626bc4f60a",
+    "html": "23887c26c0f635564fdf0cde55e6767cea050d433c52461dad7b5297d1e94ed2"
+   },
+   "runtime_s": 0.09
   },
   {
    "lab": "FL07",
@@ -1083,7 +1373,12 @@
     "FL07/FL07_winding_flux_fl08.csv",
     "FL07/FL07_winding_flux_fl08.html"
    ],
-   "runtime_s": 0.072
+   "sha256": {
+    "json": "b734a8d05fc00b76ca193aec83e1992065ad506f33a5724253b1bc5c3f40ebb1",
+    "csv": "4c796c1b00d79de7ce6ad34093b38c2a7eb9889280d4acbc232813c962247049",
+    "html": "8b68af662f1f9884df376eabe0c77d3e96ea12976f83ff5cb98d6993626b7c7b"
+   },
+   "runtime_s": 0.099
   },
   {
    "lab": "FL07",
@@ -1102,7 +1397,12 @@
     "FL07/FL07_winding_flux_mismatch.csv",
     "FL07/FL07_winding_flux_mismatch.html"
    ],
-   "runtime_s": 0.071
+   "sha256": {
+    "json": "13ae17c4110aa23a0bbe2dc4bbe97bd95dc914122f2df3cd4e4eef34c802cd98",
+    "csv": "15e96c59e18986434e57b196c3b04d313dec4a2f0960872259a3fb5a5581b1e8",
+    "html": "cef99b9b51621bc9af32b2e541bb735177ee462fa0e907bf175b19dc17d339c0"
+   },
+   "runtime_s": 0.087
   },
   {
    "lab": "FL07",
@@ -1120,7 +1420,12 @@
     "FL07/FL07_flux_walk_textbook.csv",
     "FL07/FL07_flux_walk_textbook.html"
    ],
-   "runtime_s": 0.657
+   "sha256": {
+    "json": "e4e97d454cfc1e697cb6275945c0376932969ef761e1d0799ba8061106ebe760",
+    "csv": "bf3e6c7e5a5d4bd27e3fe9dd0ef162d3b4a3430262e43f88ccb6c98e2b8be872",
+    "html": "ec2d7f8aa693be6d360ce4493da68838aed52cdd9d5b3863a525a9407b520543"
+   },
+   "runtime_s": 0.643
   },
   {
    "lab": "FL07",
@@ -1138,7 +1443,12 @@
     "FL07/FL07_flux_walk_R_only.csv",
     "FL07/FL07_flux_walk_R_only.html"
    ],
-   "runtime_s": 0.867
+   "sha256": {
+    "json": "2ab4d2f8f030e20cf8d2f2bb89160f91ea575d67835f8417785942edc72d7e74",
+    "csv": "3ae4de96b66bff1c92ffb80b47ff2e7819c8aa973e61a650c7f651c28f1d73f7",
+    "html": "c243f13c80dd33bb751319bdbbe11be601f4836f5b7f81953b10fa81102394be"
+   },
+   "runtime_s": 0.73
   },
   {
    "lab": "FL07",
@@ -1156,7 +1466,12 @@
     "FL07/FL07_flux_walk_blocking.csv",
     "FL07/FL07_flux_walk_blocking.html"
    ],
-   "runtime_s": 0.841
+   "sha256": {
+    "json": "8c61ea8297d7a33e33f12aff376a0f6ab80740a638d551ae1a3942b93431053e",
+    "csv": "2b1950ba01791069308973e2940e3fb5ba511f8e5a78e357f55de5aaffcbc318",
+    "html": "9b33984384b6d4dd2b18c7c9081ce53a4cd3bc5f259edd65b18189909dfa1adc"
+   },
+   "runtime_s": 0.831
   },
   {
    "lab": "FL07",
@@ -1175,7 +1490,12 @@
     "FL07/FL07_loss_screen_nominal.csv",
     "FL07/FL07_loss_screen_nominal.html"
    ],
-   "runtime_s": 0.029
+   "sha256": {
+    "json": "0e6d3fd06f1346269f29e5d8e00d10ce124622204750528a361088764ccce7c7",
+    "csv": "0fa5d1554bc3a7e44825aae93b28747d7682b4c83691f3c5d150b719faee9745",
+    "html": "b3b4c3bacaa3c2591ce2f9453cbf664f154343d399ce37252fd16596a2adef03"
+   },
+   "runtime_s": 0.028
   },
   {
    "lab": "FL07",
@@ -1194,7 +1514,12 @@
     "FL07/FL07_loss_screen_split.csv",
     "FL07/FL07_loss_screen_split.html"
    ],
-   "runtime_s": 0.032
+   "sha256": {
+    "json": "62352e38d7c43f15de29abd30159011a56377380382efcba9c02345c6888e3a9",
+    "csv": "8e3e37da7dcbe399704fa48a8b1b3bae4576dc945d737069a740ae916dc34ff2",
+    "html": "44439bc0bbcd198eefb558e1a723f8fcd77624471e0a5947f5cc93e5c94e1d4a"
+   },
+   "runtime_s": 0.029
   },
   {
    "lab": "FL08",
@@ -1214,7 +1539,12 @@
     "FL08/FL08_sps_nominal_nominal.csv",
     "FL08/FL08_sps_nominal_nominal.html"
    ],
-   "runtime_s": 0.018
+   "sha256": {
+    "json": "21f13168d8dd1323493e18ce3c99b5596f9ac7cf333219d24c12a6f03844188e",
+    "csv": "e1f109b1f651334a1c8b6de1e3101eb193d9abc3148d7a455c41af1a4965191c",
+    "html": "1019f291d4ae2abf07b1453f41f37c501700d5143000eed6069a5d87e8eacbfc"
+   },
+   "runtime_s": 0.02
   },
   {
    "lab": "FL08",
@@ -1234,7 +1564,12 @@
     "FL08/FL08_sps_nominal_reverse.csv",
     "FL08/FL08_sps_nominal_reverse.html"
    ],
-   "runtime_s": 0.017
+   "sha256": {
+    "json": "821b4eb0e954859fc9b308bd191f65ef17bbb02e0d5c3b42ac9a0c1261385ce6",
+    "csv": "1d1f9eb69ad156652124a941ed1f7effafb2506d05d3bc8fd18c2170ba88fdf1",
+    "html": "520e42671b552715385ae3b451367ce48c42d7e1c5b18b27cc85606593ee9889"
+   },
+   "runtime_s": 0.019
   },
   {
    "lab": "FL08",
@@ -1252,6 +1587,11 @@
     "FL08/FL08_sps_nominal_over.csv",
     "FL08/FL08_sps_nominal_over.html"
    ],
+   "sha256": {
+    "json": "77856a0161ce854a08f2d8516efb0514ec27b84128b36012d4fda41e9c61a243",
+    "csv": "6e6a16d0a3dd4b5077d38e1439c6f638f45823d5bca5b9004952926d891afd9c",
+    "html": "da0054fdfc6929979b9ef6c73dd9ab391ac2466829252c82193df3839f501f21"
+   },
    "runtime_s": 0.002
   },
   {
@@ -1270,7 +1610,12 @@
     "FL08/FL08_zero_power_mismatch_mismatch.csv",
     "FL08/FL08_zero_power_mismatch_mismatch.html"
    ],
-   "runtime_s": 0.07
+   "sha256": {
+    "json": "7afca90069bb34ef1f221d3cc6d1ad12d0d5380aeb6d8e4c24ff21c2bbdd711b",
+    "csv": "49c167281c22276332971e5c40fb2c0081b22ca3e0795e229a8384c487aebc55",
+    "html": "ac665907480c835f6b91f6ee83a66ca020531f1a043c43a0bbba5919d77f54ce"
+   },
+   "runtime_s": 0.058
   },
   {
    "lab": "FL08",
@@ -1288,7 +1633,12 @@
     "FL08/FL08_zero_power_mismatch_matched.csv",
     "FL08/FL08_zero_power_mismatch_matched.html"
    ],
-   "runtime_s": 0.058
+   "sha256": {
+    "json": "6a65b80e6c4c3ae018dcb375e01f4dfbdef4691df1bff9ed8160141e32aaafcd",
+    "csv": "dfe540b46fc28003c68e691083ae2ecc3d958e9c3e0ac34069074344018fd6ba",
+    "html": "f8dba5df2d953973dbaee5ad9b1292270f1a345c56b161e649e1ae86581abb3a"
+   },
+   "runtime_s": 0.072
   },
   {
    "lab": "FL08",
@@ -1306,7 +1656,12 @@
     "FL08/FL08_voltage_corners_textbook.csv",
     "FL08/FL08_voltage_corners_textbook.html"
    ],
-   "runtime_s": 0.008
+   "sha256": {
+    "json": "3342bbbd71a7605eb5287eba09e13d2fa4caa342e407b37a9083c915d3702b22",
+    "csv": "8c49508e4a44a511aaea8166b233ad1cabd6e440eab475ce586b239989b3994c",
+    "html": "8a75247ce70d4f89946f304b859a44d8e2e3cea0016d6ea06ee6640d07b6fcd3"
+   },
+   "runtime_s": 0.01
   },
   {
    "lab": "FL08",
@@ -1324,7 +1679,12 @@
     "FL08/FL08_voltage_corners_light.csv",
     "FL08/FL08_voltage_corners_light.html"
    ],
-   "runtime_s": 0.007
+   "sha256": {
+    "json": "dd9f9a5dbab7236acd4ca601e5448035a9772addfa6e336891275cd5752feb89",
+    "csv": "6df570769d612a571c0faaa900e8ae60efdf0df0cd39602b56d386bce82de13c",
+    "html": "73ab7bbc6e06bb86f1df44a60c43a46300a7e60783677632fa96a5428cb2e5f4"
+   },
+   "runtime_s": 0.01
   },
   {
    "lab": "FL08",
@@ -1342,7 +1702,12 @@
     "FL08/FL08_offset_startup_lossless.csv",
     "FL08/FL08_offset_startup_lossless.html"
    ],
-   "runtime_s": 0.17
+   "sha256": {
+    "json": "045f9073b1486eda0ae257676f965ca90a344bdd198703684ab0e83d29453a92",
+    "csv": "785e29b52987770d1718ee0a661848be60bab0c2109e6ddf28bb96b6b86da1e2",
+    "html": "ab04dfa42375c635e5b18346b8b87ee7ca20ae1450f0eeab0b401f7c6060f79f"
+   },
+   "runtime_s": 0.305
   },
   {
    "lab": "FL08",
@@ -1360,6 +1725,11 @@
     "FL08/FL08_offset_startup_damped.csv",
     "FL08/FL08_offset_startup_damped.html"
    ],
+   "sha256": {
+    "json": "7ba9c460fe858052a6399aa9cc5348bec14e81d3fb7d66ec8959de76515a00c3",
+    "csv": "58adcfe59c4e95b179154d8b353dedc73810c54fe0534c64e2e1b5ccc0b93641",
+    "html": "eaecb132a8e361842ef659ea85b439e5f6a3a885934499027ab06e8e2fd43546"
+   },
    "runtime_s": 0.607
   },
   {
@@ -1378,7 +1748,12 @@
     "FL08/FL08_two_modules_textbook.csv",
     "FL08/FL08_two_modules_textbook.html"
    ],
-   "runtime_s": 0.233
+   "sha256": {
+    "json": "9a6e495f56d5d662cd7111335394a1a87dbe227656fcb156b33c46a8df0829f1",
+    "csv": "9ed83fcad2995432703e1c928275141435b5a3da2419633769e185369b05614e",
+    "html": "3002ef531d843e5a2a7f716895fc070538b4d99e2cd6dbc09a1acec56ac65ecb"
+   },
+   "runtime_s": 0.185
   },
   {
    "lab": "FL08",
@@ -1396,7 +1771,12 @@
     "FL08/FL08_two_modules_ideal.csv",
     "FL08/FL08_two_modules_ideal.html"
    ],
-   "runtime_s": 0.161
+   "sha256": {
+    "json": "55497e3976791cc7bedca40c994081cf878f8795b35b306b90e3542a693c9437",
+    "csv": "d2be432f8ea2944af8c9cae50dc6134a83ea84fbd9adecfc1bf70f56bc9955b0",
+    "html": "89978596f4499cd24a758e6ce7788024b0557895a36f824f62d70b67e2fbc263"
+   },
+   "runtime_s": 0.178
   },
   {
    "lab": "FL09",
@@ -1415,7 +1795,12 @@
     "FL09/FL09_fha_gain_textbook.csv",
     "FL09/FL09_fha_gain_textbook.html"
    ],
-   "runtime_s": 0.022
+   "sha256": {
+    "json": "51e91d42a45222b8a7c2d9d4ba6f02255a93fd8533bc34db4d103f8dcfc1754f",
+    "csv": "9adf81603dd46f928e8d5d6cf75aa5e9103c329fc6b0e50c65ff3e0f58e4380b",
+    "html": "5ba2ab4934ef6c587b41329d6645f1476229271de53a43ad99fcb184ba47174e"
+   },
+   "runtime_s": 0.026
   },
   {
    "lab": "FL09",
@@ -1434,7 +1819,12 @@
     "FL09/FL09_fha_gain_hb.csv",
     "FL09/FL09_fha_gain_hb.html"
    ],
-   "runtime_s": 0.022
+   "sha256": {
+    "json": "767c77de7d4a469dbcf4883dbc14606bb0717cd8f9ebb65b7c54c7c4d2748d41",
+    "csv": "af34bd919d216bb74821fa29138122d6d10c7d30bc42a57ae6bdc33ea97dc5b8",
+    "html": "a4c83d139da309dd7e049e833f35642e481b1b39919679eb01ef2667222c1e48"
+   },
+   "runtime_s": 0.027
   },
   {
    "lab": "FL09",
@@ -1454,7 +1844,12 @@
     "FL09/FL09_switching_vs_fha_mid.csv",
     "FL09/FL09_switching_vs_fha_mid.html"
    ],
-   "runtime_s": 0.155
+   "sha256": {
+    "json": "5aa230fb0f0c392d8ab2c886f6b0f285dca229d73fa775c23f70a9681dfba412",
+    "csv": "7dfcee593a54334c76a6d06e4770a070c5f19dd533c6fe5df1bdb8575d3c053c",
+    "html": "3bc0e72c89134168b33e0c9b415ea0a0a5ea3209710c1017229ed5d0fb516f53"
+   },
+   "runtime_s": 0.188
   },
   {
    "lab": "FL09",
@@ -1474,7 +1869,12 @@
     "FL09/FL09_switching_vs_fha_at_fr.csv",
     "FL09/FL09_switching_vs_fha_at_fr.html"
    ],
-   "runtime_s": 0.112
+   "sha256": {
+    "json": "546b58d38e0de0c0e83b91017e0efccdaeddf93a678a567f32347af8104fb4af",
+    "csv": "767672e3e32fdf8fe1226a3faad6f7d74ccc3b7c252c5274f8e0fd6cfd6bfd02",
+    "html": "70c57676f0a952cb09fdce0328607028cfcbdc45e564bcdfcda18c11b65a23b6"
+   },
+   "runtime_s": 0.15
   },
   {
    "lab": "FL09",
@@ -1495,7 +1895,12 @@
     "FL09/FL09_switching_vs_fha_below_heavy.csv",
     "FL09/FL09_switching_vs_fha_below_heavy.html"
    ],
-   "runtime_s": 0.152
+   "sha256": {
+    "json": "342a3ecda746380b17e7f37601141b21c926fab398e83dc93c70bda95e249570",
+    "csv": "b891f4ae11ee97bc480330156a05fc169033e009c40102aa24f600c9013e448b",
+    "html": "170f665c3d6a4a4825f6190a73899f35f8d3cefc68a1394ad96cbb5a485526c5"
+   },
+   "runtime_s": 0.24
   },
   {
    "lab": "FL09",
@@ -1516,7 +1921,12 @@
     "FL09/FL09_switching_vs_fha_above_light.csv",
     "FL09/FL09_switching_vs_fha_above_light.html"
    ],
-   "runtime_s": 0.155
+   "sha256": {
+    "json": "49c4a651b673fa11027a1620386af1a70f2c2947c6519c9cf2a0b2ed8ae7342d",
+    "csv": "accf29563a561a652c56a016b625513b5d8a0149e8115edb958df0581d5a62e1",
+    "html": "7abf375e49bace41132da6fb17008f36dcb747bc0cbf7a7dc7efd48fbe976ab5"
+   },
+   "runtime_s": 0.124
   },
   {
    "lab": "FL09",
@@ -1536,7 +1946,12 @@
     "FL09/FL09_switching_vs_fha_hb.csv",
     "FL09/FL09_switching_vs_fha_hb.html"
    ],
-   "runtime_s": 0.119
+   "sha256": {
+    "json": "174b8fd8c5a60051ba0a8fc5e61aabdcd22826c602dc4f87223fefab0596913b",
+    "csv": "aebddd4f1586d3a6e47e4b608e1fd1a9c1f764c815da1e3b54b3e7798a5305dd",
+    "html": "5a9efdafd55748dff3453e3e5b16b1b7db56bf2681a6e29b49805016473c1bef"
+   },
+   "runtime_s": 0.127
   },
   {
    "lab": "FL09",
@@ -1556,7 +1971,12 @@
     "FL09/FL09_gain_curve_mid.csv",
     "FL09/FL09_gain_curve_mid.html"
    ],
-   "runtime_s": 2.294
+   "sha256": {
+    "json": "6ead32a82dc8e0172a50edba0ea6460dd9177c6db967afec74d366f8471d175b",
+    "csv": "22f59706165bef1cc5136c3f6db71edc96366219a2f24b4c6866112572ef1a9a",
+    "html": "2e139c828509da3a3a6ee0745bc86a2dfdf422fb008ea412613ad6d224a8eed7"
+   },
+   "runtime_s": 2.474
   },
   {
    "lab": "FL09",
@@ -1575,7 +1995,12 @@
     "FL09/FL09_zvs_lm_textbook.csv",
     "FL09/FL09_zvs_lm_textbook.html"
    ],
-   "runtime_s": 1.975
+   "sha256": {
+    "json": "206683a4d634446ea7f11b4cb06aa216faa9391d052f349fe587d5fa068bd038",
+    "csv": "9c48a2a4429bf4184377074d77631210c5fdcc0d1d9dca6114e80cec6536f90b",
+    "html": "58c193c221e74bc9ddc1dddd0307c35cba1dea0884cb139386d3eea7736a2267"
+   },
+   "runtime_s": 2.266
   },
   {
    "lab": "FL10",
@@ -1593,7 +2018,12 @@
     "FL10/FL10_seed_fail_seed.csv",
     "FL10/FL10_seed_fail_seed.html"
    ],
-   "runtime_s": 0.305
+   "sha256": {
+    "json": "4dc3620717a5b86510c54b5cd55fe04f65081f9233dbc5076949c54ace6cfa71",
+    "csv": "f9f0f44128a6fa581beafe22fbd4a57b535dbcf4854ddd21db49afe35df87b19",
+    "html": "3b33a610a167db72fc74792930d1ebdf8ca739c6b75bc578bfec120b43c5a2c9"
+   },
+   "runtime_s": 0.371
   },
   {
    "lab": "FL10",
@@ -1611,7 +2041,12 @@
     "FL10/FL10_seed_fail_fix.csv",
     "FL10/FL10_seed_fail_fix.html"
    ],
-   "runtime_s": 0.334
+   "sha256": {
+    "json": "5fac7ae2dd2b95c4b5de49ec5a3a70b9fb8598dad11485b5f9b5571f543a97ce",
+    "csv": "3dcf27574616f295654e4e78fd762d0707002927d9eb70ec65f6e45d5e4b1c8a",
+    "html": "20e40259b234214d6ccc4db5fa659b936a6265377be304944fa2ae05dfefbb5e"
+   },
+   "runtime_s": 0.404
   },
   {
    "lab": "FL10",
@@ -1630,7 +2065,12 @@
     "FL10/FL10_fix_n093_textbook.csv",
     "FL10/FL10_fix_n093_textbook.html"
    ],
-   "runtime_s": 0.076
+   "sha256": {
+    "json": "6cdf9f4a3abb50ad8a4489a69fd867518e88eb3e696cf01cbb3dd3e27f3b6013",
+    "csv": "ae5bd959d8120c4b05dfe6f54685a38d9b10e1a2a0e376d32809fa96f48a63fd",
+    "html": "be4bf6e2affbfc099da7c8a422661dc66a0c456091edc6790850d350ea9ca565"
+   },
+   "runtime_s": 0.08
   },
   {
    "lab": "FL10",
@@ -1649,7 +2089,12 @@
     "FL10/FL10_fix_n093_kept_lc.csv",
     "FL10/FL10_fix_n093_kept_lc.html"
    ],
-   "runtime_s": 0.075
+   "sha256": {
+    "json": "cddc094401402c7daf673420c5b17cf025409529b5617d61480e1f6ce03bc428",
+    "csv": "8a910fce49027f4af3d39fd91396ba541f99bfe2655fd1c0cebdd1b4b45c3cc9",
+    "html": "a33a26a4fd998800ffaf1ad393cc7e87e7af3223c6e5387a4f11bbf2d7e39f18"
+   },
+   "runtime_s": 0.08
   },
   {
    "lab": "FL10",
@@ -1668,7 +2113,12 @@
     "FL10/FL10_branch_selection_textbook.csv",
     "FL10/FL10_branch_selection_textbook.html"
    ],
-   "runtime_s": 1.498
+   "sha256": {
+    "json": "d2d911290fb4e586108b908c5cddd075440b6ea5fb3599d027bbd93714b3f8e6",
+    "csv": "02d7a221bd0392c14ef4de90b9e835daf21cc43a3c2685cf5379efdd2e4fa0f1",
+    "html": "ec6072a77644fc81a708db97a693f7cee95622997b692965a7f8d7294f1377fa"
+   },
+   "runtime_s": 1.787
   },
   {
    "lab": "FL10",
@@ -1687,7 +2137,12 @@
     "FL10/FL10_reverse_textbook.csv",
     "FL10/FL10_reverse_textbook.html"
    ],
-   "runtime_s": 0.132
+   "sha256": {
+    "json": "299f96f446fbdc0989dbca8a9af5b677ee96aa6cb3d5028e799733cb2dd5b533",
+    "csv": "cea74a165bd83170dad89249d75cef7d34bd01225fd18e13b2dee2c99b951940",
+    "html": "2cf670eddc0744d7cd009d7f89cb98983dfe07db8349c5f00ea6b362227461c9"
+   },
+   "runtime_s": 0.151
   },
   {
    "lab": "FL10",
@@ -1698,18 +2153,24 @@
     "CANDIDATE_FHA_ONLY",
     "FAIL_CONSTRAINT",
     "MARGINAL",
+    "MARGINAL",
     "SCREEN_ONLY",
     "NOT_EVALUABLE"
    ],
    "model_level": "C (이상 스위칭, 강한 배터리) + A",
-   "checks_total": 4,
+   "checks_total": 5,
    "checks_failed": [],
    "files": [
     "FL10/FL10_time_domain_textbook.json",
     "FL10/FL10_time_domain_textbook.csv",
     "FL10/FL10_time_domain_textbook.html"
    ],
-   "runtime_s": 7.082
+   "sha256": {
+    "json": "0ccb05a45232f50956db2d8a931793a61108ba249348c75e4bbaa1433b0a8dc8",
+    "csv": "34d21d75ee66f3c5536e80f1a3a3f583bb6f8f1dbc724658aabfbb220fdf814c",
+    "html": "596b9c554643a7b0ece3fb1546763e4555ca6c075307cd52fb298a092f6206c4"
+   },
+   "runtime_s": 8.259
   },
   {
    "lab": "FL11",
@@ -1727,7 +2188,12 @@
     "FL11/FL11_psfb_duty_loss_nominal.csv",
     "FL11/FL11_psfb_duty_loss_nominal.html"
    ],
-   "runtime_s": 1.56
+   "sha256": {
+    "json": "d0383fcad631ac0fc88c086041ecc03713507c7db0ba9c9a2561af85be0c2517",
+    "csv": "60177f12ba4a3f37dd413d3b2a62ce555bff2af895ebe2c32ab30b6e11b3dabb",
+    "html": "ed956f8e55694ad2789dd57a89f4ceaa05be35eccfacc3f1e0e20d4e171ce98f"
+   },
+   "runtime_s": 1.796
   },
   {
    "lab": "FL11",
@@ -1745,7 +2211,12 @@
     "FL11/FL11_psfb_duty_loss_seed_ideal.csv",
     "FL11/FL11_psfb_duty_loss_seed_ideal.html"
    ],
-   "runtime_s": 1.904
+   "sha256": {
+    "json": "ef363ba430df7e877555fb07998177614e337b1f0cf5fbc7599a240fdd34a762",
+    "csv": "b680bc78ccc684ae895c48c4793821622c30d8bccc9704da2b3a22bb5f2de128",
+    "html": "2cda9b4caaa318db8e631b5a9d4a00f06d4069a46ea069f6b70e6a69f4aee97f"
+   },
+   "runtime_s": 2.314
   },
   {
    "lab": "FL11",
@@ -1763,7 +2234,12 @@
     "FL11/FL11_psfb_duty_loss_regulate48.csv",
     "FL11/FL11_psfb_duty_loss_regulate48.html"
    ],
-   "runtime_s": 1.643
+   "sha256": {
+    "json": "01c862c2d6ce0c25802231df698e278eb5539ab7af67c06b5ba7e35e9345a481",
+    "csv": "98169a567160eea950db955b2677db69116c669de1ebd41549e5248c8bb51f16",
+    "html": "9002d862a59f035e630efe5729c3a79e519a270def47d1dbbe8924a3c838121c"
+   },
+   "runtime_s": 1.953
   },
   {
    "lab": "FL11",
@@ -1781,7 +2257,12 @@
     "FL11/FL11_psfb_duty_loss_lossy_sr.csv",
     "FL11/FL11_psfb_duty_loss_lossy_sr.html"
    ],
-   "runtime_s": 1.522
+   "sha256": {
+    "json": "c19755050e3da78614299571495dccd41c60f3322dd7cf57c6f9d758d08eeffb",
+    "csv": "aef41709f6befc5d1b2868c80ffeff6cc64eae1db1ce038d59690fabd007339e",
+    "html": "6a53b7fb961bfb581bcc28823b0618e24bbef01e8959bd035772ca6c73c710a1"
+   },
+   "runtime_s": 1.717
   },
   {
    "lab": "FL11",
@@ -1799,7 +2280,12 @@
     "FL11/FL11_psfb_duty_loss_low_line.csv",
     "FL11/FL11_psfb_duty_loss_low_line.html"
    ],
-   "runtime_s": 1.478
+   "sha256": {
+    "json": "b0549d4c0905c6faf47749669c20515a9c939a7f3e4a6180eb71436055165513",
+    "csv": "e08a742af6c1cd1465e59af3f167dffc5bc83f7f1c978ea880708f7b685bb282",
+    "html": "14d2bd700eaef3cd07fe442f08b1af2a9e23b1adde74fa15fab915f44e59677f"
+   },
+   "runtime_s": 1.598
   },
   {
    "lab": "FL11",
@@ -1818,7 +2304,12 @@
     "FL11/FL11_lk_tradeoff_nominal.csv",
     "FL11/FL11_lk_tradeoff_nominal.html"
    ],
-   "runtime_s": 1.48
+   "sha256": {
+    "json": "2b2ae70e4076d0d51c2cf6f8d8ec240fcf12d618ca5982bca27be1b151d67168",
+    "csv": "692354624e7d1e281dacf657bcca698aed04613db51273bc9943cf641c15ab65",
+    "html": "8faf7ce419eae6d585cdb1667713c311f533bfcbac139a704558814254cb0aaf"
+   },
+   "runtime_s": 1.497
   },
   {
    "lab": "FL11",
@@ -1836,7 +2327,12 @@
     "FL11/FL11_psfb_vs_dab_nominal.csv",
     "FL11/FL11_psfb_vs_dab_nominal.html"
    ],
-   "runtime_s": 0.217
+   "sha256": {
+    "json": "9f24f562a56e398b0430b007884dfa2ab50391683ce7dade15561344483bcc56",
+    "csv": "13d2fdefef4ad66c30e470a1d76386fb4a40e1ecbce64e2ec6810a02e98c66b4",
+    "html": "acbb32a983263c06f34e435a1d96e7916610ee16783696f87cbb1b5ed1629b27"
+   },
+   "runtime_s": 0.213
   },
   {
    "lab": "FL11",
@@ -1854,7 +2350,12 @@
     "FL11/FL11_lv12_extension_nominal.csv",
     "FL11/FL11_lv12_extension_nominal.html"
    ],
-   "runtime_s": 0.274
+   "sha256": {
+    "json": "19929f63b22013c54097cd8d50d1ded2e077df25d9237e44978d2d47fe151da7",
+    "csv": "027f0d38864e75ee12e1dbdb37086d892f2ebe2bf8de30f93abf47d84bf21af9",
+    "html": "b71bb88b151f9c15710402ff1b516000eb41188c1aa4cd8e4a56ce458fc7f140"
+   },
+   "runtime_s": 0.312
   },
   {
    "lab": "FL11",
@@ -1872,7 +2373,842 @@
     "FL11/FL11_lv12_extension_stray_fail.csv",
     "FL11/FL11_lv12_extension_stray_fail.html"
    ],
-   "runtime_s": 0.122
+   "sha256": {
+    "json": "a2f5367d93f6bd259175c5f463fc7161b470c7bcf1e6f7e494decbfa90712e2f",
+    "csv": "ec9b14f73e8217f4e9e9c08fbefe40c4cab3c86b961b93c714be53a03d90cd58",
+    "html": "e45d865dfe78f0d4696dd8d4ced0e38e74810495acac4300a50a3d9676d4db10"
+   },
+   "runtime_s": 0.128
+  },
+  {
+   "lab": "FL12",
+   "experiment": "case_a",
+   "preset": "observed",
+   "status": "UNRESOLVED_ROOT_CAUSE",
+   "verdicts": [
+    "UNRESOLVED_ROOT_CAUSE",
+    "MISSING_INPUT",
+    "SCREEN_ONLY"
+   ],
+   "model_level": "A/D 합성 screen (규정 edge + gate RC 닫힌 식) + FL02 D 수준 cell 인용",
+   "checks_total": 7,
+   "checks_failed": [],
+   "files": [
+    "FL12/FL12_case_a_observed.json",
+    "FL12/FL12_case_a_observed.csv",
+    "FL12/FL12_case_a_observed.html"
+   ],
+   "sha256": {
+    "json": "5458bb408be17c14aad5a02f3edbb453b522b29e4a0eb309b484c245ff2e7ff1",
+    "csv": "38c9fbb74c4a595762ec45f88ffe1ddd072585dfaad6b939bae82c89113c8018",
+    "html": "5511bb9441a5e1246dfd349b0cd82c887c1d34970e316bc925c6eee4e990c808"
+   },
+   "runtime_s": 1.275
+  },
+  {
+   "lab": "FL12",
+   "experiment": "case_a",
+   "preset": "kelvin",
+   "status": "UNRESOLVED_ROOT_CAUSE",
+   "verdicts": [
+    "UNRESOLVED_ROOT_CAUSE",
+    "MISSING_INPUT",
+    "SCREEN_ONLY"
+   ],
+   "model_level": "A/D 합성 screen (규정 edge + gate RC 닫힌 식) + FL02 D 수준 cell 인용",
+   "checks_total": 7,
+   "checks_failed": [],
+   "files": [
+    "FL12/FL12_case_a_kelvin.json",
+    "FL12/FL12_case_a_kelvin.csv",
+    "FL12/FL12_case_a_kelvin.html"
+   ],
+   "sha256": {
+    "json": "12e16e118ab30490d1b7fc757bd0f3d28251f2c2a0f77471aa5a34c246ad54b2",
+    "csv": "b6e11b3c48d2389198922aac870f736f849ec6f1102a050c65b388c963a126b6",
+    "html": "b9f3eab8087c67ef669178e794e821f0d0785af12f1b2cebf50e043b9d764ce4"
+   },
+   "runtime_s": 0.352
+  },
+  {
+   "lab": "FL12",
+   "experiment": "case_a",
+   "preset": "rg_off",
+   "status": "UNRESOLVED_ROOT_CAUSE",
+   "verdicts": [
+    "UNRESOLVED_ROOT_CAUSE",
+    "MISSING_INPUT",
+    "SCREEN_ONLY"
+   ],
+   "model_level": "A/D 합성 screen (규정 edge + gate RC 닫힌 식) + FL02 D 수준 cell 인용",
+   "checks_total": 7,
+   "checks_failed": [],
+   "files": [
+    "FL12/FL12_case_a_rg_off.json",
+    "FL12/FL12_case_a_rg_off.csv",
+    "FL12/FL12_case_a_rg_off.html"
+   ],
+   "sha256": {
+    "json": "0882c496f683fe9654d3c05e42e899871666c13569411de548b771c2847470dc",
+    "csv": "337cdb45755055719e443e040fa95ffe082761c22cf2ebd23ddbe592e36c040f",
+    "html": "5b28e3fc6469a6b50df89fc3742b49d39fc567dddc435ff10083581d041cda1a"
+   },
+   "runtime_s": 0.389
+  },
+  {
+   "lab": "FL12",
+   "experiment": "case_b",
+   "preset": "observed",
+   "status": "UNRESOLVED_ROOT_CAUSE",
+   "verdicts": [
+    "UNRESOLVED_ROOT_CAUSE",
+    "CUSTOMER_DECISION_REQUIRED",
+    "MISSING_INPUT"
+   ],
+   "model_level": "A (입력 경계·limiter 정의·4-wire 등가 ripple·포화 인덕터 자속좌표 해) + FL05 실행 인용",
+   "checks_total": 9,
+   "checks_failed": [],
+   "files": [
+    "FL12/FL12_case_b_observed.json",
+    "FL12/FL12_case_b_observed.csv",
+    "FL12/FL12_case_b_observed.html"
+   ],
+   "sha256": {
+    "json": "c060f1cc34b31d8aee623a0a0c697217cc4b70bf3fd0cf4b2157606ee23ee50b",
+    "csv": "1a91a3816d9c0aa2c8c6b7a163256080e9aab90e6d6d6a8c6e59c3a1ef5b615b",
+    "html": "f719dc83fe34bfcfde1501d3a7bf191125a56c96aecd846ea5e8ebcd1c7a2ce2"
+   },
+   "runtime_s": 0.943
+  },
+  {
+   "lab": "FL12",
+   "experiment": "case_b",
+   "preset": "fs",
+   "status": "UNRESOLVED_ROOT_CAUSE",
+   "verdicts": [
+    "UNRESOLVED_ROOT_CAUSE",
+    "CUSTOMER_DECISION_REQUIRED",
+    "MISSING_INPUT"
+   ],
+   "model_level": "A (입력 경계·limiter 정의·4-wire 등가 ripple·포화 인덕터 자속좌표 해) + FL05 실행 인용",
+   "checks_total": 9,
+   "checks_failed": [],
+   "files": [
+    "FL12/FL12_case_b_fs.json",
+    "FL12/FL12_case_b_fs.csv",
+    "FL12/FL12_case_b_fs.html"
+   ],
+   "sha256": {
+    "json": "a498b6a10f5493758427ddd35452ebad0a6a353f2527bf526bf607431e655f63",
+    "csv": "7f5d2f294de5bd4c4a141776cf04d9e86ce7c8162ea22729c99c08ac31c06fbf",
+    "html": "da4de80898a7e55c57b908d0c7a415533d18e08c7a62fdcc9837ea4b34d82a01"
+   },
+   "runtime_s": 0.915
+  },
+  {
+   "lab": "FL12",
+   "experiment": "case_b",
+   "preset": "probe",
+   "status": "UNRESOLVED_ROOT_CAUSE",
+   "verdicts": [
+    "UNRESOLVED_ROOT_CAUSE",
+    "CUSTOMER_DECISION_REQUIRED",
+    "MISSING_INPUT"
+   ],
+   "model_level": "A (입력 경계·limiter 정의·4-wire 등가 ripple·포화 인덕터 자속좌표 해) + FL05 실행 인용",
+   "checks_total": 9,
+   "checks_failed": [],
+   "files": [
+    "FL12/FL12_case_b_probe.json",
+    "FL12/FL12_case_b_probe.csv",
+    "FL12/FL12_case_b_probe.html"
+   ],
+   "sha256": {
+    "json": "381dbadb5e596e2da945c7a3729202f023e231d3430f0f363effc1dc87c3aa8d",
+    "csv": "88ce39d3c641d910172b277583f1db0c605535a608dcfe1f8067a8aac921db4a",
+    "html": "d04ac0159003ee1bdc52068d5725da055c07457e360c7632ba4d8917ecd10b39"
+   },
+   "runtime_s": 0.883
+  },
+  {
+   "lab": "FL12",
+   "experiment": "case_c",
+   "preset": "observed",
+   "status": "UNRESOLVED_ROOT_CAUSE",
+   "verdicts": [
+    "UNRESOLVED_ROOT_CAUSE",
+    "MISSING_INPUT"
+   ],
+   "model_level": "A + C (구간선형 정확 파형, 스위칭 엔진) + FL08 실행 인용",
+   "checks_total": 8,
+   "checks_failed": [],
+   "files": [
+    "FL12/FL12_case_c_observed.json",
+    "FL12/FL12_case_c_observed.csv",
+    "FL12/FL12_case_c_observed.html"
+   ],
+   "sha256": {
+    "json": "d4fe2a042e043f97f7e08f52da39e9fcbe5aaecab2e0da87d651dcb7ace4bed2",
+    "csv": "5a4368339c162c9612dc03f90576297e07a9ad5b236966fba26296cc87e28375",
+    "html": "8560fbd6c2ce0c368404fb144b0a717a4c70d4560451b3560dee948c6f33ec75"
+   },
+   "runtime_s": 0.486
+  },
+  {
+   "lab": "FL12",
+   "experiment": "case_c",
+   "preset": "ratio",
+   "status": "UNRESOLVED_ROOT_CAUSE",
+   "verdicts": [
+    "UNRESOLVED_ROOT_CAUSE",
+    "MISSING_INPUT"
+   ],
+   "model_level": "A + C (구간선형 정확 파형, 스위칭 엔진) + FL08 실행 인용",
+   "checks_total": 8,
+   "checks_failed": [],
+   "files": [
+    "FL12/FL12_case_c_ratio.json",
+    "FL12/FL12_case_c_ratio.csv",
+    "FL12/FL12_case_c_ratio.html"
+   ],
+   "sha256": {
+    "json": "aea2d852970fa4399215377f314953812aeafcf9404506c28f65a4a0fd255c63",
+    "csv": "c0ad0dd68383c528762633a5fad3686eb7aaf5800529bac996b5692223939aaa",
+    "html": "a27ed8792d6e558b72a9dc17dbbc9e4968a56275c312163b1079468b52192590"
+   },
+   "runtime_s": 0.474
+  },
+  {
+   "lab": "FL12",
+   "experiment": "case_c",
+   "preset": "dc",
+   "status": "UNRESOLVED_ROOT_CAUSE",
+   "verdicts": [
+    "UNRESOLVED_ROOT_CAUSE",
+    "MISSING_INPUT"
+   ],
+   "model_level": "A + C (구간선형 정확 파형, 스위칭 엔진) + FL08 실행 인용",
+   "checks_total": 8,
+   "checks_failed": [],
+   "files": [
+    "FL12/FL12_case_c_dc.json",
+    "FL12/FL12_case_c_dc.csv",
+    "FL12/FL12_case_c_dc.html"
+   ],
+   "sha256": {
+    "json": "38917550dc7ee7b844aeffc7d8f62cea37d41681f112e16d2135f4303a09d4a0",
+    "csv": "f7f7ebea3ec51526176184a1a0aef78b25e47aed45406c9de5df9ae49c4c927d",
+    "html": "f3da1d506893529f6951b775da10f80affedf68c701b83a1e22ae2be22933ec8"
+   },
+   "runtime_s": 0.485
+  },
+  {
+   "lab": "FL12",
+   "experiment": "case_d",
+   "preset": "observed",
+   "status": "UNRESOLVED_ROOT_CAUSE",
+   "verdicts": [
+    "UNRESOLVED_ROOT_CAUSE",
+    "SCREEN_ONLY",
+    "MISSING_INPUT"
+   ],
+   "model_level": "C (정류기 포함 스위칭 주기해, V_o 조절) + SCREEN (EX02 비선형 C_oss 전하) + 후처리 손실 추정",
+   "checks_total": 9,
+   "checks_failed": [],
+   "files": [
+    "FL12/FL12_case_d_observed.json",
+    "FL12/FL12_case_d_observed.csv",
+    "FL12/FL12_case_d_observed.html"
+   ],
+   "sha256": {
+    "json": "f1ff60506746ab03aa6dae0f12e1e7616ccd58717d775eaef16ffd8aaf39f5cd",
+    "csv": "32ac4fcfbf75807937b5bc07b4c8991cd4534d65eb0d09951ccad5f91540fe0c",
+    "html": "818f6b4b73bff83b21e4454fabaa93b905ccc547e700909a1d9e576ae2ade92b"
+   },
+   "runtime_s": 3.115
+  },
+  {
+   "lab": "FL12",
+   "experiment": "case_d",
+   "preset": "restore_lm",
+   "status": "UNRESOLVED_ROOT_CAUSE",
+   "verdicts": [
+    "UNRESOLVED_ROOT_CAUSE",
+    "SCREEN_ONLY",
+    "MISSING_INPUT"
+   ],
+   "model_level": "C (정류기 포함 스위칭 주기해, V_o 조절) + SCREEN (EX02 비선형 C_oss 전하) + 후처리 손실 추정",
+   "checks_total": 9,
+   "checks_failed": [],
+   "files": [
+    "FL12/FL12_case_d_restore_lm.json",
+    "FL12/FL12_case_d_restore_lm.csv",
+    "FL12/FL12_case_d_restore_lm.html"
+   ],
+   "sha256": {
+    "json": "09155ce8c7dfe245c41eb50bbd90913a0328da14c394f26ece06f917c459f2c9",
+    "csv": "4522bb299336face5a8daf8b05dff194a9ddec76731218319fcc87c99de90d19",
+    "html": "6ba672c6618db55d25a26c33ed63c01edff32b4f5ab1b07f24695f7afa443452"
+   },
+   "runtime_s": 3.723
+  },
+  {
+   "lab": "FL12",
+   "experiment": "case_d",
+   "preset": "restore_dev",
+   "status": "UNRESOLVED_ROOT_CAUSE",
+   "verdicts": [
+    "UNRESOLVED_ROOT_CAUSE",
+    "SCREEN_ONLY",
+    "MISSING_INPUT"
+   ],
+   "model_level": "C (정류기 포함 스위칭 주기해, V_o 조절) + SCREEN (EX02 비선형 C_oss 전하) + 후처리 손실 추정",
+   "checks_total": 9,
+   "checks_failed": [],
+   "files": [
+    "FL12/FL12_case_d_restore_dev.json",
+    "FL12/FL12_case_d_restore_dev.csv",
+    "FL12/FL12_case_d_restore_dev.html"
+   ],
+   "sha256": {
+    "json": "64350309524738bb93123ffdcf9a090bb93b839c43afee440b881092f35ced60",
+    "csv": "b23a152bee7db237e9510d69a27d4fe443bed4a6e9d6362ea3172ce0ae46ea7d",
+    "html": "63f0ed8c38287c653bbfa181ad9847e499701dcfa8e8038a3962ebe378b272ed"
+   },
+   "runtime_s": 3.22
+  },
+  {
+   "lab": "FL12",
+   "experiment": "case_e",
+   "preset": "observed",
+   "status": "UNRESOLVED_ROOT_CAUSE",
+   "verdicts": [
+    "UNRESOLVED_ROOT_CAUSE",
+    "MISSING_INPUT"
+   ],
+   "model_level": "C (정확 스위칭: full bridge + R + C_b + PWL 포화 자화 가지, 영역 guard) + 측정 경로",
+   "checks_total": 11,
+   "checks_failed": [],
+   "files": [
+    "FL12/FL12_case_e_observed.json",
+    "FL12/FL12_case_e_observed.csv",
+    "FL12/FL12_case_e_observed.html"
+   ],
+   "sha256": {
+    "json": "d973ae237e501dfe8b1d2216e32bfddf6f1b11c24713b993edcc101f46e6c992",
+    "csv": "9ce55396b75aed6f695163becffcde3b6a8b234a8d32e427385a0a93a526cce9",
+    "html": "630aa228ce8b66f31b7f17b80dac49ca9b5583725098c585b303d733b853bc11"
+   },
+   "runtime_s": 1.75
+  },
+  {
+   "lab": "FL12",
+   "experiment": "case_e",
+   "preset": "vs",
+   "status": "UNRESOLVED_ROOT_CAUSE",
+   "verdicts": [
+    "UNRESOLVED_ROOT_CAUSE",
+    "MISSING_INPUT"
+   ],
+   "model_level": "C (정확 스위칭: full bridge + R + C_b + PWL 포화 자화 가지, 영역 guard) + 측정 경로",
+   "checks_total": 11,
+   "checks_failed": [],
+   "files": [
+    "FL12/FL12_case_e_vs.json",
+    "FL12/FL12_case_e_vs.csv",
+    "FL12/FL12_case_e_vs.html"
+   ],
+   "sha256": {
+    "json": "1595efc6ccdabbe42dc02a7a7f8fbc9eb85ec3d74aaee718fdec8abb9ddcf195",
+    "csv": "dd9023da7697d9602eb57cf135fcfe5320b37940048ede084b4446b89e825258",
+    "html": "8d0db1376acf832420a56aeeac0e2dfd96de9ada8a01854f4a7ae0d783cd94ac"
+   },
+   "runtime_s": 1.867
+  },
+  {
+   "lab": "FL12",
+   "experiment": "case_e",
+   "preset": "gate",
+   "status": "UNRESOLVED_ROOT_CAUSE",
+   "verdicts": [
+    "UNRESOLVED_ROOT_CAUSE",
+    "MISSING_INPUT"
+   ],
+   "model_level": "C (정확 스위칭: full bridge + R + C_b + PWL 포화 자화 가지, 영역 guard) + 측정 경로",
+   "checks_total": 11,
+   "checks_failed": [],
+   "files": [
+    "FL12/FL12_case_e_gate.json",
+    "FL12/FL12_case_e_gate.csv",
+    "FL12/FL12_case_e_gate.html"
+   ],
+   "sha256": {
+    "json": "9fb274d8c678c9f4f274f0be9f80fbc84863adf1ba87efbeea973715c5b458d9",
+    "csv": "b641807974937f633b388b4d36f36c1640de448c722907cfd36fa9bd2ba14ad9",
+    "html": "0a9ab338bb3ac93c0a926c6cd68869e8e0e7403d20a12a57d3812277613c35d2"
+   },
+   "runtime_s": 1.796
+  },
+  {
+   "lab": "FL12",
+   "experiment": "case_f",
+   "preset": "observed",
+   "status": "UNRESOLVED_ROOT_CAUSE",
+   "verdicts": [
+    "UNRESOLVED_ROOT_CAUSE",
+    "INFO",
+    "MISSING_INPUT"
+   ],
+   "model_level": "A (GUM 1차 전파·경계 대수) + Monte Carlo (seed) + 1차 열 모델",
+   "checks_total": 12,
+   "checks_failed": [],
+   "files": [
+    "FL12/FL12_case_f_observed.json",
+    "FL12/FL12_case_f_observed.csv",
+    "FL12/FL12_case_f_observed.html"
+   ],
+   "sha256": {
+    "json": "900bfebfd863a2b04acf318f9348d112aa86eb29bebb1fe3bc6cf33a04c5c8ce",
+    "csv": "01f4408a75b39cc585cab08db301c9b09ac56773cbdc85e088096fe709a42ea1",
+    "html": "f33b78aedb58d71ad93bb76329b73f41330b0f044bd912e33132e4af0791c2d2"
+   },
+   "runtime_s": 0.236
+  },
+  {
+   "lab": "FL12",
+   "experiment": "case_f",
+   "preset": "heater",
+   "status": "UNRESOLVED_ROOT_CAUSE",
+   "verdicts": [
+    "UNRESOLVED_ROOT_CAUSE",
+    "INFO",
+    "MISSING_INPUT"
+   ],
+   "model_level": "A (GUM 1차 전파·경계 대수) + Monte Carlo (seed) + 1차 열 모델",
+   "checks_total": 12,
+   "checks_failed": [],
+   "files": [
+    "FL12/FL12_case_f_heater.json",
+    "FL12/FL12_case_f_heater.csv",
+    "FL12/FL12_case_f_heater.html"
+   ],
+   "sha256": {
+    "json": "f962b46bbbd00c6ee9ef4f429693e613dc538cd42fdcbb7bb8cae265b3ee50bb",
+    "csv": "a7e7cd8774a1073ae0a944c2e94926751f1614abe2efb3fc4d5aebe9aff7f4bd",
+    "html": "fa9e7fa253f6ae09df6b581dca4ea32a87389df19cef3144d5924c4304efc96c"
+   },
+   "runtime_s": 0.048
+  },
+  {
+   "lab": "FL12",
+   "experiment": "case_f",
+   "preset": "sync",
+   "status": "UNRESOLVED_ROOT_CAUSE",
+   "verdicts": [
+    "UNRESOLVED_ROOT_CAUSE",
+    "INFO",
+    "MISSING_INPUT"
+   ],
+   "model_level": "A (GUM 1차 전파·경계 대수) + Monte Carlo (seed) + 1차 열 모델",
+   "checks_total": 12,
+   "checks_failed": [],
+   "files": [
+    "FL12/FL12_case_f_sync.json",
+    "FL12/FL12_case_f_sync.csv",
+    "FL12/FL12_case_f_sync.html"
+   ],
+   "sha256": {
+    "json": "213ae10cef53666959723325b598018332e9e59884b93d9428d06ec0f9f748bd",
+    "csv": "6907698a4dee3bf08822a7c04e2636c7475108e6c831718591e45ea5b13e9bd4",
+    "html": "6bafc9e3304c1146ee1fd73f44989e34bfd9bd4e560f8d0a8bd1ef6670ad28f9"
+   },
+   "runtime_s": 0.05
+  },
+  {
+   "lab": "FL12",
+   "experiment": "case_g",
+   "preset": "observed",
+   "status": "UNRESOLVED_ROOT_CAUSE",
+   "verdicts": [
+    "UNRESOLVED_ROOT_CAUSE",
+    "NOT_EVALUABLE",
+    "MISSING_INPUT"
+   ],
+   "model_level": "A (PWL 정확 Fourier 계수 × 선형 경로 전달함수) — relative proxy",
+   "checks_total": 9,
+   "checks_failed": [],
+   "files": [
+    "FL12/FL12_case_g_observed.json",
+    "FL12/FL12_case_g_observed.csv",
+    "FL12/FL12_case_g_observed.html"
+   ],
+   "sha256": {
+    "json": "98625750cd6f8c1a3873a93b07ace4ee7a863a35aeffc4bb67ee27e82620fa57",
+    "csv": "51b83b7dfc14cbc51cfe77924772c70e20a50ef7dfd5ee5aa2a9dfdc090c4cf7",
+    "html": "41405dce93f67cdffaaba32633c94d7a26c8b4b49739554e00ae818a3db5e83a"
+   },
+   "runtime_s": 0.085
+  },
+  {
+   "lab": "FL12",
+   "experiment": "case_g",
+   "preset": "rg",
+   "status": "UNRESOLVED_ROOT_CAUSE",
+   "verdicts": [
+    "UNRESOLVED_ROOT_CAUSE",
+    "NOT_EVALUABLE",
+    "MISSING_INPUT"
+   ],
+   "model_level": "A (PWL 정확 Fourier 계수 × 선형 경로 전달함수) — relative proxy",
+   "checks_total": 9,
+   "checks_failed": [],
+   "files": [
+    "FL12/FL12_case_g_rg.json",
+    "FL12/FL12_case_g_rg.csv",
+    "FL12/FL12_case_g_rg.html"
+   ],
+   "sha256": {
+    "json": "14f0c5be4cbfb8e7479c672ace92ec40974a256383360da01e6524981f324c0a",
+    "csv": "f1bf844323cde54da4cc8b1ccea326c5f204f157f49a3bc5f32c99d1e10dfedf",
+    "html": "15ad01960886f7b008b8f9d633f7a1c2df1600061361935a1faa4159c461a1c9"
+   },
+   "runtime_s": 0.025
+  },
+  {
+   "lab": "FL12",
+   "experiment": "case_g",
+   "preset": "cable",
+   "status": "UNRESOLVED_ROOT_CAUSE",
+   "verdicts": [
+    "UNRESOLVED_ROOT_CAUSE",
+    "NOT_EVALUABLE",
+    "MISSING_INPUT"
+   ],
+   "model_level": "A (PWL 정확 Fourier 계수 × 선형 경로 전달함수) — relative proxy",
+   "checks_total": 9,
+   "checks_failed": [],
+   "files": [
+    "FL12/FL12_case_g_cable.json",
+    "FL12/FL12_case_g_cable.csv",
+    "FL12/FL12_case_g_cable.html"
+   ],
+   "sha256": {
+    "json": "a68398eccf35cbaed2ecb11d8d96da681d9247ba0f08441d0842ad9017cec943",
+    "csv": "3701bf0dba7b91657d5263a2ebe592f2adc248b8999ba92a829dfb37982f5a41",
+    "html": "c49f779a878a77878df750efda5037f50492c7c301a2deef159b52c012524f88"
+   },
+   "runtime_s": 0.023
+  },
+  {
+   "lab": "FL12",
+   "experiment": "case_h",
+   "preset": "observed",
+   "status": "UNRESOLVED_ROOT_CAUSE",
+   "verdicts": [
+    "UNRESOLVED_ROOT_CAUSE",
+    "MISSING_INPUT"
+   ],
+   "model_level": "C (정확 스위칭: body diode guard·clamp 상태, 에너지 원장) + EX10 RLC 재현",
+   "checks_total": 13,
+   "checks_failed": [],
+   "files": [
+    "FL12/FL12_case_h_observed.json",
+    "FL12/FL12_case_h_observed.csv",
+    "FL12/FL12_case_h_observed.html"
+   ],
+   "sha256": {
+    "json": "84b389f00b77b7106506e5de87f5cd29e07237334917f73833bdcc274975b57b",
+    "csv": "be7f695e3d09adf236d39c63d75ef0c0d5f51669d5e523d9d706b8ffd89b3974",
+    "html": "b69aaabb7acb657a792051ee5cdedc27729e2f496506e624f4db94c02c10047e"
+   },
+   "runtime_s": 0.76
+  },
+  {
+   "lab": "FL12",
+   "experiment": "case_h",
+   "preset": "ibat",
+   "status": "UNRESOLVED_ROOT_CAUSE",
+   "verdicts": [
+    "UNRESOLVED_ROOT_CAUSE",
+    "MISSING_INPUT"
+   ],
+   "model_level": "C (정확 스위칭: body diode guard·clamp 상태, 에너지 원장) + EX10 RLC 재현",
+   "checks_total": 13,
+   "checks_failed": [],
+   "files": [
+    "FL12/FL12_case_h_ibat.json",
+    "FL12/FL12_case_h_ibat.csv",
+    "FL12/FL12_case_h_ibat.html"
+   ],
+   "sha256": {
+    "json": "e719cc41f330aeffe2800b0d38e3a5b6da2b6e0cf36e86331b9d841b8ca86217",
+    "csv": "51ad1d321b2ef921320eb8e5d07d64ca2cc71f0655ab7e9f2abeaeec91dfff7e",
+    "html": "ecf481106f83c2256988b641df195ff4c763808bc4f8d437ab8f2b0db8d4bef1"
+   },
+   "runtime_s": 0.886
+  },
+  {
+   "lab": "FL12",
+   "experiment": "case_h",
+   "preset": "vbus",
+   "status": "UNRESOLVED_ROOT_CAUSE",
+   "verdicts": [
+    "UNRESOLVED_ROOT_CAUSE",
+    "MISSING_INPUT"
+   ],
+   "model_level": "C (정확 스위칭: body diode guard·clamp 상태, 에너지 원장) + EX10 RLC 재현",
+   "checks_total": 13,
+   "checks_failed": [],
+   "files": [
+    "FL12/FL12_case_h_vbus.json",
+    "FL12/FL12_case_h_vbus.csv",
+    "FL12/FL12_case_h_vbus.html"
+   ],
+   "sha256": {
+    "json": "b125c6bd4baa74c859397b5678479fe5e1ab03297114bed4f7072cc5612b396e",
+    "csv": "b5e33427143d6b2a72dd74e2374cb3dc7e3dd1b3614908b431b08ba1610e9e4f",
+    "html": "db5a0fdb9cb536b2fd19e4bc70ba2756a5df53304e64a556040f97fdb9e519e1"
+   },
+   "runtime_s": 0.775
+  },
+  {
+   "lab": "EX01",
+   "experiment": "loss_surface",
+   "preset": "nominal",
+   "status": "PASS_WITHIN_MODEL",
+   "verdicts": [
+    "PASS_WITHIN_MODEL"
+   ],
+   "model_level": "A (합성 loss surface fit·validation)",
+   "checks_total": 6,
+   "checks_failed": [],
+   "files": [
+    "EX01/EX01_loss_surface_nominal.json",
+    "EX01/EX01_loss_surface_nominal.csv",
+    "EX01/EX01_loss_surface_nominal.html"
+   ],
+   "sha256": {
+    "json": "7e7c936e3ce5ab60604fcb4a81a64e8e6cdbe493cd028c70b34da938f39fcfef",
+    "csv": "3455bfb3555296e6c457b8a0cdb5be88188b7480907889f1d3181d6c33bb3742",
+    "html": "1e17fbfa0399ce2095fd967ca19b7678230756cda2d04bd22fcf39bcb222c601"
+   },
+   "runtime_s": 0.115
+  },
+  {
+   "lab": "EX01",
+   "experiment": "loss_surface",
+   "preset": "light",
+   "status": "OUT_OF_VALIDITY",
+   "verdicts": [
+    "OUT_OF_VALIDITY"
+   ],
+   "model_level": "A (합성 loss surface fit·validation)",
+   "checks_total": 6,
+   "checks_failed": [],
+   "files": [
+    "EX01/EX01_loss_surface_light.json",
+    "EX01/EX01_loss_surface_light.csv",
+    "EX01/EX01_loss_surface_light.html"
+   ],
+   "sha256": {
+    "json": "0b1fd161ac6fddf539401b7407047aee2f1e7d659fe16b4b3d9dedbd85e4e4d4",
+    "csv": "d0828c98ac29bb55fa76fa43dd926d560238ee6270310ce633a89a48b43e26bd",
+    "html": "76f2abf930042c150693de84707eceb1d24780fe230c21521f07111d7da673ec"
+   },
+   "runtime_s": 0.114
+  },
+  {
+   "lab": "EX01",
+   "experiment": "obc_cllc",
+   "preset": "seed",
+   "status": "FAIL_CONSTRAINT",
+   "verdicts": [
+    "CUSTOMER_DECISION_REQUIRED",
+    "FAIL_CONSTRAINT"
+   ],
+   "model_level": "A (FHA 정적 해 + 합성 손실 지도)",
+   "checks_total": 9,
+   "checks_failed": [],
+   "files": [
+    "EX01/EX01_obc_cllc_seed.json",
+    "EX01/EX01_obc_cllc_seed.csv",
+    "EX01/EX01_obc_cllc_seed.html"
+   ],
+   "sha256": {
+    "json": "03d3761a14dd0218825902e309face8a8caa3f9f89fa0d711d75b7aea89647b2",
+    "csv": "2888b385bd65d65323b98c292e3d7a6780110080d858f0bac7a3577695049581",
+    "html": "fed71a7aca49ce29c20a0cbdc8e631bbe817857a98dadb508d96e5d5ff87ee01"
+   },
+   "runtime_s": 0.136
+  },
+  {
+   "lab": "EX01",
+   "experiment": "obc_cllc",
+   "preset": "n093",
+   "status": "CUSTOMER_DECISION_REQUIRED",
+   "verdicts": [
+    "CUSTOMER_DECISION_REQUIRED",
+    "CANDIDATE_FHA_ONLY"
+   ],
+   "model_level": "A (FHA 정적 해 + 합성 손실 지도)",
+   "checks_total": 20,
+   "checks_failed": [],
+   "files": [
+    "EX01/EX01_obc_cllc_n093.json",
+    "EX01/EX01_obc_cllc_n093.csv",
+    "EX01/EX01_obc_cllc_n093.html"
+   ],
+   "sha256": {
+    "json": "991684816c62d3fc01d41ed0c65bc2d0e4151553eaa247531b4f8495eaf15e7a",
+    "csv": "b3a84b9b8abbb923291ab5a99b223b5c60fc0c4f1d69dd51a2667d620dbafc5b",
+    "html": "52e75d055330e9570b01d13e44b6a0e53423a823593e164ef8a8c2b7d1d523f0"
+   },
+   "runtime_s": 0.132
+  },
+  {
+   "lab": "EX01",
+   "experiment": "dab_lv",
+   "preset": "nominal",
+   "status": "PASS_WITHIN_MODEL",
+   "verdicts": [
+    "PASS_WITHIN_MODEL",
+    "SCREEN_ONLY"
+   ],
+   "model_level": "A (SPS 구간 선형 파형 + 합성 손실 지도)",
+   "checks_total": 9,
+   "checks_failed": [],
+   "files": [
+    "EX01/EX01_dab_lv_nominal.json",
+    "EX01/EX01_dab_lv_nominal.csv",
+    "EX01/EX01_dab_lv_nominal.html"
+   ],
+   "sha256": {
+    "json": "65fa72fe64bd62366995dd059de352e5c3ac77d7f268dfcae9aa3c23bcab9cc8",
+    "csv": "0a029fb8d4d9d9188c0d9b5fad6a7ba97964a56cf10d016eb8a1c215a460a784",
+    "html": "0ffa668d309fee39e0e45fdbf3371c860eff9a7768b3d568882c3e3a9ec3dc11"
+   },
+   "runtime_s": 0.047
+  },
+  {
+   "lab": "EX01",
+   "experiment": "dab_lv",
+   "preset": "L100",
+   "status": "FAIL_CONSTRAINT",
+   "verdicts": [
+    "FAIL_CONSTRAINT",
+    "SCREEN_ONLY"
+   ],
+   "model_level": "A (SPS 구간 선형 파형 + 합성 손실 지도)",
+   "checks_total": 2,
+   "checks_failed": [],
+   "files": [
+    "EX01/EX01_dab_lv_L100.json",
+    "EX01/EX01_dab_lv_L100.csv",
+    "EX01/EX01_dab_lv_L100.html"
+   ],
+   "sha256": {
+    "json": "42932e5bd3ff4ce45f660f4ad151903674f2a2e0e70067715a04fad48b31c83f",
+    "csv": "f57aca671a24c2347be97549466104ce48dbce8d57a54c87d24a501b1d210849",
+    "html": "6a161ff0a08d75d2649631cd3f21ae7457dadf80236d1fed7fbdacc812bb82b4"
+   },
+   "runtime_s": 0.058
+  },
+  {
+   "lab": "EX01",
+   "experiment": "sic_leg",
+   "preset": "nominal",
+   "status": "PASS_WITHIN_MODEL",
+   "verdicts": [
+    "PASS_WITHIN_MODEL",
+    "SCREEN_ONLY"
+   ],
+   "model_level": "A (정적·전열 분배 + 합성 손실 지도 + 결합 screen)",
+   "checks_total": 10,
+   "checks_failed": [],
+   "files": [
+    "EX01/EX01_sic_leg_nominal.json",
+    "EX01/EX01_sic_leg_nominal.csv",
+    "EX01/EX01_sic_leg_nominal.html"
+   ],
+   "sha256": {
+    "json": "7b6c5920a0df03b7feeb767f0248219a41b6e3de63dad37e9d0adc2fd9aea845",
+    "csv": "9c3f245c9a0f3da902c3542da7a3f13caa5459ff4bcc7ab213d00ed4e7ccf841",
+    "html": "2b376ccc23171276508be920ab44d2ce560bd3e01e409e77b311303ddf6aa7b7"
+   },
+   "runtime_s": 0.062
+  },
+  {
+   "lab": "EX01",
+   "experiment": "sic_leg",
+   "preset": "fast",
+   "status": "FAIL_CONSTRAINT",
+   "verdicts": [
+    "FAIL_CONSTRAINT",
+    "SCREEN_ONLY"
+   ],
+   "model_level": "A (정적·전열 분배 + 합성 손실 지도 + 결합 screen)",
+   "checks_total": 8,
+   "checks_failed": [],
+   "files": [
+    "EX01/EX01_sic_leg_fast.json",
+    "EX01/EX01_sic_leg_fast.csv",
+    "EX01/EX01_sic_leg_fast.html"
+   ],
+   "sha256": {
+    "json": "c82bd885caaad8eaa270045f0d44d9323fd2b3f8cd52daa43c4aa27a653e5916",
+    "csv": "87b77e6f6a28cb879dbd5bea5fec87d03891b5d65b4c469ea94df67389c0433f",
+    "html": "1f87709e2f0033e208a053475bd80093942a772fd438099d26b2a7867d59fb7b"
+   },
+   "runtime_s": 0.053
+  },
+  {
+   "lab": "EX01",
+   "experiment": "mission_ranking",
+   "preset": "textbook",
+   "status": "UNRESOLVED_RANKING",
+   "verdicts": [
+    "UNRESOLVED_RANKING",
+    "UNRESOLVED_RANKING"
+   ],
+   "model_level": "A (FHA 운전점 + 합성 손실 지도) + Monte Carlo",
+   "checks_total": 5,
+   "checks_failed": [],
+   "files": [
+    "EX01/EX01_mission_ranking_textbook.json",
+    "EX01/EX01_mission_ranking_textbook.csv",
+    "EX01/EX01_mission_ranking_textbook.html"
+   ],
+   "sha256": {
+    "json": "4520157546cd281a27bcf679e0c1ea785f41112966b4b426bdf3bc8cb61c279e",
+    "csv": "b717de465b08156d7e5e870793e4e578db74697772dc79852a7cd366f90ac187",
+    "html": "3b442584ecaf6ff403fe8cfce3392108654172849fbf0176ffa9de305c12faf9"
+   },
+   "runtime_s": 0.045
+  },
+  {
+   "lab": "EX01",
+   "experiment": "mission_ranking",
+   "preset": "eoss_double",
+   "status": "OUT_OF_VALIDITY",
+   "verdicts": [
+    "OUT_OF_VALIDITY",
+    "UNRESOLVED_RANKING",
+    "UNRESOLVED_RANKING"
+   ],
+   "model_level": "A (FHA 운전점 + 합성 손실 지도) + Monte Carlo",
+   "checks_total": 4,
+   "checks_failed": [],
+   "files": [
+    "EX01/EX01_mission_ranking_eoss_double.json",
+    "EX01/EX01_mission_ranking_eoss_double.csv",
+    "EX01/EX01_mission_ranking_eoss_double.html"
+   ],
+   "sha256": {
+    "json": "3c49058ee07c0ae191b010a9b4c6a6c0dd165fb1d023cef9134b5619c5506637",
+    "csv": "a9b9a6b2870db3aa3778ac22447ea0a22809c74bb214ad583aa7ef4d6a7e7b5d",
+    "html": "34bbe2b9f0b6277e83172e6aeca9263f43b2bf18d930face75a0f9487394e96c"
+   },
+   "runtime_s": 0.045
   },
   {
    "lab": "EX02",
@@ -1890,7 +3226,12 @@
     "EX02/EX02_qe_integrals_textbook.csv",
     "EX02/EX02_qe_integrals_textbook.html"
    ],
-   "runtime_s": 0.013
+   "sha256": {
+    "json": "2dd92eb675f1b56e75a228ec931851b6475154c63c015aa085a5ef69d1246dbf",
+    "csv": "2d8e7118561919638b4d26bcced1c94dc8b92bb68d27494ef2ac301b0aaf3052",
+    "html": "9d216e213aebecf4b49588dc2cbe41719ffb3adf045f7bdf15b3a543d7f93e51"
+   },
+   "runtime_s": 0.014
   },
   {
    "lab": "EX02",
@@ -1908,7 +3249,12 @@
     "EX02/EX02_hb_constant_current_textbook.csv",
     "EX02/EX02_hb_constant_current_textbook.html"
    ],
-   "runtime_s": 0.017
+   "sha256": {
+    "json": "4dea06d8568b8995e2fa1c60d9f65dae3aa36130f107b8ff2ec2e7a47b0ef9a9",
+    "csv": "5c7de8c8f06e68a90972c33e72755bc44b60f72f35bc3db2cd687ab587ca4cfa",
+    "html": "0b1b10b1fd2cc91585fe2e9a164f56e8594f8a6376b0367f9b520d4ec3acd4d1"
+   },
+   "runtime_s": 0.021
   },
   {
    "lab": "EX02",
@@ -1926,6 +3272,11 @@
     "EX02/EX02_hb_constant_current_td300.csv",
     "EX02/EX02_hb_constant_current_td300.html"
    ],
+   "sha256": {
+    "json": "685ad73a86c79a1fcba9f1fe8892cb5776c41d1773c6b880200ef2f7915499bc",
+    "csv": "878008862419bcdc22d17dddef70e6f642ca7a1912d03b8dc072d373dd6c3380",
+    "html": "a7f263107f54d31279b97311b620334d0f4c3f340420d9aa9babaa279e3e007f"
+   },
    "runtime_s": 0.018
   },
   {
@@ -1945,7 +3296,12 @@
     "EX02/EX02_hb_constant_current_neg.csv",
     "EX02/EX02_hb_constant_current_neg.html"
    ],
-   "runtime_s": 0.011
+   "sha256": {
+    "json": "681b47e08f43a5b169e46839a4004d9f80cb07841e3835877b52684b7949055c",
+    "csv": "ed7057d414548f7e9b85eb502fbf1c06b90499b4f88ceb3262c836e80490c902",
+    "html": "58b0ba0a45b1ad072b651fc03aa4ef1b863f1a2c808e5c34ebe1ebd28835ebcb"
+   },
+   "runtime_s": 0.013
   },
   {
    "lab": "EX02",
@@ -1963,7 +3319,12 @@
     "EX02/EX02_resonant_transition_mid.csv",
     "EX02/EX02_resonant_transition_mid.html"
    ],
-   "runtime_s": 0.751
+   "sha256": {
+    "json": "643857e6d8fe63c65f0c1c1b472a191a0b50eb0bf56d3cf93b6b56a997be0a7e",
+    "csv": "3611a8312cb817ccc3ed9b295a7f152da7bf87068260f9b5487658f24c2b65f0",
+    "html": "6a0b5a3162764385ce50d92943de1326936fd369f184b394de278a2f3c37801f"
+   },
+   "runtime_s": 0.67
   },
   {
    "lab": "EX02",
@@ -1981,7 +3342,12 @@
     "EX02/EX02_resonant_transition_mid300.csv",
     "EX02/EX02_resonant_transition_mid300.html"
    ],
-   "runtime_s": 0.687
+   "sha256": {
+    "json": "4802fde8981f10933896cab9d6038ab290f024dc5d96e89ebcd884ff9a00e9de",
+    "csv": "9b58c4d63374e6fb02589d8303cc8c69f266b7846138a9cf36a310ddf5a61bfe",
+    "html": "af36bb8e85afc4e20c971d54880f4e1eae144b4bf82e37fa2e88a9c9e8884367"
+   },
+   "runtime_s": 0.659
   },
   {
    "lab": "EX02",
@@ -1999,7 +3365,12 @@
     "EX02/EX02_resonant_transition_vx0.csv",
     "EX02/EX02_resonant_transition_vx0.html"
    ],
-   "runtime_s": 0.391
+   "sha256": {
+    "json": "8c15a320cc5a33c84b923309fae0e607bcacb26c140d279c65a6223be9c267e7",
+    "csv": "a0fc090f33ba817a67e33d14b88f9fd3ac09b00bb485348e841e8da83e815ffa",
+    "html": "d704e8208365011a0ce959329b6e76e5ba3d50531d1f78467b99b24571daf524"
+   },
+   "runtime_s": 0.378
   },
   {
    "lab": "EX02",
@@ -2017,7 +3388,12 @@
     "EX02/EX02_deadtime_window_mid.csv",
     "EX02/EX02_deadtime_window_mid.html"
    ],
-   "runtime_s": 4.223
+   "sha256": {
+    "json": "aa03d17f58978a8dfe18c2fabb0bf5481239817e05bf7e731a43fd6f6f1ebcaa",
+    "csv": "3e220492bb07b38cc6ec6d7e1683f498fa641ff6dff1e918e487b3db232a89c5",
+    "html": "2b9a6366585fe5687cc0f18c006f6b46a2715f578a072f86fd97e2791e2cdaa5"
+   },
+   "runtime_s": 4.646
   },
   {
    "lab": "EX03",
@@ -2035,6 +3411,11 @@
     "EX03/EX03_static_sharing_textbook.csv",
     "EX03/EX03_static_sharing_textbook.html"
    ],
+   "sha256": {
+    "json": "6a456140faee885af7e0f851d0b6e3232aad4767a393348d9e836d1ce3d48ffb",
+    "csv": "b9cc704081ecff128f099422fd3e20599336317b4da3917e0e6ba285494dedc0",
+    "html": "9f869041f1a5242761e0992a3b8727575795b9077dd297ff68619a80298a08a6"
+   },
    "runtime_s": 0.005
   },
   {
@@ -2053,7 +3434,12 @@
     "EX03/EX03_static_sharing_no_tempco.csv",
     "EX03/EX03_static_sharing_no_tempco.html"
    ],
-   "runtime_s": 0.004
+   "sha256": {
+    "json": "4cddf8176bf2372528f819067f6cca3bc4bfa5477808c9449243ebdd9a4cb921",
+    "csv": "c1cdb087a4942b0e42cdf0b6b5594bc884826e9c221b97c26292f6bc854b8cb6",
+    "html": "fceaccf963bf92949bf7075adb6d22006eec9d83262221d581e28249b617a918"
+   },
+   "runtime_s": 0.005
   },
   {
    "lab": "EX03",
@@ -2071,7 +3457,12 @@
     "EX03/EX03_dpt_deskew_textbook.csv",
     "EX03/EX03_dpt_deskew_textbook.html"
    ],
-   "runtime_s": 0.413
+   "sha256": {
+    "json": "7370cd4e55ebd8d804333b7d155c20f1b2938866f7858b3a355d9ad1974cdedd",
+    "csv": "46fca90c24f1ec21abccca469b1ebe0399e7ef39be58fff913506600ca90adfd",
+    "html": "78271d1d6951401e820f6acbda4c7825807db12560e77f1e96164e9a8d866c89"
+   },
+   "runtime_s": 0.502
   },
   {
    "lab": "EX03",
@@ -2089,7 +3480,12 @@
     "EX03/EX03_dpt_deskew_skew_m5.csv",
     "EX03/EX03_dpt_deskew_skew_m5.html"
    ],
-   "runtime_s": 0.342
+   "sha256": {
+    "json": "4c14955ca1cd4dbdd1849ef2dfe30d4756cbb92402a006f6b3d2e951f89b2c7b",
+    "csv": "d337a02b1020ead9d20c3e4f8294eec0b92c02d5d0a8745acfb6137b2ec57015",
+    "html": "ac02d408e865f8803629c6d49a1ded7ed8537b42dcaefc18ae1dd371c0e46359"
+   },
+   "runtime_s": 0.346
   },
   {
    "lab": "EX03",
@@ -2108,7 +3504,12 @@
     "EX03/EX03_dpt_deskew_poor_deskew.csv",
     "EX03/EX03_dpt_deskew_poor_deskew.html"
    ],
-   "runtime_s": 0.361
+   "sha256": {
+    "json": "e01b47a643f4e3ac2d8605a97a7596183b05c8dee3c6dadaecd2ac42f2882af0",
+    "csv": "9cff14dfae682b006edd71a52f68b9fed8afdc4d2573484bc6d5075c00cb3de4",
+    "html": "e93576aa819bfc29023631479772c56ebef11eff0252c2cfa9a0abe8d3d55ff1"
+   },
+   "runtime_s": 0.35
   },
   {
    "lab": "EX03",
@@ -2126,7 +3527,12 @@
     "EX03/EX03_dynamic_sharing_nominal.csv",
     "EX03/EX03_dynamic_sharing_nominal.html"
    ],
-   "runtime_s": 3.493
+   "sha256": {
+    "json": "d4512cf34e4edfe9f5d214da41919d18fa7fdeea71d105d1eae0894fa5ae62ff",
+    "csv": "be42073318d523ce7c3ff956adbb054fec70610bbcd00c8bd00a868e48b629b9",
+    "html": "4a949a8d780810b71007c15d5afb08bb9afb1bfa317e9b9460b1c4e9810659fd"
+   },
+   "runtime_s": 3.941
   },
   {
    "lab": "EX03",
@@ -2144,7 +3550,12 @@
     "EX03/EX03_dynamic_sharing_skew10.csv",
     "EX03/EX03_dynamic_sharing_skew10.html"
    ],
-   "runtime_s": 3.681
+   "sha256": {
+    "json": "414fb73db8d428ed9bbbfbdbba4f86c8bb745b134cb9366e86d62ecf614b8da4",
+    "csv": "85b3f06e73896fb5fc5624b9118bb352be6d3f256bc25a34f6e070dad8c9fcde",
+    "html": "6fa3fe28a7cdc0ec98bd9eca97ea335df464d333d594bc1eb9950b8918b5bfad"
+   },
+   "runtime_s": 3.991
   },
   {
    "lab": "EX03",
@@ -2162,7 +3573,12 @@
     "EX03/EX03_dynamic_sharing_kelvin.csv",
     "EX03/EX03_dynamic_sharing_kelvin.html"
    ],
-   "runtime_s": 2.892
+   "sha256": {
+    "json": "73cecdfa5b89b64986b6a02f1498088e6a5028d00d6b51d17d9825ec08a5d037",
+    "csv": "0965d4e7cc4b306823e8e114841f37dce558388d8a8de1549fa12ce3dc36532a",
+    "html": "3b504bd7c97767fe62ef9e0c2d5480bfb0e1f845063db39019af03de026aa8e7"
+   },
+   "runtime_s": 3.196
   },
   {
    "lab": "EX04",
@@ -2181,7 +3597,12 @@
     "EX04/EX04_turns_window_textbook.csv",
     "EX04/EX04_turns_window_textbook.html"
    ],
-   "runtime_s": 0.024
+   "sha256": {
+    "json": "eebceb8ac678410ef7e298169918269a9e3bc646a175f39c86ba9c423a0bcbef",
+    "csv": "fe782c14e34e95e47b8d6f17ce24556b877ca4c8c6fcbbd551cf55b24e27e89b",
+    "html": "f10c1d9f2a20a4475fb3c8f34029b9b09d0bcd51db1c9c1f2777460cc90ecff4"
+   },
+   "runtime_s": 0.026
   },
   {
    "lab": "EX04",
@@ -2200,7 +3621,12 @@
     "EX04/EX04_turns_window_insulation.csv",
     "EX04/EX04_turns_window_insulation.html"
    ],
-   "runtime_s": 0.027
+   "sha256": {
+    "json": "5912c948f212b2b238d1d8756eaa8fdab63b49ba1610800b9ba706162406f0a7",
+    "csv": "c5ee29d580bd7b233d28752870b1e69afacf108874a4e3047d6f3b457a422cc5",
+    "html": "617aa79c4ec18cbc607280445e0b2fb2e19a0223558ecf99eecbd14f8ca6368a"
+   },
+   "runtime_s": 0.025
   },
   {
    "lab": "EX04",
@@ -2220,7 +3646,12 @@
     "EX04/EX04_cllc_turns_nominal.csv",
     "EX04/EX04_cllc_turns_nominal.html"
    ],
-   "runtime_s": 0.034
+   "sha256": {
+    "json": "bb7657ce078dc2fa8cd06fa3b8af09cbb703d3b7188742eaaed41ccfd419b272",
+    "csv": "9bf979c1e28b348a6d1b7233888570eec245a5f5f128f289183883ef30232989",
+    "html": "92f86db65ed644336167f96fd12d99f0296b23791a4a664d0b836f0ebd87c62e"
+   },
+   "runtime_s": 0.04
   },
   {
    "lab": "EX04",
@@ -2240,7 +3671,12 @@
     "EX04/EX04_cllc_turns_retune.csv",
     "EX04/EX04_cllc_turns_retune.html"
    ],
-   "runtime_s": 0.034
+   "sha256": {
+    "json": "c33fc8392586ec6d9c84538cd169bc127debdc618e1417e7263ec56a48089006",
+    "csv": "e8cd0c0e2607bfcaca2213e15e0f04f44a590d686a73651581851504775e8a35",
+    "html": "dfe3f68fb7f2891b50cb05af07b0e79f9636dff03fafdf64f6d9cc3ccbb41a56"
+   },
+   "runtime_s": 0.039
   },
   {
    "lab": "EX04",
@@ -2259,7 +3695,12 @@
     "EX04/EX04_harmonic_copper_textbook.csv",
     "EX04/EX04_harmonic_copper_textbook.html"
    ],
-   "runtime_s": 0.004
+   "sha256": {
+    "json": "6f7b4c0c48aedb5544127d1b935bbb792cb6c85aad6cc03a59cf3855539d6f96",
+    "csv": "a7aed6e6f13d37665e12e29e100a11667b1d3a95ee96a380eb9389d1e7740a8e",
+    "html": "d16e1f7ee285916878e16493dbb9f2b1c7c3751e47b8093a11ecbc3d863892ef"
+   },
+   "runtime_s": 0.005
   },
   {
    "lab": "EX04",
@@ -2278,7 +3719,12 @@
     "EX04/EX04_harmonic_copper_dab.csv",
     "EX04/EX04_harmonic_copper_dab.html"
    ],
-   "runtime_s": 0.022
+   "sha256": {
+    "json": "16030d466a2179ee673ff25c27003aae60b04e6672ccb5cb4d12441688b38aca",
+    "csv": "0064791dd90ef299f8c2186399ab9c2a9b60acbbf078b14dd384571e5b7b8ae5",
+    "html": "685eec1a937fb42c91b068c2f2e6ad74e52b0cf65582a9076ce1764604f99fbd"
+   },
+   "runtime_s": 0.026
   },
   {
    "lab": "EX04",
@@ -2297,7 +3743,12 @@
     "EX04/EX04_tolerance_map_textbook.csv",
     "EX04/EX04_tolerance_map_textbook.html"
    ],
-   "runtime_s": 1.007
+   "sha256": {
+    "json": "777fe11e74fcaeabd8ae64069204c49f2c6a60d49b80a0a224680568403662a8",
+    "csv": "116b04f1c3690c4fee77f26b58676ea3fa726546514450becb0bcc3b03a25b93",
+    "html": "cf6a8e2607ee5afdce0fa6fa354ae21f3a3521cd65b1b2e5bde677f04004d797"
+   },
+   "runtime_s": 1.121
   },
   {
    "lab": "EX04",
@@ -2316,7 +3767,12 @@
     "EX04/EX04_tolerance_map_correlated.csv",
     "EX04/EX04_tolerance_map_correlated.html"
    ],
-   "runtime_s": 0.825
+   "sha256": {
+    "json": "aa78561d935fdc96eb7972538357745735d017ca9970b4efde4662a00b7e7d19",
+    "csv": "ec578c21c683b2d0b7d8087404dde42b6a4c15a6f455640f88c7dbc6cb2ee75f",
+    "html": "ce4e9dd6b18119fcc3a7d12f35be276a0ecf746baa7ab007bad3257c99023fd9"
+   },
+   "runtime_s": 0.95
   },
   {
    "lab": "EX04",
@@ -2335,7 +3791,12 @@
     "EX04/EX04_identification_nominal.csv",
     "EX04/EX04_identification_nominal.html"
    ],
-   "runtime_s": 0.04
+   "sha256": {
+    "json": "f4025a83aea188c0234fd8138ba689e13d87976a68a95c6a170c1bde61362d49",
+    "csv": "19e93c1240925a51d5b58c14e18ca2aa6ccbbf1c436e6ea2d8983bfb47853771",
+    "html": "a6e3122c8ae7f1a7c71077cc9bd21991b819810e6e094e9118e2725bed5c1f37"
+   },
+   "runtime_s": 0.044
   },
   {
    "lab": "EX04",
@@ -2354,7 +3815,12 @@
     "EX04/EX04_identification_sc_hv_short.csv",
     "EX04/EX04_identification_sc_hv_short.html"
    ],
-   "runtime_s": 0.046
+   "sha256": {
+    "json": "0cc783f9c163255e7ea80de8edb8fdd9df6f986458d1797a54b2d35bcc3c14f1",
+    "csv": "e437576847899ee7b93b105288c1848dbcceadbec7a0c98e0b15097557ea2e44",
+    "html": "7bffe6c973bf4ce0a0bd32b42728183f1ae1339097fe907fff749bd6fe609e12"
+   },
+   "runtime_s": 0.056
   },
   {
    "lab": "EX05",
@@ -2373,7 +3839,12 @@
     "EX05/EX05_state_identity_textbook.csv",
     "EX05/EX05_state_identity_textbook.html"
    ],
-   "runtime_s": 0.191
+   "sha256": {
+    "json": "8b181bf743320a2124326e4dbf4b219fb1a4d9ccda3cb25d2a2823621b6bd55d",
+    "csv": "fa942056c50e848bf9665431f747d7de9989b69341eb4c36c69f76b03b10756b",
+    "html": "438703d3c8f13e8c2a0586f7ee571d53e01ed0e8fd6f961487765d9262a6491b"
+   },
+   "runtime_s": 0.215
   },
   {
    "lab": "EX05",
@@ -2392,7 +3863,12 @@
     "EX05/EX05_state_identity_lossy.csv",
     "EX05/EX05_state_identity_lossy.html"
    ],
-   "runtime_s": 0.185
+   "sha256": {
+    "json": "84ddb9f9f5b957bbd1ebea4e90eab5aa421b366c15302d0ebbf273824d499b54",
+    "csv": "f2cf2bd01a03eb0940f2601d46caccd11e7dae9bdc7f14c7d7629dc0e39e608d",
+    "html": "f23aacac121174696385de730610d87bf794f7e3b4a5717fd6f005f77870b11e"
+   },
+   "runtime_s": 0.215
   },
   {
    "lab": "EX05",
@@ -2412,7 +3888,12 @@
     "EX05/EX05_operating_points_textbook.csv",
     "EX05/EX05_operating_points_textbook.html"
    ],
-   "runtime_s": 1.165
+   "sha256": {
+    "json": "c48cfa215b38d2621d69ed4bc7086660b07b2e17b753f97c11dae4fe13717ee8",
+    "csv": "54440d40d7ca0bac21d9e9168f78926c43dc903c35c75ac9690335c02ee51bb0",
+    "html": "ecfbc180a8a2c017b3913905ee9d99b045a6dbbd3226bcd428e3dcf80934a29c"
+   },
+   "runtime_s": 1.192
   },
   {
    "lab": "EX05",
@@ -2432,7 +3913,12 @@
     "EX05/EX05_floquet_textbook.csv",
     "EX05/EX05_floquet_textbook.html"
    ],
-   "runtime_s": 0.844
+   "sha256": {
+    "json": "388465209e11d905c1e72cb4906bfc2c5aa186179c70b8aefcb93d5841aab424",
+    "csv": "2b5e0e90b3b86d95c0c2f9dfe7cccbd6dc7da0c96e51de83b3517a90857b5bbd",
+    "html": "0f0b365fcbd9b4ec74ebb2d7e3cc449937ff9c5cd43d64eeebbeb85e7383479f"
+   },
+   "runtime_s": 0.83
   },
   {
    "lab": "EX05",
@@ -2451,7 +3937,12 @@
     "EX05/EX05_floquet_lossy.csv",
     "EX05/EX05_floquet_lossy.html"
    ],
-   "runtime_s": 0.867
+   "sha256": {
+    "json": "d424d83af9ce877ebea828ca147aec23741fc8a8d5e6eaa5b32c3039518ca551",
+    "csv": "588fd0b8954b8303befdfba8dd18b21d7ca40e38b96528cf9e580ae8fe1d3097",
+    "html": "746996df46fef072d2fae14cc361d24a0b85c981448cb0053ce84d9e34cfd9be"
+   },
+   "runtime_s": 0.798
   },
   {
    "lab": "EX05",
@@ -2470,7 +3961,12 @@
     "EX05/EX05_gvf_textbook.csv",
     "EX05/EX05_gvf_textbook.html"
    ],
-   "runtime_s": 1.818
+   "sha256": {
+    "json": "1419de306f1d50deca0b2c4799d9f05394bcfc31b8cdf2d2024e3371fcb42378",
+    "csv": "ea868a361f9495919f50fb458d8be9634f19f02a46bca9cc0cc1480b5211609e",
+    "html": "45e289f15c34ae5a3a9d6701a7df4a33c55e6bd923307a8250119df16a70aad8"
+   },
+   "runtime_s": 1.779
   },
   {
    "lab": "EX05",
@@ -2489,7 +3985,12 @@
     "EX05/EX05_closed_loop_slow.csv",
     "EX05/EX05_closed_loop_slow.html"
    ],
-   "runtime_s": 2.783
+   "sha256": {
+    "json": "7b9aba5cc89f719cb4ee1fdccbfaad73503940e1d13e5e8810a177b6be690c2a",
+    "csv": "4c3899ae4382e9685f78110c187daa70be7024a621bce4508e40d16d6ae53b3c",
+    "html": "6014aa42f8993a77d69d903224b1c5a39d8add6521d60a8134c88e5ab47aafaa"
+   },
+   "runtime_s": 2.751
   },
   {
    "lab": "EX05",
@@ -2508,7 +4009,12 @@
     "EX05/EX05_closed_loop_fast.csv",
     "EX05/EX05_closed_loop_fast.html"
    ],
-   "runtime_s": 2.836
+   "sha256": {
+    "json": "375035473f6134d395c198cfccb2590bc8df1500826081a4f6f8513a5d3447c6",
+    "csv": "4514260e1a924d851fe215d3a44c453990444ba7d7af6a7dbee6c0a0dfe01303",
+    "html": "25e2bb91dd48e132ac8f6dd892a8aad7a9f493494bfcd6e84c7878780acc54f9"
+   },
+   "runtime_s": 2.794
   },
   {
    "lab": "EX05",
@@ -2526,7 +4032,12 @@
     "EX05/EX05_closed_loop_wrong_sign.csv",
     "EX05/EX05_closed_loop_wrong_sign.html"
    ],
-   "runtime_s": 4.777
+   "sha256": {
+    "json": "1c6c85435edc79f4787de3a3b16eece37710f6bf15067ccc4c5cd0cab8644c3f",
+    "csv": "7af9338871ca0867aa4c99eb86a44d53da17224c458624d7f601ab18de8a3c28",
+    "html": "45fe7b6a6c227b667966e5148684436fabfc3c7f81a096448ae352ef6d4bebae"
+   },
+   "runtime_s": 4.947
   },
   {
    "lab": "EX05",
@@ -2547,7 +4058,12 @@
     "EX05/EX05_startup_reverse_textbook.csv",
     "EX05/EX05_startup_reverse_textbook.html"
    ],
-   "runtime_s": 13.291
+   "sha256": {
+    "json": "7951b98bb391f6dc59fa60d11824a9ac6d50fd04a36c544b3323084b33712cc7",
+    "csv": "08abb1cc0f53c7377dff5d201b4878f8bff6f39801379c4aba348391514e1538",
+    "html": "fa511096ffaf329bb18bf1732f37172f9301dd60020d70908e067c9fca652733"
+   },
+   "runtime_s": 14.422
   },
   {
    "lab": "EX05",
@@ -2566,7 +4082,12 @@
     "EX05/EX05_tolerance_textbook.csv",
     "EX05/EX05_tolerance_textbook.html"
    ],
-   "runtime_s": 1.529
+   "sha256": {
+    "json": "9b752e0e533c334639f34f757d8477598de154b25a192daa6043d21d1dad9e0b",
+    "csv": "dce86b5ea6b95db15356e55b8d2513affd70f054ec29c7629227bb2157867ea1",
+    "html": "9e3f6cfa25943b24b4ba47dba428767a25bcfee7127a234c3de23fbc8fd95327"
+   },
+   "runtime_s": 1.664
   },
   {
    "lab": "EX06",
@@ -2585,7 +4106,12 @@
     "EX06/EX06_general_modulation_textbook.csv",
     "EX06/EX06_general_modulation_textbook.html"
    ],
-   "runtime_s": 0.062
+   "sha256": {
+    "json": "1a6330ac90aea641bee5ea83eec913c3ed47615a70301ee47a31fe4d0f7abb95",
+    "csv": "31cc1394c967b9fa64bf576d754871ca2585f41592824fc49b138f05b36cf117",
+    "html": "d251abd4c10719f7c96695a383d3550a4b00626ba834ff48eb1c800b82d69667"
+   },
+   "runtime_s": 0.067
   },
   {
    "lab": "EX06",
@@ -2604,7 +4130,12 @@
     "EX06/EX06_general_modulation_sps.csv",
     "EX06/EX06_general_modulation_sps.html"
    ],
-   "runtime_s": 0.058
+   "sha256": {
+    "json": "48e8439e42541c03fb9d7c66abc429398ace12dfc2bfa9443e07e26be81a0c1f",
+    "csv": "3f51fe35aa83b9aa2214bc2299f3fdd493b1d4261684ac48e82fb2db02be2b11",
+    "html": "ab3c808f0d1e0c69cfd583c732db1dedc3a26e7b11c77d5d8926a012a87ab45c"
+   },
+   "runtime_s": 0.077
   },
   {
    "lab": "EX06",
@@ -2623,7 +4154,12 @@
     "EX06/EX06_candidate_map_textbook.csv",
     "EX06/EX06_candidate_map_textbook.html"
    ],
-   "runtime_s": 1.543
+   "sha256": {
+    "json": "54be0dd068ad59bdb088736ca567b158d50721b4ea23196f748a12bfc2a02b20",
+    "csv": "eaf07f2059305d680ef2c627f6f942ad92404e54d766fc761f1f793b7604fa8f",
+    "html": "6b655b9154e64b6745357c73843029f60eb6e631c7cd070b36157a40b3a3e5b8"
+   },
+   "runtime_s": 1.899
   },
   {
    "lab": "EX06",
@@ -2641,7 +4177,12 @@
     "EX06/EX06_commutation_detail_textbook.csv",
     "EX06/EX06_commutation_detail_textbook.html"
    ],
-   "runtime_s": 0.031
+   "sha256": {
+    "json": "c9aae12b9e3765cda6e2d92b76d5e82b8c1aab40e1b8b2dd9ac41044654d155a",
+    "csv": "3ae00b30626732746b13c6368ecf74edf0f98ca90ca819c6ffdfa89bdf28166f",
+    "html": "0b6dd7e9839082e52158a4d980aef8a10c68d1dc37eb184012e3ed4de1e7a396"
+   },
+   "runtime_s": 0.033
   },
   {
    "lab": "EX06",
@@ -2659,7 +4200,12 @@
     "EX06/EX06_commutation_detail_light.csv",
     "EX06/EX06_commutation_detail_light.html"
    ],
-   "runtime_s": 0.016
+   "sha256": {
+    "json": "b37afde3167f88d3199a8d0d7352faeda7efae908ad675fd25476de47f9e0fd1",
+    "csv": "92f63c106490ef2eb57119da397660068d46e319a3190f263ce6a6f42f0b8a14",
+    "html": "513221de050b999ed23385ccf1cf1948ec5d3a61c671139348f46daa7a3b3907"
+   },
+   "runtime_s": 0.017
   },
   {
    "lab": "EX06",
@@ -2677,7 +4223,12 @@
     "EX06/EX06_implementation_textbook.csv",
     "EX06/EX06_implementation_textbook.html"
    ],
-   "runtime_s": 0.475
+   "sha256": {
+    "json": "fb33db7a3d8ed9367b5f765d73535788d2b46040b1330f46e1d1161f93af51de",
+    "csv": "14e275cea6fbf2fbfadf95499dab72e63c6011329f1f0b0a3bced2cbc4952cec",
+    "html": "a9b6348b7fb9e6d3879e81c1e9a8e0b5eaf37ff4deb8ba4b8d3da1ca9f639742"
+   },
+   "runtime_s": 0.435
   },
   {
    "lab": "EX07",
@@ -2695,7 +4246,12 @@
     "EX07/EX07_cpl_exact_c100u.csv",
     "EX07/EX07_cpl_exact_c100u.html"
    ],
-   "runtime_s": 0.101
+   "sha256": {
+    "json": "d1e70731b92df639214b61543a13b8e206a375127accb1b9d14eeccce234154a",
+    "csv": "cdfb57811cab4ea2ff6e59079b8bcf3eed69537862fd76c12320a92ed7420b42",
+    "html": "b650487106655696ad78f8491c789f76a290c72a638f2b578a66dfc3328c16ea"
+   },
+   "runtime_s": 0.105
   },
   {
    "lab": "EX07",
@@ -2713,7 +4269,12 @@
     "EX07/EX07_cpl_exact_c1m.csv",
     "EX07/EX07_cpl_exact_c1m.html"
    ],
-   "runtime_s": 0.086
+   "sha256": {
+    "json": "0985b362d892e07b3cf2d9b812eb81af4211437db4ed5cde00010d72602ec792",
+    "csv": "35d2663b5117cdf836aefd14895f8e2eb1ed1eafc86c9aaf7a96b1fb489f27ba",
+    "html": "4bb8db002179a1aeb5381f64776a2cae0fae130c81966be32dd6370471e011e8"
+   },
+   "runtime_s": 0.08
   },
   {
    "lab": "EX07",
@@ -2731,7 +4292,12 @@
     "EX07/EX07_cpl_exact_p250k.csv",
     "EX07/EX07_cpl_exact_p250k.html"
    ],
-   "runtime_s": 0.01
+   "sha256": {
+    "json": "cc3aafe47e262243ebde9ccefeb3919697963a8916b0db33725f1747336e4275",
+    "csv": "9e8cfc37c984ce23f29dcad37bae2f538dcbc4918b4073169317b9d2239bdd12",
+    "html": "597176b7ddee29e1744d3ca81c5429ac2667475adb38e1f7bfefb9580ef87fa9"
+   },
+   "runtime_s": 0.012
   },
   {
    "lab": "EX07",
@@ -2749,7 +4315,12 @@
     "EX07/EX07_converter_impedance_nominal.csv",
     "EX07/EX07_converter_impedance_nominal.html"
    ],
-   "runtime_s": 0.594
+   "sha256": {
+    "json": "16709e36ba32509f2b08a6b4e4db08a65282fca9071596946c18d3872cb7ad73",
+    "csv": "01b817863a3e5c64ff2d131452774cd19b3630917bf30fcffd669e18dfa7511c",
+    "html": "be5077f8e91d1014a16258fa010af2bc72f478a7dbd4809fc50433ab59fde48a"
+   },
+   "runtime_s": 0.689
   },
   {
    "lab": "EX07",
@@ -2767,7 +4338,12 @@
     "EX07/EX07_converter_impedance_slow.csv",
     "EX07/EX07_converter_impedance_slow.html"
    ],
-   "runtime_s": 0.702
+   "sha256": {
+    "json": "c0549e5e63885ba4433ca61cffb8433137d14e5fa42e920aefe9db872044dbad",
+    "csv": "5abf8b5a1453a5fe359a5e598fd3fe54e6792699dc93dc825e19ae6039d6ced9",
+    "html": "b6bc884f23af64ebf26b968bd77fe911f0d8e27690fa048240ee69b01dc2cff1"
+   },
+   "runtime_s": 0.738
   },
   {
    "lab": "EX07",
@@ -2785,7 +4361,12 @@
     "EX07/EX07_converter_impedance_feedforward.csv",
     "EX07/EX07_converter_impedance_feedforward.html"
    ],
-   "runtime_s": 0.494
+   "sha256": {
+    "json": "93ee38b098d7be6da1935d0937b32d5739fc1ac5563467b3174ada006000e96f",
+    "csv": "bc6cd5633cba353f49864ee5fd2d4421b79da9e682b2dfd4b82a6e84ddd02922",
+    "html": "27ddcdbfdc7d60bf2f28d1b916c0535082728740953373a7df40bfc964e01668"
+   },
+   "runtime_s": 0.555
   },
   {
    "lab": "EX07",
@@ -2803,7 +4384,12 @@
     "EX07/EX07_converter_impedance_big_c.csv",
     "EX07/EX07_converter_impedance_big_c.html"
    ],
-   "runtime_s": 0.699
+   "sha256": {
+    "json": "e8aa21d7376f14ed942453a228221aac6da0e268cc249c623a20302af3576750",
+    "csv": "0f63fbe82f9616de5fc2ebbd05274ec1d252d0875f39146ffba7bcca4c8d4d3f",
+    "html": "677b62d1c9245343850b44b8b848effa8dcdc1ddce7f076aadd7e24b1e6d436c"
+   },
+   "runtime_s": 0.789
   },
   {
    "lab": "EX07",
@@ -2822,7 +4408,12 @@
     "EX07/EX07_digital_delay_td15.csv",
     "EX07/EX07_digital_delay_td15.html"
    ],
-   "runtime_s": 0.121
+   "sha256": {
+    "json": "3f93a199bdea1da75501882110f367ec42f83f82f93402a90b4cb3d79bc8a4e7",
+    "csv": "9a54fefe02706a0cd279c3b00cf2ee1f581216e709a3a0c5ab51a5ffa13957b3",
+    "html": "9b1ccb566097e874928b9bd0fcc237a7c68ac8662749af1de2d28e8d1d5ae94a"
+   },
+   "runtime_s": 0.125
   },
   {
    "lab": "EX07",
@@ -2841,7 +4432,12 @@
     "EX07/EX07_digital_delay_slip.csv",
     "EX07/EX07_digital_delay_slip.html"
    ],
-   "runtime_s": 0.121
+   "sha256": {
+    "json": "db9c1fd93a75c4e69902340468749315123536372719f50fcb7c981b03b3f42a",
+    "csv": "2f42909b513e7a8b10324a27d81a4ff8a09152b8597c1bc6b3375f4a3726a2bd",
+    "html": "3249edd6dfebf43e4f8c324669410bcb7d49cc565f5c642b6d062b570da53d36"
+   },
+   "runtime_s": 0.131
   },
   {
    "lab": "EX07",
@@ -2859,7 +4455,12 @@
     "EX07/EX07_saturation_transfer_axis.csv",
     "EX07/EX07_saturation_transfer_axis.html"
    ],
-   "runtime_s": 0.092
+   "sha256": {
+    "json": "3079fa26abd989660d73c4031453174ac343d3b864871123bbe9af8cbba4cc07",
+    "csv": "4d6254278ae5b1f25b7b14758221fffdd8d350187f6181d9e36f79cf5350687a",
+    "html": "6d67ea78be603a0c46294320d978ca022cfee53d040a8b67fb856b9f9716ecb7"
+   },
+   "runtime_s": 0.096
   },
   {
    "lab": "EX07",
@@ -2877,7 +4478,12 @@
     "EX07/EX07_saturation_transfer_circle.csv",
     "EX07/EX07_saturation_transfer_circle.html"
    ],
-   "runtime_s": 0.089
+   "sha256": {
+    "json": "50131f47373ef5ea05a4d8eb6101aeeb5ad04d5fd6f488aa968a37cca63547fe",
+    "csv": "4c894cb25660d35575d77b04cbbfd80020e1f4f0cc11514cab4d93c55502580d",
+    "html": "2343452314bd276552d12cf36957704300ffdb06d04d126075639f6ea2f787d8"
+   },
+   "runtime_s": 0.094
   },
   {
    "lab": "EX08",
@@ -2895,7 +4501,12 @@
     "EX08/EX08_thermal_matrix_textbook.csv",
     "EX08/EX08_thermal_matrix_textbook.html"
    ],
-   "runtime_s": 0.097
+   "sha256": {
+    "json": "1f4ac930fc4f6d5cff0fda31aad48afea8fe52e40908b45028d136ba2e930a61",
+    "csv": "08aed0991507c0e7845b37ba640addbd9b45ceed7e932dc95fb2a54474b71b73",
+    "html": "7f9778695159ff91d073cbb628cbb4d9624c379059a51f37392d5a771bc28325"
+   },
+   "runtime_s": 0.098
   },
   {
    "lab": "EX08",
@@ -2913,7 +4524,12 @@
     "EX08/EX08_thermal_matrix_near.csv",
     "EX08/EX08_thermal_matrix_near.html"
    ],
-   "runtime_s": 0.096
+   "sha256": {
+    "json": "963abdebebb481c409686939157f58c5ca9f4be58a4d3cfca2b5860a5249789e",
+    "csv": "4aa9c94e10dcd1f33fc3c37235c905a166a9dd849db72c27a6ddd3a3e023b138",
+    "html": "7d90bc778b42a5227c44f85fea3e409baa6ab60b0d1d5dead702ebb359a4eeca"
+   },
+   "runtime_s": 0.1
   },
   {
    "lab": "EX08",
@@ -2931,7 +4547,12 @@
     "EX08/EX08_thermal_matrix_diverge.csv",
     "EX08/EX08_thermal_matrix_diverge.html"
    ],
-   "runtime_s": 0.093
+   "sha256": {
+    "json": "f248ae6dcebe7502f0f9e67c86f886a5787542cb76c2b0159320e5aeb7592ce1",
+    "csv": "bffc9ad088bc5e23878a8a3cc1ddaa21679db1a7c11fbb6a3789aa2b618960ac",
+    "html": "76178e61784beee8bd6ce11f98c23e47936280e4b6e36aeca29e486af7213380"
+   },
+   "runtime_s": 0.095
   },
   {
    "lab": "EX08",
@@ -2949,7 +4570,12 @@
     "EX08/EX08_dynamic_network_nominal.csv",
     "EX08/EX08_dynamic_network_nominal.html"
    ],
-   "runtime_s": 0.654
+   "sha256": {
+    "json": "a5bd8fdf00c9b4d454d2aea45778b200f81fd5a0d2880310144030a50acea429",
+    "csv": "84bf9099f2a229e4ddb16647557e9f3495bff4c44b8a816198b061e6cb20729a",
+    "html": "1d01778abe14f989412e295de05f93a5a587f293d201ff3fd86bbe499f03ef6a"
+   },
+   "runtime_s": 0.786
   },
   {
    "lab": "EX08",
@@ -2967,7 +4593,12 @@
     "EX08/EX08_dynamic_network_light_sink.csv",
     "EX08/EX08_dynamic_network_light_sink.html"
    ],
-   "runtime_s": 1.128
+   "sha256": {
+    "json": "fe5636cd540b3bcd60035339f83a7024d4b842c8a81ec291a1ea9f85a4e328fd",
+    "csv": "7c6a5f7bd8f59abd0283681e556b25c29a39fd5498caaaa6be771d910ace97e8",
+    "html": "322c5f70cc0e21c5f60c9e01907c3148fda72763babef2b43afce3c85e482d9f"
+   },
+   "runtime_s": 1.119
   },
   {
    "lab": "EX08",
@@ -2986,7 +4617,12 @@
     "EX08/EX08_mission_nominal.csv",
     "EX08/EX08_mission_nominal.html"
    ],
-   "runtime_s": 3.412
+   "sha256": {
+    "json": "af5ad01835d3766fe3e81ee7f3a4315fd7b7562406290cca7aa7784229f2a2b0",
+    "csv": "b2203e1b8411304c1be4d9cd636346eee05b3fc4dda7adfef1ecf2092a982974",
+    "html": "62e1ddae4ee8792debd83f09a16a26736675ce1647972ed0d2b42b0663081f5d"
+   },
+   "runtime_s": 3.759
   },
   {
    "lab": "EX08",
@@ -3005,7 +4641,12 @@
     "EX08/EX08_mission_hot_hill.csv",
     "EX08/EX08_mission_hot_hill.html"
    ],
-   "runtime_s": 3.487
+   "sha256": {
+    "json": "efd7c50f65331bf00362fb089c1d30e4eb7a664a2f5d6696147a2ce07ca62e5a",
+    "csv": "94a36b41079360af11b6d989e4c8547acc82143fceb2f63ce7c0a64ee7ecfa4c",
+    "html": "3b8a0f3df470ee8a47eabe8478f90112389fd9b2ca9448023e2d4d6d69e67f0a"
+   },
+   "runtime_s": 3.496
   },
   {
    "lab": "EX09",
@@ -3023,7 +4664,12 @@
     "EX09/EX09_hand_screens_textbook.csv",
     "EX09/EX09_hand_screens_textbook.html"
    ],
-   "runtime_s": 0.085
+   "sha256": {
+    "json": "fba40ba321a716558ef6abfd15f4b5cb4632b1911e488d4d2a0a9ff7f376831f",
+    "csv": "a4295bd67587060adc9397bcc89abd7bc9349d2b44ddf7cb820796c6d567bac4",
+    "html": "6569c7bf3c712c138bf7c9deb8179be235017052db774387baded0c97ae64260"
+   },
+   "runtime_s": 0.088
   },
   {
    "lab": "EX09",
@@ -3041,7 +4687,12 @@
     "EX09/EX09_source_path_victim_nominal.csv",
     "EX09/EX09_source_path_victim_nominal.html"
    ],
-   "runtime_s": 1.085
+   "sha256": {
+    "json": "02b91b6f65a6c6fc32299a18694100b5dcef37229319cd0a89042892770e0213",
+    "csv": "5bc25859d2173dd165b6c5a049bd42c75ccb92a7b938c8549049589d16b101b4",
+    "html": "3e174128eed0fa3042ef46adf9ff7d0db8b0d6ca8481d2a7991a607d266ec575"
+   },
+   "runtime_s": 1.201
   },
   {
    "lab": "EX09",
@@ -3059,7 +4710,12 @@
     "EX09/EX09_mitigation_nominal.csv",
     "EX09/EX09_mitigation_nominal.html"
    ],
-   "runtime_s": 4.076
+   "sha256": {
+    "json": "39e3013a015fcf2751177da1a987952d012724c5471d467bd040fc37083409a4",
+    "csv": "5d7e2c185bb6f51340e21beb772497699d8327d937a6b725ed747124d016dde9",
+    "html": "49f0b0f331fb140146a83b208a803d941f94ae44db0fe0173141237af2fb64bb"
+   },
+   "runtime_s": 4.656
   },
   {
    "lab": "EX10",
@@ -3077,7 +4733,12 @@
     "EX10/EX10_rlc_fault_textbook.csv",
     "EX10/EX10_rlc_fault_textbook.html"
    ],
-   "runtime_s": 0.18
+   "sha256": {
+    "json": "5b26b193b7f83217e1265ad1953a89bffec1c392a54c1c0665a008157cd02d83",
+    "csv": "50d2b7212c3fdc1a05e5c390f2b568813bb5cc3f0c9edebefdded04cccec9211",
+    "html": "564f18b6b6f0961b9d17a21ffeaa9790cee8c81583aac7825eb23f60c1603ab1"
+   },
+   "runtime_s": 0.219
   },
   {
    "lab": "EX10",
@@ -3095,7 +4756,12 @@
     "EX10/EX10_rlc_fault_clamp.csv",
     "EX10/EX10_rlc_fault_clamp.html"
    ],
-   "runtime_s": 0.382
+   "sha256": {
+    "json": "c57dae670e65a6e3fa6b74e1aed5b46b0715ff4f35e1135e142d8041dad0b42b",
+    "csv": "94a8cff9b163eb7bd413bf762b5c2c1a7fb1bb98cc760cd2d93b6673442d5ce9",
+    "html": "96f5e5932bdc7e269a26750dc3cbded91a1e506c38e433165b3801faabe88a7d"
+   },
+   "runtime_s": 0.362
   },
   {
    "lab": "EX10",
@@ -3113,7 +4779,12 @@
     "EX10/EX10_rlc_fault_over.csv",
     "EX10/EX10_rlc_fault_over.html"
    ],
-   "runtime_s": 0.181
+   "sha256": {
+    "json": "0046d5f1088dd4c4702fc7d3a76811de4a261ba50453559419be7d84aee6b2a0",
+    "csv": "158a5d1e6e6b4f66f6c2766b736ab7a86bbccc28eaeb531ffd60d0f1c72664fe",
+    "html": "2e072490fc63ef9bec8a5c4f53c91370e493de22a4c9660d47f349ef8a842ece"
+   },
+   "runtime_s": 0.182
   },
   {
    "lab": "EX10",
@@ -3131,7 +4802,12 @@
     "EX10/EX10_protection_timeline_textbook.csv",
     "EX10/EX10_protection_timeline_textbook.html"
    ],
-   "runtime_s": 0.057
+   "sha256": {
+    "json": "650d9c681d647f8cbcdb5d3538a6f0ef1c0547f527ed044294e3083799b71f59",
+    "csv": "76188a394195291450a9b31102d2551db107b6f5dd9d6b0c3ee3d5c1085f2ba1",
+    "html": "565b98fb1a4218b2e527510f25faecafd84eed417a3edb2e247da33b3628e07b"
+   },
+   "runtime_s": 0.06
   },
   {
    "lab": "EX10",
@@ -3149,7 +4825,12 @@
     "EX10/EX10_protection_timeline_type2.csv",
     "EX10/EX10_protection_timeline_type2.html"
    ],
-   "runtime_s": 0.056
+   "sha256": {
+    "json": "88d0b5cd818413f329367c1ca571a91db0c9eb3b7dd8796809661af0001cd427",
+    "csv": "a35052756a60e0b7e32e8c97f8d01f8c7c8427241f6d0d412ce6403f0e83cbd1",
+    "html": "2c3c682d2ac5f4b1a2fb79303f9afd669d0a4bef94262ed8164ed815541bccaa"
+   },
+   "runtime_s": 0.063
   },
   {
    "lab": "EX10",
@@ -3167,7 +4848,12 @@
     "EX10/EX10_protection_timeline_soft_short.csv",
     "EX10/EX10_protection_timeline_soft_short.html"
    ],
-   "runtime_s": 0.09
+   "sha256": {
+    "json": "83f658d2cdad7c7f3ce11082db4fee37e110755223940997ca1d366038a2e25a",
+    "csv": "56bd4f3a55a5011ec0fdbd8003fa74d51a4aa32bbef9b696298e8aa521685b9b",
+    "html": "045f2beea86112b7a484227a6d3671ace65555e1f57397b4c6c880cb01f85162"
+   },
+   "runtime_s": 0.124
   },
   {
    "lab": "EX10",
@@ -3185,7 +4871,12 @@
     "EX10/EX10_protection_timeline_fast_off.csv",
     "EX10/EX10_protection_timeline_fast_off.html"
    ],
-   "runtime_s": 0.048
+   "sha256": {
+    "json": "aa34c0a96bd39f74188ee37453d3237a0c144de9fb099629f688448f11c9ae78",
+    "csv": "b7383bcfc0380f740c9727b43534865dae55fd885af03c9d4ac7a880c3741f6e",
+    "html": "b1a5d20fb6ddc406eb0769b06cbdcdeb61de80c37d9fe690434ab3a874f8ff81"
+   },
+   "runtime_s": 0.059
   },
   {
    "lab": "EX10",
@@ -3205,7 +4896,12 @@
     "EX10/EX10_discharge_resistor_textbook.csv",
     "EX10/EX10_discharge_resistor_textbook.html"
    ],
-   "runtime_s": 0.035
+   "sha256": {
+    "json": "cf2e56a8b299c8f2abff5d0b161ba142da647989258a291df8fa60729fe27e42",
+    "csv": "19060280797c913996c7d02e4afb67bf5915ac1bd64f45a674dcb0d0ae005236",
+    "html": "f0481fb79b833b8982557ec8a469a57afc216f08bb10fcb77e7fd9f36debbbff"
+   },
+   "runtime_s": 0.036
   },
   {
    "lab": "EX10",
@@ -3224,7 +4920,12 @@
     "EX10/EX10_discharge_resistor_worst_case.csv",
     "EX10/EX10_discharge_resistor_worst_case.html"
    ],
-   "runtime_s": 0.035
+   "sha256": {
+    "json": "c484fd9710e8a988c64221636dbc4edbae48dd1d526046ce618f3a3bf88dec12",
+    "csv": "9b01a893bd7b5cce16392608c68044372ae8ff106242d9a2e7528406843805c4",
+    "html": "1ccf756e7324d41a52bedc5491cc39a493551d5bbb8650d0bedc6a40966dfce3"
+   },
+   "runtime_s": 0.057
   },
   {
    "lab": "EX10",
@@ -3245,7 +4946,12 @@
     "EX10/EX10_safe_state_nominal.csv",
     "EX10/EX10_safe_state_nominal.html"
    ],
-   "runtime_s": 0.697
+   "sha256": {
+    "json": "eca3b6bc7c8a7040e137a53c61bb7caf729a81bcc61644d39f3db0f2b2be7f32",
+    "csv": "e742734303118ca11d85e27bebd4fa574f1c2457ffa3dd5a1c751892f4c48a4f",
+    "html": "2145b866eefbd5ebd589cbbd2298ca82f1800ddebf6e59a7269159d3f9567b55"
+   },
+   "runtime_s": 0.746
   },
   {
    "lab": "EX10",
@@ -3266,7 +4972,12 @@
     "EX10/EX10_safe_state_open.csv",
     "EX10/EX10_safe_state_open.html"
    ],
-   "runtime_s": 0.67
+   "sha256": {
+    "json": "64b9a1e87911c512e330d8342de6ea7b9d4994100f0909a0a1473bdc766063ee",
+    "csv": "a3eff95885d6129328d6c0fdef781d713e50c3caf638dc7db27ed4841a511b86",
+    "html": "3f59a6265af76d8feabbfb59f7d40b55758893443b96939f0a5d77221b6bc861"
+   },
+   "runtime_s": 0.712
   },
   {
    "lab": "EX10",
@@ -3287,7 +4998,12 @@
     "EX10/EX10_safe_state_overspeed.csv",
     "EX10/EX10_safe_state_overspeed.html"
    ],
-   "runtime_s": 0.862
+   "sha256": {
+    "json": "6aa2752e9b5e0466c65c29a328b98e495f45edcf2dd90d35c20b9a891603afa2",
+    "csv": "d02850e21abd73f2f3b25eb2d4891e70dff31f7538c8514299f78eecae4e1c86",
+    "html": "c0e8b18dca9b4a02d4e797103b35bf457895fe621dee227ddbc15e1c4022a1d4"
+   },
+   "runtime_s": 0.875
   },
   {
    "lab": "EX10",
@@ -3309,7 +5025,12 @@
     "EX10/EX10_safe_state_overspeed_open.csv",
     "EX10/EX10_safe_state_overspeed_open.html"
    ],
-   "runtime_s": 1.239
+   "sha256": {
+    "json": "8989b573ce73d00e19e6068dda767cb7fba181c31496841a3906e5f4634aa6d4",
+    "csv": "7038117cce74f574941c43b9511ad74d3ea98cba3519493324804c522481854f",
+    "html": "6bb7ec7504a5342024b088531b61d9c6117c9a6cda7fe697ab2d47fe90dc7cd2"
+   },
+   "runtime_s": 1.144
   },
   {
    "lab": "EX11",
@@ -3327,6 +5048,11 @@
     "EX11/EX11_loss_uncertainty_textbook.csv",
     "EX11/EX11_loss_uncertainty_textbook.html"
    ],
+   "sha256": {
+    "json": "5bd4e977aeaf88128464472360d4930f1ffcd4e378b337f966af40be5fb98e63",
+    "csv": "54d8e5991dda66ac396a26773ea5ed8878d0e40815e210e515dc936908834112",
+    "html": "e9cef02ca4b679808a1dc90a3a6594d37cb902ba0723fd79c01f1ae9f8ffa0d1"
+   },
    "runtime_s": 0.021
   },
   {
@@ -3346,6 +5072,11 @@
     "EX11/EX11_loss_uncertainty_rho09_nobasis.csv",
     "EX11/EX11_loss_uncertainty_rho09_nobasis.html"
    ],
+   "sha256": {
+    "json": "7463b9312ddfdea270d80587da54e72a56f02ea08f7a29d58ed97cfd7d83342d",
+    "csv": "4e760a8d1dcd33b34c5770f97860759146cefa4c4a05497c142b444743624fb7",
+    "html": "ac2ed17a8962dab174333429828dd0b4da49cd08fb3efb191a50381cd7f3aff6"
+   },
    "runtime_s": 0.021
   },
   {
@@ -3364,7 +5095,12 @@
     "EX11/EX11_binomial_bounds_textbook.csv",
     "EX11/EX11_binomial_bounds_textbook.html"
    ],
-   "runtime_s": 0.024
+   "sha256": {
+    "json": "226b69a073c84f52b4f7501427782b954a66840d37e6e9145fa3292e884e6681",
+    "csv": "8370e3e5d85e33bef8704dce6a81467617589a9d4b0740ab2297e6c133df0d12",
+    "html": "2650418ec8da34fa4bcc72ffa668e1d6df4a91175ee48c187820334a79b09b9e"
+   },
+   "runtime_s": 0.025
   },
   {
    "lab": "EX11",
@@ -3382,6 +5118,11 @@
     "EX11/EX11_binomial_bounds_grid.csv",
     "EX11/EX11_binomial_bounds_grid.html"
    ],
+   "sha256": {
+    "json": "7cb382770126925fe0b590da4dfa747052dba2fae32abcf48cb7bc3a234db149",
+    "csv": "61a5026f1faa0ef802e7d5de2ed6be9bf1cd8a01826545a3bc2c8033da5a7dff",
+    "html": "cbd4cf9b44127a384008b4bea675bfb020f0dbde25f818059e7f2d45f3aae12a"
+   },
    "runtime_s": 0.02
   },
   {
@@ -3402,7 +5143,12 @@
     "EX11/EX11_identifiability_nominal.csv",
     "EX11/EX11_identifiability_nominal.html"
    ],
-   "runtime_s": 0.498
+   "sha256": {
+    "json": "59a18729cebcb053c5f68ec30ee15a2e19811c87c160d363e7a35eec5264c108",
+    "csv": "1356934c3b343a133e721ab43d61544cc0aebdab7ca7d8b6d80691a1d8085672",
+    "html": "c16cf505955b4c3e0f7dcbb0077ff6160a4439f521336afc1ae5efa7cec14584"
+   },
+   "runtime_s": 0.517
   },
   {
    "lab": "EX11",
@@ -3420,7 +5166,12 @@
     "EX11/EX11_monte_carlo_nominal.csv",
     "EX11/EX11_monte_carlo_nominal.html"
    ],
-   "runtime_s": 0.02
+   "sha256": {
+    "json": "8401d9a189e8b832c35143a4634745435958ffdd9322c19b1c9f8eb41bb966f1",
+    "csv": "c56cfa895262f22f396cb29000d2d019df3b951ac040d9f9441989264ac2e135",
+    "html": "8f44d7df56dbdd7c80d9b45d6f774e9390c4b7d1493ce8aa76d86ca86788b5a7"
+   },
+   "runtime_s": 0.021
   },
   {
    "lab": "EX11",
@@ -3438,7 +5189,12 @@
     "EX11/EX11_monte_carlo_corr_pos.csv",
     "EX11/EX11_monte_carlo_corr_pos.html"
    ],
-   "runtime_s": 0.02
+   "sha256": {
+    "json": "042963d61f5450383d6164c2dc9b1f497e136fe1fa1eb91054b91daafe6e13f0",
+    "csv": "4442cc044b5a8f2f8360106469ada3f36ef059e36a92eb16bd36a7812187736a",
+    "html": "d13db1ee94c45d33bb49a25573162b72846f3407bc5b472e44b8e457d04595f0"
+   },
+   "runtime_s": 0.022
   },
   {
    "lab": "EX11",
@@ -3446,6 +5202,7 @@
    "preset": "nominal",
    "status": "PASS_WITHIN_MODEL",
    "verdicts": [
+    "NOT_EVALUABLE",
     "PASS_WITHIN_MODEL"
    ],
    "model_level": "메타 (저장소의 검증 경로를 실행·스캔)",
@@ -3456,7 +5213,12 @@
     "EX11/EX11_test_independence_nominal.csv",
     "EX11/EX11_test_independence_nominal.html"
    ],
-   "runtime_s": 9.392
+   "sha256": {
+    "json": "dfe7b88cd17c5a5ac7a57a221fe6fe5116c64e585d00e66843f906ce521101db",
+    "csv": "9af95a4c322a9ea6e35ccb7673050ff52aa7572c226fc468cfa7d1a18dbe7254",
+    "html": "36590bee2ed79dea02d48bc80c3f5b4ba0a68e9f5ccfbf07fb098d16b8b3d07d"
+   },
+   "runtime_s": 10.066
   },
   {
    "lab": "EX12",
@@ -3476,7 +5238,12 @@
     "EX12/EX12_capstone_a_textbook.csv",
     "EX12/EX12_capstone_a_textbook.html"
    ],
-   "runtime_s": 7.756
+   "sha256": {
+    "json": "a888630976d04a33326b7de28162f1026ee4a7fd8466287bf91485890f5d094e",
+    "csv": "eca7bbaa22d3156ac06947129d7f06b73cb71cc61a04b8321b9a74ac3f4bb133",
+    "html": "fdf01f85f858c1d13ad3e1ba2cdf4ff5f81612faa83174b2eceb76dc110364c3"
+   },
+   "runtime_s": 7.89
   },
   {
    "lab": "EX12",
@@ -3497,7 +5264,12 @@
     "EX12/EX12_capstone_b_textbook.csv",
     "EX12/EX12_capstone_b_textbook.html"
    ],
-   "runtime_s": 0.17
+   "sha256": {
+    "json": "d9534b8ff92b4ed19516e3f850013784d2bc348905890752122e1600601df3ab",
+    "csv": "417a04c7c440d73c3f670778bcc3793369221ad96a85d865d23a83238c10ee74",
+    "html": "68aac2527a79c9f3026d305703f003c5f7c50ce31e6bcbf28f0972e1d4239f0d"
+   },
+   "runtime_s": 0.208
   },
   {
    "lab": "EX12",
@@ -3517,12 +5289,14 @@
     "EX12/EX12_capstone_c_textbook.csv",
     "EX12/EX12_capstone_c_textbook.html"
    ],
-   "runtime_s": 5.616
+   "sha256": {
+    "json": "22902bcd4150a14b2aad484d40d13546ed8cb0bdcd1989020d38a213a3eb0fda",
+    "csv": "935e2cbe64d0e25f611d17db861f09fcf4957e91133e22eccc6f60e0c9dda69f",
+    "html": "a7ea3cbf1ebca3bd61894ab05a39c6ed3e1877ee240e824823dbcd312e96253e"
+   },
+   "runtime_s": 5.678
   }
  ],
- "not_implemented": [
-  "FL12",
-  "EX01"
- ],
- "total_runtime_s": 150.5
+ "not_implemented": [],
+ "total_runtime_s": 187.31
 }

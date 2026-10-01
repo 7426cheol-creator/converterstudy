@@ -30,8 +30,8 @@
 ### F-001 · 교재 13장 CLLC [FL10] ‘수정 A의 모든 해’ · 실습 FL10 time_domain, EX05 operating_points
 
 - **교재:** n = 0.93, 고전압 corner(920 V, 11 kW)에서 FHA 해 136099.47 Hz와 147060.86 Hz. 두 해의 FHA 기울기는 +0.001871/kHz와 −0.001803/kHz이며 ‘이 수치는 스위칭 실측값이 아니다’.
-- **모델 결과:** FHA 해와 기울기는 그대로 재현된다(FL10 fix_n093, Octave fzero로 독립 확인). 그러나 정류기를 포함한 이상 스위칭 모델에서 920 V 배터리(강성 출력, R = 0)로 두 주파수를 돌리면 전력이 11 kW가 아니라 17.34 kW와 22.24 kW다. 범위 안에서 11 kW가 되는 점은 peak 위 148.005 kHz 하나다. 이 점의 dP/df는 약 −1.63 kW/Hz라 10 Hz 오차가 148 %의 전력 오차가 된다. peak 아래(+기울기) 쪽은 120 kHz에서도 13.16 kW라 11 kW 점이 없다.
-- **근거:** 엔진 주기해를 DOP853 독립 적분과 고조파 중첩(harmonic_power)으로 맞춰 보았다. tests/test_fl10.py.
+- **모델 결과:** FHA 해와 기울기는 그대로 재현된다(FL10 fix_n093, Octave fzero로 독립 확인). 그러나 정류기를 포함한 이상 스위칭 모델에서 920 V 배터리(강성 출력, R = 0)로 두 주파수를 돌리면 전력이 11 kW가 아니라 17.34 kW와 22.24 kW다. 범위 안에서 11 kW가 되는 점은 peak 위 148004.86 Hz 하나다(Octave 독립 해와 0.5 Hz 안에서 일치). 이 점의 dP/df는 약 −1.7 kW/Hz라 10 Hz 오차가 150 % 안팎의 전력 오차가 되고, Floquet |λ|max = 0.99998로 거의 중립 안정이다(교란이 1/e로 줄어드는 데 수만 주기). peak 아래(+기울기) 쪽은 120 kHz에서도 13.16 kW라 11 kW 점이 없다.
+- **근거:** 엔진 주기해를 DOP853 독립 적분과 고조파 중첩(harmonic_power)으로 맞춰 보았고, Octave에서 E05 상태식으로 다시 쓴 ode45 + Newton shooting(matlab/xc_cllc_*.m)이 FHA 해의 전력·Floquet 승수·11 kW 주파수를 독립으로 재현한다. tests/test_fl10.py.
 - **영향:** FHA 해는 CANDIDATE_FHA_ONLY로만 표시한다. branch 선택, ZVS, 기동, 역방향은 스위칭 모델에서 따로 판정한다(교재의 ‘FHA gain PASS와 switching PASS 분리’ 원칙과 같은 방향).
 
 ### F-002 · 교재 13장 CLLC ‘같은 출력이지만 주파수 변화에 대한 출력 방향이 반대다’ · 실습 EX05 operating_points, closed_loop

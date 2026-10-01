@@ -60,7 +60,7 @@
   - `psim/`의 build sheet 7개를 손으로 회로를 만드는 용도로 둡니다: FL01, FL08, EX06, FL09, FL10, EX02, EX07.
   - 각 sheet에는 접속, 소자, gate 식, solver, 초기조건, probe, 앱 실행에서 가져온 기대값, 한계가 들어 있습니다.
 - **GitHub Actions 결과.** workflow(`.github/workflows/ci.yml`)는 저장소에 있습니다.
-  - 2026-09-30 19:59 UTC부터 이 세션의 GitHub 접근이 끊겨(403) 그 뒤 커밋은 push하지 못했습니다.
+  - 2026-09-30 19:59 UTC부터 이 세션의 GitHub 접근이 끊겨(403) 그 뒤 커밋은 push하지 못했습니다. 사용자의 GitHub 계정이 바뀌어, 새 저장소 `7426cheol-creator/converterstudy`의 연결을 기다리고 있습니다.
   - 그래서 CI 결과도 확인하지 못했습니다. 같은 명령의 로컬 결과는 §6에 있습니다.
 - **하드웨어.** 측정, 열화상, 규격 시험, 수명 시험은 없습니다. ‘통과’는 모두 합성 모델 안의 판정입니다.
 
@@ -79,4 +79,18 @@ python tools/gen_docs.py --results results             # 추적표·모델 카�
 
 ## 6. 이번 실행 결과
 
-(마지막 전체 실행 뒤 갱신)
+2026-10-01 01:30–01:50 UTC, 커밋 42ce428(실습 24개 모두 병합) 기준입니다.
+
+환경: Python 3.11.15, numpy 2.4.6, scipy 1.17.1, Linux x86_64(4코어), GNU Octave 8.4.0, Node 22.22.2, Playwright 1.56.1(Chromium).
+
+| 경로 | 결과 |
+|---|---|
+| `pytest` | **378 passed**, 0 failed (316 s) |
+| `convlab run-all` (기준 preset) | **223 runs**, 검증 실패 0, 그래프 문단 계약 위반 0. 기준값 metric 628개 모두 PASS(`docs/contract/reference_results_reconstructed.json`). 187 s(pytest와 동시 실행) |
+| `convlab run-all --all-presets` | **398 runs**, 검증 실패 0, 계약 위반 0 (530 s) |
+| `independent_reference_check.py` | **99 checks, 0 failed** (표준 라이브러리만, convlab 미 import) |
+| Octave 교차검증 | **220 items: 220 PASS, 0 FAIL, 0 TODO** (Octave 8.4.0). 커밋 204298b에서 실행했고, 그 뒤 바뀐 코드는 FL12 추가와 문서뿐이며 Octave가 대조하는 실습은 바뀌지 않았다 |
+| 브라우저 스모크 | **101 experiments, 0 failures** (355 s). 실험마다 기준 실행, 제안 변경 적용, 예측 선택, 재실행, 결과 영역 점검, 레이아웃 점검을 하고, 답 저장·export 3종·기록 화면도 확인 |
+| GitHub Actions | 이 세션에서 결과 확인 못 함(§4) |
+
+실습별 실행 수, 상태, 기준값, 독립·회귀 check 수는 [TRACEABILITY.md](TRACEABILITY.md)에 있고, 실행 기록과 결과 파일 sha256은 [run_manifest.json](run_manifest.json)에 있습니다.

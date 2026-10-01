@@ -1,7 +1,7 @@
 {
  "contract_version": "4.0-reconstructed",
  "note": "원본 simulation_contract_v4.json이 제공되지 않아 구현된 실습과 실제 실행에서 재구성했다 (docs/ERRATA.md E-000).",
- "generated": "2026-09-30T23:59:39",
+ "generated": "2026-10-01T01:37:46",
  "labs": [
   {
    "id": "FL01",
@@ -2424,9 +2424,1045 @@
      "claim_limit": "합성 저항·전하값의 A 수준 budget + 결합 스위칭 검산. 특정 부품·layout의 손실·온도는 주장하지 않는다."
     }
    ]
+  },
+  {
+   "id": "FL12",
+   "title": "FAE 디버깅 — 파형보다 먼저 질문의 질을 높인다",
+   "title_en": "FAE debugging: better questions before more waveforms",
+   "minimum_scope": "교재 8개 case; 원인이 둘 이상 가능한 파형은 multiple-hypothesis diagnosis; 시뮬레이션 결과로 고객 root cause를 확정하지 않음; 설명형 답은 rubric + 사용자 독립 답변 기록",
+   "claim_limits": [
+    "모든 case의 판정은 UNRESOLVED_ROOT_CAUSE: 시뮬레이션은 가설별 예측을 보일 뿐 근본원인을 확정하지 않는다",
+    "가설별 세계의 미지수는 관측을 재현하도록 맞춘 합성 값이다 (고객 회로 값이 아니다)",
+    "설명형 답은 자동 채점하지 않는다: rubric(must_include)과 사용자가 저장한 답만"
+   ],
+   "experiments": [
+    {
+     "key": "case_a",
+     "title": "CASE A — SiC 교체 후 false turn-on 의심: 같은 +5 V를 만드는 네 가지 세계",
+     "model_level": "A/D 합성 screen (+ FL02 D 수준 cell 인용)",
+     "presets": [
+      {
+       "key": "observed",
+       "label": "관측 그대로 (시험 전)",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference"
+       ]
+      },
+      {
+       "key": "kelvin",
+       "label": "첫 시험: Kelvin 기준 재측정",
+       "values": {
+        "test": "kelvin"
+       },
+       "tags": [
+        "reference"
+       ]
+      },
+      {
+       "key": "rg_off",
+       "label": "R_g,off 10 → 2.5 Ω",
+       "values": {
+        "test": "rg_off"
+       },
+       "tags": [
+        "variant",
+        "reference"
+       ]
+      },
+      {
+       "key": "sync",
+       "label": "V_DS·전류·gate 명령 동시 취득",
+       "values": {
+        "test": "sync"
+       },
+       "tags": [
+        "variant"
+       ]
+      },
+      {
+       "key": "short_probe",
+       "label": "probe tip 단락 시험",
+       "values": {
+        "test": "short_probe"
+       },
+       "tags": [
+        "variant"
+       ]
+      },
+      {
+       "key": "slow_on",
+       "label": "임시조치: R_g,on 2.5 → 10 Ω",
+       "values": {
+        "test": "slow_on"
+       },
+       "tags": [
+        "variant"
+       ]
+      },
+      {
+       "key": "hot_vth",
+       "label": "고온 V_th 1.8 V",
+       "values": {
+        "Vth": 1.8
+       },
+       "tags": [
+        "corner"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "observed",
+      "kelvin",
+      "rg_off"
+     ],
+     "status_of_reference": "UNRESOLVED_ROOT_CAUSE",
+     "claim_limit": "합성 edge·gate RC screen으로 가설별 예측을 비교한다. 고객 소자의 false turn-on 여부·여유를 확정하지 않는다."
+    },
+    {
+     "key": "case_b",
+     "title": "CASE B — PFC 저전압 입력에서만 과전류: 정상 RMS 증가인가, 한계 정의·ripple·센서·포화인가",
+     "model_level": "A (경계·limiter 정의·ripple·포화 자속좌표 해)",
+     "presets": [
+      {
+       "key": "observed",
+       "label": "관측 그대로 (400 V 정상, 360 V 제한)",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference"
+       ]
+      },
+      {
+       "key": "fs",
+       "label": "f_s +25 %",
+       "values": {
+        "test": "fs"
+       },
+       "tags": [
+        "reference"
+       ]
+      },
+      {
+       "key": "probe",
+       "label": "기준 probe vs 센서",
+       "values": {
+        "test": "probe"
+       },
+       "tags": [
+        "variant",
+        "reference"
+       ]
+      },
+      {
+       "key": "hf",
+       "label": "고대역 인덕터 전류 캡처",
+       "values": {
+        "test": "hf"
+       },
+       "tags": [
+        "variant"
+       ]
+      },
+      {
+       "key": "flat",
+       "label": "flat-top 계통 전압",
+       "values": {
+        "test": "flat"
+       },
+       "tags": [
+        "variant"
+       ]
+      },
+      {
+       "key": "sweep",
+       "label": "360 V 전력 sweep",
+       "values": {
+        "test": "sweep"
+       },
+       "tags": [
+        "variant"
+       ]
+      },
+      {
+       "key": "high_ocp",
+       "label": "H5 OCP 40 A",
+       "values": {
+        "I_ocp5": 40.0
+       },
+       "tags": [
+        "corner"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "observed",
+      "fs",
+      "probe"
+     ],
+     "status_of_reference": "UNRESOLVED_ROOT_CAUSE",
+     "claim_limit": "A 수준 경계·ripple·포화 screen으로 가설별 예측을 비교한다. 고객 limiter의 실제 원인과 허용 전류를 확정하지 않는다."
+    },
+    {
+     "key": "case_c",
+     "title": "CASE C — DAB 무부하에서 transformer가 뜨겁다: P = 0인데 흐르는 전류의 다섯 가지 원인",
+     "model_level": "A + C (구간선형 정확 파형, 스위칭 엔진)",
+     "presets": [
+      {
+       "key": "observed",
+       "label": "관측 그대로 (900/600 V corner)",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference"
+       ]
+      },
+      {
+       "key": "ratio",
+       "label": "첫 시험: 전압비 일치",
+       "values": {
+        "test": "ratio"
+       },
+       "tags": [
+        "reference"
+       ]
+      },
+      {
+       "key": "dc",
+       "label": "DC 결합 probe",
+       "values": {
+        "test": "dc"
+       },
+       "tags": [
+        "variant",
+        "reference"
+       ]
+      },
+      {
+       "key": "lm",
+       "label": "L_m ×2",
+       "values": {
+        "test": "lm"
+       },
+       "tags": [
+        "variant"
+       ]
+      },
+      {
+       "key": "log",
+       "label": "장시간 φ·포트 전류 기록",
+       "values": {
+        "test": "log"
+       },
+       "tags": [
+        "variant"
+       ]
+      },
+      {
+       "key": "fast_lc",
+       "label": "limit cycle 반주기 1주기",
+       "values": {
+        "M_lc": 1
+       },
+       "tags": [
+        "corner"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "observed",
+      "ratio",
+      "dc"
+     ],
+     "status_of_reference": "UNRESOLVED_ROOT_CAUSE",
+     "claim_limit": "이상 bridge·구간선형 정확 파형의 가설별 예측. 무부하 손실·온도와 고객 원인은 확정하지 않는다."
+    },
+    {
+     "key": "case_d",
+     "title": "CASE D — LLC 경부하에서 낮은 R_DS(on) 소자가 더 뜨겁다: 둘을 동시에 바꾼 결과는 원인을 말해주지 않는다",
+     "model_level": "C + SCREEN (정류기 포함 주기해, EX02 전하 screen, 후처리 손실)",
+     "presets": [
+      {
+       "key": "observed",
+       "label": "관측 그대로 (소자·L_m 동시 변경)",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference"
+       ]
+      },
+      {
+       "key": "restore_lm",
+       "label": "첫 시험: L_m만 원래로",
+       "values": {
+        "test": "restore_lm"
+       },
+       "tags": [
+        "reference"
+       ]
+      },
+      {
+       "key": "restore_dev",
+       "label": "소자만 원래로",
+       "values": {
+        "test": "restore_dev"
+       },
+       "tags": [
+        "variant",
+        "reference"
+       ]
+      },
+      {
+       "key": "vds",
+       "label": "gate-on 직전 V_DS",
+       "values": {
+        "test": "vds"
+       },
+       "tags": [
+        "variant"
+       ]
+      },
+      {
+       "key": "ir",
+       "label": "공진 전류 edge 값",
+       "values": {
+        "test": "ir"
+       },
+       "tags": [
+        "variant"
+       ]
+      },
+      {
+       "key": "sr",
+       "label": "SR 전류 캡처",
+       "values": {
+        "test": "sr"
+       },
+       "tags": [
+        "variant"
+       ]
+      },
+      {
+       "key": "fsw",
+       "label": "실제 f_s·burst 로그",
+       "values": {
+        "test": "fsw"
+       },
+       "tags": [
+        "variant"
+       ]
+      },
+      {
+       "key": "big_obs",
+       "label": "관측 +3 W",
+       "values": {
+        "dP_obs": 3.0
+       },
+       "tags": [
+        "corner"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "observed",
+      "restore_lm",
+      "restore_dev"
+     ],
+     "status_of_reference": "UNRESOLVED_ROOT_CAUSE",
+     "claim_limit": "정류기 포함 주기해 + 전하 screen으로 가설별 예측을 비교한다. 고객 소자의 손실·온도와 근본원인을 확정하지 않는다."
+    },
+    {
+     "key": "case_e",
+     "title": "CASE E — 변압기 기동 포화 의심: enable 직후 1차 전류가 한쪽으로 커지는 다섯 가지 이유",
+     "model_level": "C (정확 스위칭 + PWL 포화, 영역 guard) + 측정 경로",
+     "presets": [
+      {
+       "key": "observed",
+       "label": "관측 그대로 (enable 직후 + peak 4 A)",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference"
+       ]
+      },
+      {
+       "key": "vs",
+       "label": "첫 시험: 권선 volt-second + 기울기",
+       "values": {
+        "test": "vs"
+       },
+       "tags": [
+        "reference"
+       ]
+      },
+      {
+       "key": "gate",
+       "label": "gate 명령 vs bridge 출력",
+       "values": {
+        "test": "gate"
+       },
+       "tags": [
+        "variant",
+        "reference"
+       ]
+      },
+      {
+       "key": "cb",
+       "label": "C_b 전압",
+       "values": {
+        "test": "cb"
+       },
+       "tags": [
+        "variant"
+       ]
+      },
+      {
+       "key": "probe",
+       "label": "두 번째 DC 결합 probe",
+       "values": {
+        "test": "probe"
+       },
+       "tags": [
+        "variant"
+       ]
+      },
+      {
+       "key": "demag",
+       "label": "소거 후 재기동",
+       "values": {
+        "test": "demag"
+       },
+       "tags": [
+        "variant"
+       ]
+      },
+      {
+       "key": "soft_core",
+       "label": "포화가 완만한 코어 (L_m/L_sat = 4)",
+       "values": {
+        "k_sat": 4.0
+       },
+       "tags": [
+        "corner"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "observed",
+      "vs",
+      "gate"
+     ],
+     "status_of_reference": "UNRESOLVED_ROOT_CAUSE",
+     "claim_limit": "PWL 포화 합성 코어의 정확 스위칭 해로 가설별 예측을 비교한다. 실제 코어의 포화 여유와 고객의 근본원인을 확정하지 않는다."
+    },
+    {
+     "key": "case_f",
+     "title": "CASE F — 효율 98 %인데 열량이 맞지 않는다: 전기 200 W와 열량 350 W 중 무엇을 믿나",
+     "model_level": "A + MC (GUM 1차 전파, seed 고정 Monte Carlo, 경계 대수, 1차 열 모델)",
+     "presets": [
+      {
+       "key": "observed",
+       "label": "관측 그대로 (200 W vs 350 W)",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference"
+       ]
+      },
+      {
+       "key": "heater",
+       "label": "첫 시험: heater로 열량계 교정",
+       "values": {
+        "test": "heater"
+       },
+       "tags": [
+        "reference"
+       ]
+      },
+      {
+       "key": "sync",
+       "label": "같은 분석기 동시 취득",
+       "values": {
+        "test": "sync"
+       },
+       "tags": [
+        "variant",
+        "reference"
+       ]
+      },
+      {
+       "key": "aux",
+       "label": "보조 전력 측정",
+       "values": {
+        "test": "aux"
+       },
+       "tags": [
+        "variant"
+       ]
+      },
+      {
+       "key": "steady",
+       "label": "정상상태 재측정",
+       "values": {
+        "test": "steady"
+       },
+       "tags": [
+        "variant"
+       ]
+      },
+      {
+       "key": "pf",
+       "label": "PF 1 / 위상 교정",
+       "values": {
+        "test": "pf"
+       },
+       "tags": [
+        "variant"
+       ]
+      },
+      {
+       "key": "swap",
+       "label": "채널 교차 확인",
+       "values": {
+        "test": "swap"
+       },
+       "tags": [
+        "variant"
+       ]
+      },
+      {
+       "key": "rho09",
+       "label": "ρ = 0.9 (근거 없음)",
+       "values": {
+        "rho": 0.9
+       },
+       "tags": [
+        "corner"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "observed",
+      "heater",
+      "sync"
+     ],
+     "status_of_reference": "UNRESOLVED_ROOT_CAUSE",
+     "claim_limit": "GUM·Monte Carlo와 경계 대수로 가설별 예측을 비교한다. 계측기 교정 상태와 고객 컨버터의 실제 효율·근본원인을 확정하지 않는다."
+    },
+    {
+     "key": "case_g",
+     "title": "CASE G — R_g를 늘렸는데 EMC peak가 거의 그대로다: C·dv/dt 한 식으로는 spectrum을 예측하지 못한다",
+     "model_level": "A (정확 Fourier 계수 × 경로 전달함수, relative proxy)",
+     "presets": [
+      {
+       "key": "observed",
+       "label": "관측 그대로 (R_g 기준 spectrum)",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference"
+       ]
+      },
+      {
+       "key": "rg",
+       "label": "R_g만 변경",
+       "values": {
+        "test": "rg"
+       },
+       "tags": [
+        "reference"
+       ]
+      },
+      {
+       "key": "cable",
+       "label": "첫 시험: cable·접지 용량 변경",
+       "values": {
+        "test": "cable"
+       },
+       "tags": [
+        "variant",
+        "reference"
+       ]
+      },
+      {
+       "key": "cmdm",
+       "label": "CM/DM 분리",
+       "values": {
+        "test": "cmdm"
+       },
+       "tags": [
+        "variant"
+       ]
+      },
+      {
+       "key": "aux_off",
+       "label": "보조 컨버터 끄기",
+       "values": {
+        "test": "aux_off"
+       },
+       "tags": [
+        "variant"
+       ]
+      },
+      {
+       "key": "ctrl",
+       "label": "제어 설정 변경",
+       "values": {
+        "test": "ctrl"
+       },
+       "tags": [
+        "variant"
+       ]
+      },
+      {
+       "key": "snub",
+       "label": "RC snubber",
+       "values": {
+        "test": "snub"
+       },
+       "tags": [
+        "variant"
+       ]
+      },
+      {
+       "key": "low_peak",
+       "label": "관측 peak 1.5 MHz",
+       "values": {
+        "f_obs": 1500000.0
+       },
+       "tags": [
+        "corner"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "observed",
+      "rg",
+      "cable"
+     ],
+     "status_of_reference": "UNRESOLVED_ROOT_CAUSE",
+     "claim_limit": "정확 Fourier 계수와 선형 경로의 relative proxy로 가설별 예측을 비교한다. EMI 규격 적합성과 고객의 근본원인을 판정하지 않는다."
+    },
+    {
+     "key": "case_h",
+     "title": "CASE H — gate를 껐는데 출력에 에너지가 계속 간다: gate off는 절연 스위치가 아니다",
+     "model_level": "C (정확 스위칭: body diode guard·clamp, 에너지 원장)",
+     "presets": [
+      {
+       "key": "observed",
+       "label": "관측 그대로 (1 ms에 250 A)",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference"
+       ]
+      },
+      {
+       "key": "ibat",
+       "label": "첫 시험: battery 전류",
+       "values": {
+        "test": "ibat"
+       },
+       "tags": [
+        "reference"
+       ]
+      },
+      {
+       "key": "vbus",
+       "label": "bus 전압",
+       "values": {
+        "test": "vbus"
+       },
+       "tags": [
+        "variant",
+        "reference"
+       ]
+      },
+      {
+       "key": "vin",
+       "label": "C_in 전압·에너지",
+       "values": {
+        "test": "vin"
+       },
+       "tags": [
+        "variant"
+       ]
+      },
+      {
+       "key": "path",
+       "label": "단락 경로 R/L 측정",
+       "values": {
+        "test": "path"
+       },
+       "tags": [
+        "variant"
+       ]
+      },
+      {
+       "key": "contactor",
+       "label": "contactor 열기",
+       "values": {
+        "test": "contactor"
+       },
+       "tags": [
+        "variant"
+       ]
+      },
+      {
+       "key": "ideal_short",
+       "label": "이상 단락 (1 mΩ, 10 nH)",
+       "values": {
+        "Rf": 0.001,
+        "Lf": 1e-08
+       },
+       "tags": [
+        "failure"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "observed",
+      "ibat",
+      "vbus"
+     ],
+     "status_of_reference": "UNRESOLVED_ROOT_CAUSE",
+     "claim_limit": "이상 diode·집중 R/L의 정확 스위칭 해로 가설별 예측을 비교한다. fuse·contactor 차단 성능과 고객의 근본원인을 확정하지 않는다."
+    }
+   ]
   }
  ],
  "expert_labs": [
+  {
+   "id": "EX01",
+   "title": "설계영역·손실 지도·부품선정",
+   "title_en": "Design space, loss maps and part selection",
+   "minimum_scope": "synthetic loss map과 동시 제약으로 운전영역·active limit·A/B ranking 시각화; nominal optimum과 required-corner feasible choice 분리; 보간 범위와 외삽 status; 불확도보다 작은 차이는 UNRESOLVED_RANKING; mission efficiency = ΣE_out/ΣE_in (지침 §10, 교재 E01·E12)",
+   "claim_limits": [
+    "손실 지도·소자·mission은 모두 합성 학습 자료 — 실제 부품 비교·추천이 아니다 (DATASHEET 자료 없음, MISSING_INPUT)",
+    "FHA·SPS·정적 분배는 A 수준: ZVS·동적 분배·startup·reverse는 해당 EX(EX02/03/05/06)에서 확인",
+    "비용은 자료가 없어 목적함수에 넣지 않았다",
+    "모든 판정은 모델 범위 안의 verification이며 hardware validation이 아니다"
+   ],
+   "experiments": [
+    {
+     "key": "loss_surface",
+     "title": "데이터시트 점에서 loss surface로: fit과 검증을 나누고, 외삽은 순위에서 뺀다",
+     "model_level": "A",
+     "presets": [
+      {
+       "key": "nominal",
+       "label": "700 V·60 A 질의 (보간)",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference"
+       ]
+      },
+      {
+       "key": "light",
+       "label": "800 V·4 A 질의 (측정 하한 아래)",
+       "values": {
+        "query_V": 800.0,
+        "query_I": 4.0
+       },
+       "tags": [
+        "failure",
+        "reference"
+       ]
+      },
+      {
+       "key": "overvolt",
+       "label": "900 V·100 A 질의 (전압 외삽)",
+       "values": {
+        "query_V": 900.0,
+        "query_I": 100.0
+       },
+       "tags": [
+        "failure"
+       ]
+      },
+      {
+       "key": "power_law",
+       "label": "순수 power law로 순위 (800 V·35 A)",
+       "values": {
+        "rank_model": "power",
+        "query_V": 800.0,
+        "query_I": 35.0
+       },
+       "tags": [
+        "failure"
+       ]
+      },
+      {
+       "key": "close_call",
+       "label": "교차 전류 근처 (800 V·25 A)",
+       "values": {
+        "query_V": 800.0,
+        "query_I": 25.0
+       },
+       "tags": [
+        "corner"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "nominal",
+      "light"
+     ],
+     "status_of_reference": "PASS_WITHIN_MODEL",
+     "claim_limit": "합성 소자·합성 측정의 fit/검증 절차. 실제 소자의 스위칭 손실 주장이 아니다."
+    },
+    {
+     "key": "obc_cllc",
+     "title": "11 kW OBC CLLC: seed n = 1의 실패, n = 0.93의 두 FHA 해, nominal 최적 ≠ corner 만족 선택",
+     "model_level": "A",
+     "presets": [
+      {
+       "key": "seed",
+       "label": "seed n = 1 (교재 초기안)",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference",
+        "failure"
+       ]
+      },
+      {
+       "key": "n093",
+       "label": "수정 후보 n = 0.93",
+       "values": {
+        "n": 0.93
+       },
+       "tags": [
+        "reference"
+       ]
+      },
+      {
+       "key": "n093_min",
+       "label": "n = 0.93, 최소 RMS 분기 선택",
+       "values": {
+        "n": 0.93,
+        "branch": "min_current"
+       },
+       "tags": [
+        "failure"
+       ]
+      },
+      {
+       "key": "light_reg",
+       "label": "경부하 1.1 kW까지 연속 regulation 요구",
+       "values": {
+        "n": 0.93,
+        "P_burst": 1100.0
+       },
+       "tags": [
+        "failure"
+       ]
+      },
+      {
+       "key": "n090",
+       "label": "n = 0.90",
+       "values": {
+        "n": 0.9
+       },
+       "tags": [
+        "corner"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "seed",
+      "n093"
+     ],
+     "status_of_reference": "FAIL_CONSTRAINT",
+     "claim_limit": "FHA 정적 해 + 합성 손실 지도(A 수준). switching·ZVS·startup·reverse 검증과 실제 부품 손실은 포함하지 않는다."
+    },
+    {
+     "key": "dab_lv",
+     "title": "900 V ↔ LV DAB (2 × 1.5 kW): φ = 0에서도 2.165 A — L의 nominal 최적과 corner 만족 선택",
+     "model_level": "A",
+     "presets": [
+      {
+       "key": "nominal",
+       "label": "L = 200 µH (교재)",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference"
+       ]
+      },
+      {
+       "key": "L100",
+       "label": "L = 100 µH (nominal 최적)",
+       "values": {
+        "L": 0.0001
+       },
+       "tags": [
+        "failure",
+        "reference"
+       ]
+      },
+      {
+       "key": "L300",
+       "label": "L = 300 µH",
+       "values": {
+        "L": 0.0003
+       },
+       "tags": [
+        "failure"
+       ]
+      },
+      {
+       "key": "map550",
+       "label": "지도를 V_H = 550 V에서",
+       "values": {
+        "VH_map": 550.0
+       },
+       "tags": [
+        "variant"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "nominal",
+      "L100"
+     ],
+     "status_of_reference": "PASS_WITHIN_MODEL",
+     "claim_limit": "SPS 이상 스위치 구간 선형 파형 + 합성 손실 지도(A 수준). ZVS는 screen만, 실제 commutation·자화전류·코어 손실은 포함하지 않는다."
+    },
+    {
+     "key": "sic_leg",
+     "title": "병렬 4 branch SiC leg: 110.6/99.5/99.5/90.5 A, 2 nH × 2 kA/µs = 4 V, 가장 빠른 gate가 답이 아닌 이유",
+     "model_level": "A",
+     "presets": [
+      {
+       "key": "nominal",
+       "label": "R_g 4.7 Ω (branch 2 kA/µs)",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference"
+       ]
+      },
+      {
+       "key": "fast",
+       "label": "R_g 1 Ω (nominal 손실 최소)",
+       "values": {
+        "Rg": 1.0
+       },
+       "tags": [
+        "failure",
+        "reference"
+       ]
+      },
+      {
+       "key": "kelvin",
+       "label": "Kelvin source만 추가 (R_g 3.3 Ω)",
+       "values": {
+        "Rg": 3.3,
+        "kelvin": true
+       },
+       "tags": [
+        "variant"
+       ]
+      },
+      {
+       "key": "kelvin_lowL",
+       "label": "Kelvin + 루프 8 nH (R_g 3.3 Ω)",
+       "values": {
+        "Rg": 3.3,
+        "kelvin": true,
+        "L_loop": 8e-09
+       },
+       "tags": [
+        "variant"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "nominal",
+      "fast"
+     ],
+     "status_of_reference": "PASS_WITHIN_MODEL",
+     "claim_limit": "정적·전열 분배와 합성 손실 지도, L·di/dt 결합 screen(A 수준). 동적 분배·ringing·SOA·단락은 포함하지 않는다."
+    },
+    {
+     "key": "mission_ranking",
+     "title": "A가 nominal에서 8 W 좋지만 모델이 ±15 W라면? mission 효율 = ΣE_out/ΣE_in과 손실 회계",
+     "model_level": "A + MC",
+     "presets": [
+      {
+       "key": "textbook",
+       "label": "A가 8 W 좋다, 모델 ±15 W",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference"
+       ]
+      },
+      {
+       "key": "same_fixture",
+       "label": "같은 fixture 교대 측정, ρ_AB = 0.99 (근거 기록)",
+       "values": {
+        "rho_AB": 0.99,
+        "rho_basis": "same_fixture"
+       },
+       "tags": [
+        "variant"
+       ]
+      },
+      {
+       "key": "rho_nobasis",
+       "label": "ρ_AB = 0.99, 근거 없음",
+       "values": {
+        "rho_AB": 0.99
+       },
+       "tags": [
+        "failure"
+       ]
+      },
+      {
+       "key": "eoss_double",
+       "label": "ZVS인데 E_oss를 손실로 추가",
+       "values": {
+        "add_eoss": true
+       },
+       "tags": [
+        "failure",
+        "reference"
+       ]
+      },
+      {
+       "key": "single_phase",
+       "label": "단상 3.5 kW 완속 충전 mission",
+       "values": {
+        "profile": "single_phase"
+       },
+       "tags": [
+        "variant"
+       ]
+      },
+      {
+       "key": "deep_taper",
+       "label": "CV를 0.6 kW까지 (burst 구간 포함)",
+       "values": {
+        "profile": "deep_taper"
+       },
+       "tags": [
+        "failure"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "textbook",
+      "eoss_double"
+     ],
+     "status_of_reference": "UNRESOLVED_RANKING",
+     "claim_limit": "합성 손실 지도·합성 mission의 순위 판정 절차. 실제 소자 비교·수율·비용 주장이 아니다."
+    }
+   ]
+  },
   {
    "id": "EX02",
    "title": "비선형 Coss·dead time·ZVS — 에너지식 하나로 판정하지 않기",
@@ -4596,8 +5632,18 @@
        ]
       },
       {
+       "key": "wide",
+       "label": "예산 45 s (1분 안쪽)",
+       "values": {
+        "budget_s": 45.0
+       },
+       "tags": [
+        "variant"
+       ]
+      },
+      {
        "key": "full",
-       "label": "예산 600 s (전부 실행)",
+       "label": "예산 600 s — 전부 실행, 수 분 걸림",
        "values": {
         "budget_s": 600.0
        },

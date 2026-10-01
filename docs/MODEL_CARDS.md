@@ -1,6 +1,6 @@
 # 모델 카드 (Model cards)
 
-생성: `tools/gen_docs.py` · run-all 2026-09-30T23:59:39
+생성: `tools/gen_docs.py` · run-all 2026-10-01T01:37:46
 
 모델 수준: A 해석/FHA · B 평균 동역학 · C 이상 스위칭 · D 비이상 commutation(합성). 가정·적용 불가 범위는 각 실험의 기준 preset 실행 결과에서 그대로 가져왔다.
 
@@ -382,6 +382,111 @@
 - 가정: 모든 경로 저항·Q_g·E_oss·분산은 ASSUMED 합성값 (특정 부품 아님); budget: 위치당 전류는 반주기 도통 I_o, 리플·commutation 중복 무시; 권선 AC 저항은 상수 계수 F_R (정밀값은 MISSING_INPUT: 권선 구조·주파수 필요); 3000 W는 총합 (모듈 분할 없음)
 - 적용 불가: 특정 MOSFET·busbar 설계의 손실 정밀값; 병렬 소자 동적 분담·layout (EX03); SR 소자 온도·수명 (FL03/EX08); current doubler 정류 (모델 없음)
 - 주장 한계: 합성 저항·전하값의 A 수준 budget + 결합 스위칭 검산. 특정 부품·layout의 손실·온도는 주장하지 않는다.
+
+## FL12 · FAE 디버깅 — 파형보다 먼저 질문의 질을 높인다
+
+범위: 교재 8개 case; 원인이 둘 이상 가능한 파형은 multiple-hypothesis diagnosis; 시뮬레이션 결과로 고객 root cause를 확정하지 않음; 설명형 답은 rubric + 사용자 독립 답변 기록
+
+주장 한계: 모든 case의 판정은 UNRESOLVED_ROOT_CAUSE: 시뮬레이션은 가설별 예측을 보일 뿐 근본원인을 확정하지 않는다; 가설별 세계의 미지수는 관측을 재현하도록 맞춘 합성 값이다 (고객 회로 값이 아니다); 설명형 답은 자동 채점하지 않는다: rubric(must_include)과 사용자가 저장한 답만
+
+
+### case_a — CASE A — SiC 교체 후 false turn-on 의심: 같은 +5 V를 만드는 네 가지 세계
+
+- 모델 수준: **A/D 합성 screen (+ FL02 D 수준 cell 인용)** · 기준 실행 상태: `UNRESOLVED_ROOT_CAUSE`
+- 가정: Q_H turn-on은 gate charge로 정한 직선 전류 상승(t_ri) 뒤 직선 전압 하강(t_fv): 규정된 edge, 소자 상호작용(shoot-through가 dv/dt를 늦추는 효과) 없음; Q_L gate loop는 선형 C_gs + 유효 C_gd(상수), driver는 R_g,off + R_g,int 뒤의 이상 전압원; 측정 오차 = (L_s + M)·di/dt, di/dt는 전류 전환 ramp와 shoot-through만 (C_oss 전류 edge의 di/dt는 미포함); shoot-through = g_fs·max(0, v_GS,die − V_th), Q_H가 도통한 뒤부터; 에너지 ≈ V_DC·∫i dt; 각 가설 세계는 그 가설의 미지수만 바꿔 관측을 재현하고 나머지는 같은 배경값
+- 적용 불가: 실제 소자의 false turn-on 여유·산화막 신뢰성; probe CM rejection·대역 오차의 정량; E_on의 정밀값 (DPT 측정 정의는 FL02·EX03); 고객 회로의 근본원인 확정
+- 주장 한계: 합성 edge·gate RC screen으로 가설별 예측을 비교한다. 고객 소자의 false turn-on 여부·여유를 확정하지 않는다.
+
+### case_b — CASE B — PFC 저전압 입력에서만 과전류: 정상 RMS 증가인가, 한계 정의·ripple·센서·포화인가
+
+- 모델 수준: **A (경계·limiter 정의·ripple·포화 자속좌표 해)** · 기준 실행 상태: `UNRESOLVED_ROOT_CAUSE`
+- 가정: η·PF는 상수 (교재 합성 조건), 3상 평형, 단위역률 저항 에뮬레이션; ripple: 한 상을 DC 중점에 잇는 4-wire 등가 leg (±V_dc/2), L 250 µH, f_s 40 kHz, V_dc 800 V (ASSUMED); 포화: 구간선형 λ(i) (I_sat 위에서 L/k), 스위칭 주기 안에서 평균전류를 맞춘 정확해 (A 수준 준정적); 각 세계의 한계값·이득·I_sat은 관측(400 V 통과, 360 V 제한)과 맞는 범위의 가운데로 둔 합성 값
+- 적용 불가: 실제 limiter 동작·제어 응답; 3선식 PFC의 실제 ripple 분포; 소자 SOA·배선 온도 판정; 고객 회로의 근본원인 확정
+- 주장 한계: A 수준 경계·ripple·포화 screen으로 가설별 예측을 비교한다. 고객 limiter의 실제 원인과 허용 전류를 확정하지 않는다.
+
+### case_c — CASE C — DAB 무부하에서 transformer가 뜨겁다: P = 0인데 흐르는 전류의 다섯 가지 원인
+
+- 모델 수준: **A + C (구간선형 정확 파형, 스위칭 엔진)** · 기준 실행 상태: `UNRESOLVED_ROOT_CAUSE`
+- 가정: 이상 full bridge 두 개(SPS), 무손실 직렬 L(1차 환산), 이상 변압기 + 자화 가지; H2·H4: 직렬 L이 1차에 있어 코어 전압은 2차 bridge가 정한다 → 여자전류는 그 bridge 쪽 권선이 공급; H4: 구간선형 포화 코어 (λ_s = 1.6·λ_pk, L_sat = L_m/20), DC 자속은 주어진 이력의 결과로 고정; H5: φ가 5주기마다 ±로 뒤집히는 limit cycle을 스위칭 엔진으로 적분 (R = 0이라 전환 때 DC offset이 남는다); 각 세계의 미지수는 같은 권선 RMS를 재현하도록 맞춘 합성 값
+- 적용 불가: 무부하 손실·온도의 정밀값 (권선·코어 손실 모델 없음); 제어 루프의 실제 limit cycle 조건; 고객 변압기의 근본원인 확정
+- 주장 한계: 이상 bridge·구간선형 정확 파형의 가설별 예측. 무부하 손실·온도와 고객 원인은 확정하지 않는다.
+
+### case_d — CASE D — LLC 경부하에서 낮은 R_DS(on) 소자가 더 뜨겁다: 둘을 동시에 바꾼 결과는 원인을 말해주지 않는다
+
+- 모델 수준: **C + SCREEN (정류기 포함 주기해, EX02 전하 screen, 후처리 손실)** · 기준 실행 상태: `UNRESOLVED_ROOT_CAUSE`
+- 가정: FL09 합성 tank (L_r 40 µH, C_r 28.1448 nF), 기존 L_m 200 µH; 늘린 L_m은 H1·H12 400 µH, H2 240 µH (폭은 모름: ASSUMED); V_in 400 V, V_o 45 V로 조절 (f_r보다 위에서 운전하도록 ASSUMED), 저항부하, 이상 다이오드 정류; 관측 = 경부하 소자당 손실 +1.5 W (온도 상승을 손실로 환산했다고 가정), 전부하는 개선; 새 소자: R_DS(on) ↓ (합성), C_oss는 세계마다 관측을 재현하도록 보정 — 고객 소자 값이 아니다; ZVS: 상승 edge 전류를 dead time 동안 일정하게 둔 charge screen + EX02 고정 rail 잔류 turn-on 에너지; 손실: R_DS(on)·I_rms²/2 + E_res·f (후처리 추정); H5는 Q_g·V_drv·f 전부가 die에서 소산된다는 상한
+- 적용 불가: 실제 소자 온도·효율; SR·burst 동작 (모델 없음); turn-off 손실·코어 손실; 고객 회로의 근본원인 확정
+- 주장 한계: 정류기 포함 주기해 + 전하 screen으로 가설별 예측을 비교한다. 고객 소자의 손실·온도와 근본원인을 확정하지 않는다.
+
+### case_e — CASE E — 변압기 기동 포화 의심: enable 직후 1차 전류가 한쪽으로 커지는 다섯 가지 이유
+
+- 모델 수준: **C (정확 스위칭 + PWL 포화, 영역 guard) + 측정 경로** · 기준 실행 상태: `UNRESOLVED_ROOT_CAUSE`
+- 가정: bridge ±800 V, 100 kHz, 2준위 구동, 첫 펄스 반폭(대칭 기동); 무부하 (부하 전류는 대칭이라 자속에 영향 없음); N 50, A_e 250 mm², L_m 2 mH, PWL 포화: B_s 0.35 T 위에서 L_m/20 (합성), R 100 mΩ, C_b 10 µF (FL07과 같은 값); 관측 = 처음 40주기 안에 센서 + peak 4 A (ASSUMED 수치화); H2: 처음 10펄스만 비대칭; H5: 센서 offset이 τ_s 100 µs로 정착
+- 적용 불가: 실제 코어 재료의 B-H 곡선·잔류자속; 제어 루프(전류 모드 자속 균형 등); 부하가 걸린 기동; 고객 회로의 근본원인 확정
+- 주장 한계: PWL 포화 합성 코어의 정확 스위칭 해로 가설별 예측을 비교한다. 실제 코어의 포화 여유와 고객의 근본원인을 확정하지 않는다.
+
+### case_f — CASE F — 효율 98 %인데 열량이 맞지 않는다: 전기 200 W와 열량 350 W 중 무엇을 믿나
+
+- 모델 수준: **A + MC (GUM 1차 전파, seed 고정 Monte Carlo, 경계 대수, 1차 열 모델)** · 기준 실행 상태: `UNRESOLVED_ROOT_CAUSE`
+- 가정: P_in 10000 W DC, η 0.98 → P_out 9800 W (3상 AC, PF 0.8), 각 ±0.1 %를 표준불확도로 (EX11 교재 가정); 냉각수 50 % glycol 가정: 밀도 1070 kg/m³, c_p 3400 J/(kg·K), 유량 8 L/min → ṁc_p 485.1 W/K, 열량 350 W의 ΔT 0.7216 K; 세계 가정: drift 0.05 %/s (H3), 이전 시험 손실 500 W·τ 600 s (H7), 측정 창 0.2 s·C 1 mF·800 V (H8); Monte Carlo 200000개, seed 20261001
+- 적용 불가: 계측기 인증·교정; 실제 열 경로(다중 시정수); 고객 컨버터의 실제 효율; 고객 회로의 근본원인 확정
+- 주장 한계: GUM·Monte Carlo와 경계 대수로 가설별 예측을 비교한다. 계측기 교정 상태와 고객 컨버터의 실제 효율·근본원인을 확정하지 않는다.
+
+### case_g — CASE G — R_g를 늘렸는데 EMC peak가 거의 그대로다: C·dv/dt 한 식으로는 spectrum을 예측하지 못한다
+
+- 모델 수준: **A (정확 Fourier 계수 × 경로 전달함수, relative proxy)** · 기준 실행 상태: `UNRESOLVED_ROOT_CAUSE`
+- 가정: switch node: 800 V trapezoid, 100 kHz, D 0.5; t_r = Q_gd(R_g + R_g,int)/ΔV_g, Q_gd 20 nC, R_g,int 2.5 Ω, ΔV_g 10 V; CM proxy = |c_k|·|H_loop|·|Y_CM|·R_m (R_m 25 Ω), 기본 경로 L_loop 10 nH·C_oss 1 nF, C_par 100 pF·L_cab 100 nH; 관측 = 15.9 MHz peak가 주변보다 10 dB, R_g 2.5 → 10 Ω에 거의 그대로; receiver식 읽음 = RBW 9 kHz 안 선의 전력 합; 보조 컨버터 300 kHz·400 V·t_r 20 ns (H3), 제어 성분은 협대역 선 하나 (H4) — 합성
+- 적용 불가: EMI 규격 적합성·limit 여유; 방사 emission; 실제 경로 기생값; 고객 회로의 근본원인 확정
+- 주장 한계: 정확 Fourier 계수와 선형 경로의 relative proxy로 가설별 예측을 비교한다. EMI 규격 적합성과 고객의 근본원인을 판정하지 않는다.
+
+### case_h — CASE H — gate를 껐는데 출력에 에너지가 계속 간다: gate off는 절연 스위치가 아니다
+
+- 모델 수준: **C (정확 스위칭: body diode guard·clamp, 에너지 원장)** · 기준 실행 상태: `UNRESOLVED_ROOT_CAUSE`
+- 가정: battery 400 V (R_bat 20 mΩ), C_in 100 µF, L 200 µH (R_L 20 mΩ), bus C 1 mF @ 800 V, 부하 64 Ω; 단락 경로 기본값 R_f 100 mΩ, L_f 10 µH (EX10과 같은 값), 단락 순간 gate off, 그때 인덕터 전류 25 A; body diode = 이상 diode + V_f 1.5 V; clamp 상태에서 bus는 −2V_f; 관측 = gate off 1 ms 뒤 출력 단자 전류 250 A (ASSUMED 수치화)
+- 적용 불가: fuse·contactor 차단 성능; 소자 서지·파손; 아크; 고객 회로의 근본원인 확정
+- 주장 한계: 이상 diode·집중 R/L의 정확 스위칭 해로 가설별 예측을 비교한다. fuse·contactor 차단 성능과 고객의 근본원인을 확정하지 않는다.
+
+## EX01 · 설계영역·손실 지도·부품선정
+
+범위: synthetic loss map과 동시 제약으로 운전영역·active limit·A/B ranking 시각화; nominal optimum과 required-corner feasible choice 분리; 보간 범위와 외삽 status; 불확도보다 작은 차이는 UNRESOLVED_RANKING; mission efficiency = ΣE_out/ΣE_in (지침 §10, 교재 E01·E12)
+
+주장 한계: 손실 지도·소자·mission은 모두 합성 학습 자료 — 실제 부품 비교·추천이 아니다 (DATASHEET 자료 없음, MISSING_INPUT); FHA·SPS·정적 분배는 A 수준: ZVS·동적 분배·startup·reverse는 해당 EX(EX02/03/05/06)에서 확인; 비용은 자료가 없어 목적함수에 넣지 않았다; 모든 판정은 모델 범위 안의 verification이며 hardware validation이 아니다
+
+
+### loss_surface — 데이터시트 점에서 loss surface로: fit과 검증을 나누고, 외삽은 순위에서 뺀다
+
+- 모델 수준: **A** · 기준 실행 상태: `PASS_WITHIN_MODEL`
+- 가정: 합성 참값 E = E_oss(V/800)^1.5 + E0(I/100)^α(V/800)^β에 상대 잡음(1σ)을 더한 ‘측정’; floor 전압 지수 1.5 고정(C ∝ V^−1/2 가정); α·β·E0·E_oss는 fit; fit 점 400·800 V, 검증 점 600 V; 모든 점 같은 온도·gate 조건
+- 적용 불가: 실제 소자의 스위칭 에너지(데이터시트·DPT 조건 확인 필요, MISSING_INPUT); 특성화 범위 밖 전압·전류(외삽); soft-switching(ZVS) 손실 — hard-switching 데이터
+- 주장 한계: 합성 소자·합성 측정의 fit/검증 절차. 실제 소자의 스위칭 손실 주장이 아니다.
+
+### obc_cllc — 11 kW OBC CLLC: seed n = 1의 실패, n = 0.93의 두 FHA 해, nominal 최적 ≠ corner 만족 선택
+
+- 모델 수준: **A** · 기준 실행 상태: `FAIL_CONSTRAINT`
+- 가정: FHA: 기본파 phasor, full-bridge 기본파 0.9·V, 정류 부하 R_ac′ = n²·8R_L/π²; referred symmetry(L_r2′ = L_r, C_r2′ = C_r); link 전압 schedule: 배터리 650/800/920 V ↔ link 700/800/850 V 사이 선형 보간; 오른쪽 분기(gain 기울기 음) 기본 선택; P < P_burst(2.2 kW)은 burst 운전으로 가정해 FHA 판정에서 제외; turn-off 전류 = √2·I_1·sin θ_Zin (FHA 추정), ZVS screen: i_off·t_dead ≥ 2Q_oss; 자속: 구형파 n·V_bat/(4 f N_p A_e) (보수적); 손실은 합성 손실 지도 후처리(postprocessed)
+- 적용 불가: 실제 ZVS·SR timing·dead-time 파형 (NOT_EVALUABLE: EX05 time-domain); startup·reverse(역방향은 forward gain의 역수가 아님); 실제 소자·코어 재료 손실 (MISSING_INPUT); 경부하 burst 운전
+- 주장 한계: FHA 정적 해 + 합성 손실 지도(A 수준). switching·ZVS·startup·reverse 검증과 실제 부품 손실은 포함하지 않는다.
+
+### dab_lv — 900 V ↔ LV DAB (2 × 1.5 kW): φ = 0에서도 2.165 A — L의 nominal 최적과 corner 만족 선택
+
+- 모델 수준: **A** · 기준 실행 상태: `PASS_WITHIN_MODEL`
+- 가정: SPS(단일 위상천이), 반주기 반대칭 정상상태 해, 이상 스위치; 자화전류 무시; per module 1.5 kW; 합계 전력은 모듈 수 × 1모듈; ZVS screen: i·t_dead ≥ 2Q_oss (단일 Q_oss 값); 손실은 합성 손실 지도 후처리; T_j는 선형 PTC 정상상태
+- 적용 불가: 실제 ZVS·commutation 파형 (NOT_EVALUABLE); EPS/DPS/TPS 변조 (EX06); 실제 소자·transformer 손실 (MISSING_INPUT); 모듈 on/off 전환·startup
+- 주장 한계: SPS 이상 스위치 구간 선형 파형 + 합성 손실 지도(A 수준). ZVS는 screen만, 실제 commutation·자화전류·코어 손실은 포함하지 않는다.
+
+### sic_leg — 병렬 4 branch SiC leg: 110.6/99.5/99.5/90.5 A, 2 nH × 2 kA/µs = 4 V, 가장 빠른 gate가 답이 아닌 이유
+
+- 모델 수준: **A** · 기준 실행 상태: `PASS_WITHIN_MODEL`
+- 가정: 정적 분배 I_k ∝ 1/R_k(T_k), R = R25(1 + α(T − 25)); sine 전류, 동기정류: 도통 R·I_pk²/4, 스위칭은 해당 반주기 sine 평균; di/dt ∝ 1/(R_g + R_int), E_sw ∝ (R_g + R_int) (합성 비례식); 과전압 = L_loop × 4 branch di/dt, 모든 branch R_th 동일
+- 적용 불가: 동적 전류 분배·gate timing skew (EX03); 실제 ringing·false turn-on 파형; 단락·보호 동작 (EX10); 실제 소자 손실·SOA (MISSING_INPUT)
+- 주장 한계: 정적·전열 분배와 합성 손실 지도, L·di/dt 결합 screen(A 수준). 동적 분배·ringing·SOA·단락은 포함하지 않는다.
+
+### mission_ranking — A가 nominal에서 8 W 좋지만 모델이 ±15 W라면? mission 효율 = ΣE_out/ΣE_in과 손실 회계
+
+- 모델 수준: **A + MC** · 기준 실행 상태: `UNRESOLVED_RANKING`
+- 가정: 설계 n = 0.93 (obc_cllc의 robust 선택), 오른쪽 분기 FHA 운전점, 합성 손실 지도; A: turn-off 에너지 ×1.35, R_DS(on)은 ‘nominal에서 8 W 좋다’ 시나리오로 도출; 스위칭 손실 모델 오차는 후보마다 계통적(운전점 간 완전 상관), 후보 간 상관 ρ_AB; mission = 합성 CC-CV 충전 (P_cc, 900 V CV taper); P < P_burst 구간은 burst 운전으로 FHA 밖
+- 적용 불가: 실제 소자 비교 (DATASHEET 조건·DPT 필요: MISSING_INPUT); burst·경부하 손실; 회생·역방향 mission; 비용 비교 (cost 자료 없음 — 만들어 넣지 않음)
+- 주장 한계: 합성 손실 지도·합성 mission의 순위 판정 절차. 실제 소자 비교·수율·비용 주장이 아니다.
 
 ## EX02 · 비선형 Coss·dead time·ZVS — 에너지식 하나로 판정하지 않기
 
