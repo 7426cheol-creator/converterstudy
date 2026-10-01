@@ -96,3 +96,16 @@ def test_all_reference_checks_pass():
                 assert c["status"] in ("PASS", "INFO", "NOT_RUN"), (e.key, pk, c["name"], c["value"])
             for m in js["metrics"]:
                 assert m["check"] in (None, "PASS", "INFO"), (e.key, pk, m["key"])
+
+
+def test_large_fm_injection_is_out_of_validity_not_a_failed_check():
+    # 100x the small-signal amplitude: the 1 kHz response (near the output resonance) departs from the linear G_vf.
+    # The departure shrinks with the amplitude, so it is reported as the model's range, not as a failed check.
+    js = run("gvf", "big_fm")
+    assert js["status"]["code"] == "OUT_OF_VALIDITY"
+    fm = {c["name"]: c for c in js["checks"] if c["name"].startswith("FM")}
+    big = next(c for n, c in fm.items() if "1000 Hz" in n)
+    assert big["status"] == "INFO" and big["value"] > 0.02 and "1/10" in big["detail"]
+    assert all(c["status"] != "FAIL" for c in js["checks"])
+    small = run("gvf", "textbook")
+    assert all(c["status"] == "PASS" for c in small["checks"] if c["name"].startswith("FM"))

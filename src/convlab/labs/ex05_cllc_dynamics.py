@@ -442,14 +442,15 @@ def run_gvf(v: dict) -> Result:
     if val:
         o, A, Bf, C = val
         s, x0, T0, f0 = o.s, o.x, o.s.T, o.s.fs
-        for fmod in (v["fm_check1"], v["fm_check2"]):
-            K = int(v["fm_cycles"])
-            df = v["fm_amp"] * f0
+        K = int(v["fm_cycles"])
+
+        def inject(fmod: float, df: float) -> tuple[float, float]:
+            """Same FM input to the nonlinear cycle map and to the linear map; max |difference| and max |response|."""
             x = x0.copy()
             xl = np.zeros(s.ns)
             t = 0.0
             err = amp = 0.0
-            for k in range(K):
+            for _ in range(K):
                 fk = f0 + df * math.sin(2 * PI * fmod * t)
                 Tk = 1.0 / fk
                 x, _ = cycle_map(s, x, Tk, t)
@@ -458,8 +459,27 @@ def run_gvf(v: dict) -> Result:
                 d_nl = x[s.ix["vo"]] - x0[s.ix["vo"]]
                 err = max(err, abs(d_nl - xl[s.ix["vo"]]))
                 amp = max(amp, abs(d_nl))
-            res.add_check(Check(f"FM 주입 {fmod:g} Hz: 비선형 시뮬레이션 vs 선형 예측", "PASS" if err <= 0.02 * amp else "FAIL", err / max(amp, 1e-30), "rel", 0.02,
-                                path=f"f_s에 ±{v['fm_amp'] * 100:g} % 사인 변조, {K}주기 — 같은 입력열로 비선형 사이클 map과 선형 map 비교", independent=True, detail=f"최대 |Δv_o| {amp:.4g} V, 최대 차이 {err:.3g} V"))
+            return err, amp
+
+        for fmod in (v["fm_check1"], v["fm_check2"]):
+            df = v["fm_amp"] * f0
+            err, amp = inject(fmod, df)
+            rel = err / max(amp, 1e-30)
+            path = f"f_s에 ±{v['fm_amp'] * 100:g} % 사인 변조, {K}주기 — 같은 입력열로 비선형 사이클 map과 선형 map 비교"
+            detail = f"최대 |Δv_o| {amp:.4g} V, 최대 차이 {err:.3g} V"
+            status = "PASS" if rel <= 0.02 else "FAIL"
+            if status == "FAIL":
+                # a linearisation error from nonlinearity is second order: at 1/10 of the amplitude the relative error
+                # must drop about tenfold. If it does, the amplitude is outside the small-signal range (a model limit,
+                # not a defect); if it does not, the linear model itself is wrong and the check stays FAIL.
+                err10, amp10 = inject(fmod, df / 10)
+                rel10 = err10 / max(amp10, 1e-30)
+                detail += f"; 진폭 1/10에서 상대 차이 {rel10:.3g}"
+                if rel10 <= 0.2 * rel and rel10 <= 0.02:
+                    status = "INFO"
+                    detail += " — 오차가 진폭에 비례해 줄어드는 2차 비선형 효과"
+                    res.verdict("OUT_OF_VALIDITY", f"FM 진폭 ±{v['fm_amp'] * 100:g} %에서 {fmod:g} Hz 응답이 선형 G_vf와 {rel * 100:.1f} % 다르다 — 소신호 모델의 적용범위 밖이다. 진폭을 1/10로 줄이면 차이가 {rel10 * 100:.2f} %로 준다.")
+            res.add_check(Check(f"FM 주입 {fmod:g} Hz: 비선형 시뮬레이션 vs 선형 예측", status, rel, "rel", 0.02, path=path, independent=True, detail=detail))
     res.verdict("PASS_WITHIN_MODEL", "branch별 G_vf를 event 포함 sampled small-signal 모델로 구하고 비선형 FM 주입으로 확인")
     res.verdict("INFO", "정상 gain 기울기는 G_vf(0)에 대한 정보일 뿐 위상·공진극·sampling delay를 알려주지 않는다")
     res.assumptions += ["cycle-to-cycle map: 주기 시작 샘플 v_o, 주기마다 한 번 바뀌는 주파수 명령", f"FM 주입 진폭 ±{v['fm_amp'] * 100:g} % (소신호)"]
