@@ -1,0 +1,48 @@
+{
+ "kind": "project_state",
+ "note": "이 파일은 저장소 작업 상태다. 학습자의 예측·답 기록은 ~/.convlab/progress.json (앱이 관리)이며 이 파일과 다르다.",
+ "updated": "2026-10-01T00:20:00Z",
+ "app_version": "4.0.0",
+ "contract_version": "4.0-reconstructed",
+ "branch": "ccr-947b03d9-ahvguh",
+ "labs": {
+  "implemented": ["FL01", "FL02", "FL03", "FL04", "FL05", "FL06", "FL07", "FL08", "FL09", "FL10", "FL11", "EX02", "EX03", "EX04", "EX05", "EX06", "EX07", "EX08", "EX09", "EX10", "EX11", "EX12"],
+  "in_progress": ["FL12", "EX01"],
+  "not_started": []
+ },
+ "done": [
+  "정확한 구간 해석 엔진(행렬지수·사건·주기해), 스키마, 로컬 서버, 학습 화면",
+  "22개 실습: 회로·식·preset·예측·실행·그래프·판정·해설·면접 질문·export·테스트",
+  "표준 라이브러리 기준값 검산 (verification/independent_reference_check.py)",
+  "Octave 교차검증 (matlab/xc_*.m) — FL09 표 버그를 찾아 고침",
+  "Simscape builder 스크립트(미실행), PSIM 12.0.2 build sheet(미실행)",
+  "CI workflow (python + 브라우저 e2e), 브라우저 스모크 테스트",
+  "문서: README, START_HERE, ERRATA(E-000~E-002, F-001~F-002), KNOWN_LIMITS, 생성 문서(추적표·모델 카드·테스트 독립성·run manifest·계약 재구성본)"
+ ],
+ "in_progress": [
+  "FL12 8개 사례 (rubric·기록만, 자동 채점 없음)",
+  "EX01 손실 map·동시 제약·운전영역·A/B 순위",
+  "EX11 test_independence의 제안 변경 실행 시간 단축 (브라우저 120 s 초과)",
+  "Octave: CLLC 시간영역 독립 검산, PSIM FL10 표, CI octave job"
+ ],
+ "next": [
+  "FL12·EX01 병합 후 테스트·run-all·브라우저 스모크",
+  "tools/gen_docs.py로 생성 문서 재생성, docs/VERIFICATION.md 수치 갱신",
+  "GitHub 접근이 복구되면 push, PR #1 CI 확인과 설명 갱신"
+ ],
+ "commands": {
+  "start": "./run.sh  (또는 python -m convlab serve)",
+  "tests": "python -m pytest -q",
+  "run_all": "python -m convlab run-all --out results",
+  "docs": "python tools/gen_docs.py --results results",
+  "reference_check": "python verification/independent_reference_check.py",
+  "octave": "verification/run_octave_crosscheck.sh",
+  "e2e": "cd e2e && npm ci && node smoke.mjs --spawn"
+ },
+ "blockers": [
+  "GitHub 접근 403 (2026-09-30 19:59 UTC부터): push와 PR 확인 불가. 사용자가 https://claude.ai/connect-github 에서 GitHub를 다시 연결해야 한다.",
+  "MATLAB/Simulink/PSIM 미설치: NOT_RUN_ENVIRONMENT (Python 필수 기능과 무관)",
+  "원본 패키지 파일 미제공 (ERRATA E-000)"
+ ],
+ "resume": "이 파일의 next부터. 브랜치 ccr-947b03d9-ahvguh, `python -m pytest -q`와 `python -m convlab run-all --out results`로 현재 상태를 먼저 확인한다."
+}

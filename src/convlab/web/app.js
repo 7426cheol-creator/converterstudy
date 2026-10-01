@@ -711,6 +711,13 @@ function verifyPage(main) {
     for (const r of er.items || []) b.append(h("tr", {}, h("td", {}, r.id), h("td", { class: "small" }, r.where), h("td", { class: "small" }, r.original), h("td", { class: "small" }, r.corrected), h("td", { class: "small" }, r.evidence), h("td", { class: "small" }, r.impact)));
     t.append(b);
     main.append(h("section", { class: "card" }, h("h3", {}, "Errata (교재·지침 수치 정정 기록)"), h("div", { class: "tablewrap" }, t)));
+    if ((er.findings || []).length) {
+      const tf = h("table", { class: "data" }, h("thead", {}, h("tr", {}, ...["ID", "위치", "교재", "모델 결과", "근거", "영향"].map((c) => h("th", {}, c)))));
+      const bf = h("tbody");
+      for (const r of er.findings) bf.append(h("tr", {}, h("td", {}, r.id), h("td", { class: "small" }, r.where), h("td", { class: "small" }, r.textbook), h("td", { class: "small" }, r.model_result), h("td", { class: "small" }, r.evidence), h("td", { class: "small" }, r.impact)));
+      tf.append(bf);
+      main.append(h("section", { class: "card" }, h("h3", {}, "발견 (정정 아님 — 교재 수치는 맞고 스위칭 모델에서 결론이 달라지는 경우)"), h("div", { class: "tablewrap" }, tf)));
+    }
   }
 }
 

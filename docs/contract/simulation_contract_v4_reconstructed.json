@@ -1,7 +1,7 @@
 {
  "contract_version": "4.0-reconstructed",
  "note": "원본 simulation_contract_v4.json이 제공되지 않아 구현된 실습과 실제 실행에서 재구성했다 (docs/ERRATA.md E-000).",
- "generated": "2026-09-30T19:46:57",
+ "generated": "2026-09-30T23:59:39",
  "labs": [
   {
    "id": "FL01",
@@ -212,6 +212,684 @@
      ],
      "status_of_reference": "PASS_WITHIN_MODEL",
      "claim_limit": "개루프 duty step의 역응답과 이상 CCM 소신호 영점. 폐루프 안정성은 주장하지 않는다."
+    }
+   ]
+  },
+  {
+   "id": "FL02",
+   "title": "Si·SiC·GaN과 데이터시트, Gate drive·DPT·보호",
+   "title_en": "Devices, gate drive, double-pulse test and protection",
+   "minimum_scope": "loss 비교·gate/DPT 제한된 commutation; 조건표·E 적분·L·di/dt·가설 분리 (교재 19장 표). 14/20.5 W, 6/6.1 W, 75 V, 30 A, 10 ns, 1.8 µs",
+   "claim_limits": [
+    "합성 A/B는 비교 논리 훈련 — 실제 부품 데이터셋은 별도(MISSING_INPUT), 제품 순위 아님",
+    "loss 비교는 postprocessed loss estimate (전력단에 결합된 손실 아님)",
+    "DPT 셀은 합성 D 수준 경향 — vendor 소자 모델이 아니며 역회복·온도 없음",
+    "이상 스위치로 gate ringing을 만들었다고 주장하지 않음 (ringing은 셀의 L·C에서만)",
+    "단순 모델로 SC survival을 보장하지 않음"
+   ],
+   "experiments": [
+    {
+     "key": "loss_ab",
+     "title": "합성 A/B 손실 비교: 낮은 R_DS(on)이 더 뜨거운 이유",
+     "model_level": "A (postprocessed loss estimate)",
+     "presets": [
+      {
+       "key": "textbook",
+       "label": "교재 100 kHz",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference"
+       ]
+      },
+      {
+       "key": "f20k",
+       "label": "f_s 20 kHz",
+       "values": {
+        "fs": 20000.0
+       },
+       "tags": [
+        "reference",
+        "variant"
+       ]
+      },
+      {
+       "key": "coss_unknown_20k",
+       "label": "20 kHz, Coss 정의 미확인",
+       "values": {
+        "fs": 20000.0,
+        "coss_boundary": "unknown"
+       },
+       "tags": [
+        "reference",
+        "failure"
+       ]
+      },
+      {
+       "key": "coss_excluded",
+       "label": "E에 Coss 미포함 (100 kHz)",
+       "values": {
+        "coss_boundary": "excluded"
+       },
+       "tags": [
+        "variant"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "textbook",
+      "f20k",
+      "coss_unknown_20k"
+     ],
+     "status_of_reference": "PASS_WITHIN_MODEL",
+     "claim_limit": "합성 A/B의 postprocessed 손실 비교(A). 실제 부품·제품 순위를 주장하지 않는다."
+    },
+    {
+     "key": "gate_protect",
+     "title": "Gate·Miller·loop 전압과 보호 타임라인 (1차 크기)",
+     "model_level": "A (1차 screen) + B (gate-charge ODE)",
+     "presets": [
+      {
+       "key": "textbook",
+       "label": "교재 수치",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference"
+       ]
+      },
+      {
+       "key": "blank_long",
+       "label": "blanking 2 µs (오검출 회피용으로 늘림)",
+       "values": {
+        "t_blank": 2e-06
+       },
+       "tags": [
+        "failure",
+        "reference"
+       ]
+      },
+      {
+       "key": "low_rg",
+       "label": "외부 R_g 1 Ω",
+       "values": {
+        "Rg_ext": 1.0
+       },
+       "tags": [
+        "variant"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "textbook",
+      "blank_long"
+     ],
+     "status_of_reference": "MISSING_INPUT",
+     "claim_limit": "1차 크기 screen과 합성 보호 타임라인. SC survival·EMC 적합성을 주장하지 않는다."
+    },
+    {
+     "key": "dpt_cell",
+     "title": "합성 DPT 셀: Miller·L·di/dt·링잉과 E_on/E_off 적분의 정의",
+     "model_level": "D (합성 commutation cell)",
+     "presets": [
+      {
+       "key": "nominal",
+       "label": "Kelvin 드라이버, R_g 10 Ω",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference"
+       ]
+      },
+      {
+       "key": "fast",
+       "label": "R_g 3 Ω (빠른 edge)",
+       "values": {
+        "Rg_on": 3.0,
+        "Rg_off": 3.0
+       },
+       "tags": [
+        "variant",
+        "reference"
+       ]
+      },
+      {
+       "key": "no_kelvin",
+       "label": "드라이버 반환 = power source",
+       "values": {
+        "drv_ref": "power_source"
+       },
+       "tags": [
+        "variant",
+        "reference"
+       ]
+      },
+      {
+       "key": "high_L",
+       "label": "L_a 25 nH",
+       "values": {
+        "La": 2.5e-08
+       },
+       "tags": [
+        "corner"
+       ]
+      },
+      {
+       "key": "skew5",
+       "label": "측정 skew −5 ns",
+       "values": {
+        "skew": -5e-09
+       },
+       "tags": [
+        "failure"
+       ]
+      },
+      {
+       "key": "inductor_ref",
+       "label": "i 참조 = 부하 인덕터 전류",
+       "values": {
+        "i_ref": "inductor"
+       },
+       "tags": [
+        "failure"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "nominal",
+      "fast",
+      "no_kelvin"
+     ],
+     "status_of_reference": "PASS_WITHIN_MODEL",
+     "claim_limit": "합성 소자·회로의 D 수준 경향. vendor 소자 E·overshoot 예측, SC survival, EMI를 주장하지 않는다."
+    },
+    {
+     "key": "vgs_spike",
+     "title": "블라인드 문제: V_GS spike — 실제 Miller turn-on인가, 측정 기준 오차인가",
+     "model_level": "D (합성 commutation cell)",
+     "presets": [
+      {
+       "key": "artifact",
+       "label": "빠른 turn-on, 상측 −4 V 유지",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference"
+       ]
+      },
+      {
+       "key": "real",
+       "label": "상측 0 V·R_gH 10 Ω (unipolar, 약한 hold)",
+       "values": {
+        "VoffH": 0.0,
+        "RgH": 10.0
+       },
+       "tags": [
+        "failure",
+        "reference"
+       ]
+      },
+      {
+       "key": "clamp",
+       "label": "0 V·10 Ω + Miller clamp",
+       "values": {
+        "VoffH": 0.0,
+        "RgH": 10.0,
+        "clamp": true
+       },
+       "tags": [
+        "variant",
+        "reference"
+       ]
+      },
+      {
+       "key": "slow",
+       "label": "DUT R_g 10 Ω",
+       "values": {
+        "Rg_on": 10.0,
+        "Rg_off": 10.0
+       },
+       "tags": [
+        "variant"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "artifact",
+      "real",
+      "clamp"
+     ],
+     "status_of_reference": "UNRESOLVED_ROOT_CAUSE",
+     "claim_limit": "합성 셀의 판별 논리(D). 실제 소자의 false turn-on 여유·산화막 신뢰성을 주장하지 않는다."
+    }
+   ]
+  },
+  {
+   "id": "FL03",
+   "title": "손실·온도·수명 — 숫자가 서로 맞아야 한다",
+   "title_en": "Loss, temperature and lifetime: the numbers must agree",
+   "minimum_scope": "thermal RC·loss/T 반복 (교재 19장 표): 77.642 °C 기준·전열 수렴·경계; coolant 65→85 °C·30 s 과부하; loss map 범위; Foster/Cauer",
+   "claim_limits": [
+    "단일 노드·합성 사다리의 열 모델 — 실제 모듈 열망·계면 값이 아님",
+    "전열 발산(NO_STABLE_FIXED_POINT)은 단순 모델의 결과이며 실제 파손온도 예측이 아님",
+    "Foster 내부 노드를 물리 계면으로 연결하지 않음",
+    "loss map 결과는 postprocessed loss estimate, 범위 밖은 외삽하지 않음",
+    "수명(년)을 계산하지 않음 (EX08: 상대 proxy만)"
+   ],
+   "experiments": [
+    {
+     "key": "rc_step",
+     "title": "100 W 계단: 10 s = 77.642 °C, 최종 85 °C — 과도와 정상상태",
+     "model_level": "A (해석해) + C (정확 선형 적분)",
+     "presets": [
+      {
+       "key": "textbook",
+       "label": "교재 100 W 계단",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference"
+       ]
+      },
+      {
+       "key": "t30",
+       "label": "평가 시각 30 s (3τ)",
+       "values": {
+        "t_eval": 30.0
+       },
+       "tags": [
+        "variant"
+       ]
+      },
+      {
+       "key": "slow_pulse",
+       "label": "긴 펄스 120 s",
+       "values": {
+        "T_slow": 120.0
+       },
+       "tags": [
+        "corner"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "textbook"
+     ],
+     "status_of_reference": "PASS_WITHIN_MODEL",
+     "claim_limit": "단일 열노드의 과도/정상상태. 다층 열 경로·수명은 주장하지 않는다."
+    },
+    {
+     "key": "electrothermal",
+     "title": "R_DS(on)(T) 되먹임: 수렴·발산·과부하 (전열 반복)",
+     "model_level": "A (고정점) + C (정확 선형 과도)",
+     "presets": [
+      {
+       "key": "nominal",
+       "label": "α 0.004/K, 과부하 ×2",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference"
+       ]
+      },
+      {
+       "key": "sensitive",
+       "label": "α 0.02/K",
+       "values": {
+        "alpha": 0.02
+       },
+       "tags": [
+        "corner",
+        "reference"
+       ]
+      },
+      {
+       "key": "runaway",
+       "label": "α 0.06/K (g = 1.2)",
+       "values": {
+        "alpha": 0.06
+       },
+       "tags": [
+        "failure",
+        "reference"
+       ]
+      },
+      {
+       "key": "coarse_step",
+       "label": "Euler Δt 25 s",
+       "values": {
+        "dt_euler": 25.0
+       },
+       "tags": [
+        "failure"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "nominal",
+      "sensitive",
+      "runaway"
+     ],
+     "status_of_reference": "PASS_WITHIN_MODEL",
+     "claim_limit": "단일 열노드·선형 온도계수의 전열 고정점과 과도. 실제 파손온도·열폭주 판정이 아니다."
+    },
+    {
+     "key": "loss_map",
+     "title": "손실 포함 경계와 loss map 범위: 채널·dead time·E_sw를 사건별로",
+     "model_level": "A (postprocessed loss estimate)",
+     "presets": [
+      {
+       "key": "nominal",
+       "label": "100 A peak, 20 kHz, T_j 125 °C",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference"
+       ]
+      },
+      {
+       "key": "over_I",
+       "label": "I_pk 180 A (map 상한 150 A)",
+       "values": {
+        "Ipk": 180.0
+       },
+       "tags": [
+        "failure",
+        "reference"
+       ]
+      },
+      {
+       "key": "hot",
+       "label": "R_th 1.8 K/W (냉각 약함)",
+       "values": {
+        "Rth": 1.8
+       },
+       "tags": [
+        "failure",
+        "reference"
+       ]
+      },
+      {
+       "key": "pf_low",
+       "label": "cos φ 0.3",
+       "values": {
+        "cosphi": 0.3
+       },
+       "tags": [
+        "variant"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "nominal",
+      "over_I"
+     ],
+     "status_of_reference": "PASS_WITHIN_MODEL",
+     "claim_limit": "합성 loss map의 postprocessed 손실 추정. 실제 부품 손실·효율을 주장하지 않는다."
+    },
+    {
+     "key": "foster_cauer",
+     "title": "Foster vs Cauer: 내부 노드는 물리 계면이 아니다",
+     "model_level": "A (Z_th 표현) + C (정확 선형 과도)",
+     "presets": [
+      {
+       "key": "nominal",
+       "label": "4층 사다리 + 방열판 (τ_hs 9 s)",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference"
+       ]
+      },
+      {
+       "key": "small_sink",
+       "label": "작은 방열판 C_hs 5 J/K",
+       "values": {
+        "Chs": 5.0
+       },
+       "tags": [
+        "variant",
+        "reference"
+       ]
+      },
+      {
+       "key": "fit3",
+       "label": "Foster 3항 피팅",
+       "values": {
+        "n_fit": 3
+       },
+       "tags": [
+        "variant"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "nominal",
+      "small_sink"
+     ],
+     "status_of_reference": "PASS_WITHIN_MODEL",
+     "claim_limit": "합성 사다리의 표현·연결 방식 비교. 실제 모듈 층 구조·계면 값을 주장하지 않는다."
+    }
+   ]
+  },
+  {
+   "id": "FL04",
+   "title": "인버터 — 알고 있는 것을 더 날카롭게 증명하기",
+   "title_en": "Inverter: dq operating point, voltage margin and a short switching run",
+   "minimum_scope": "dq solver·loss 경계·짧은 inverter switching; 438.545 V·전압여유·출력경계 (교재 19장 표); 760 V sag에서 같은 점 불가",
+   "claim_limits": [
+    "선형 L_d·L_q·ψ_m (포화·교차결합·온도 의존 없음)",
+    "반도체 손실은 채널 전도분만; diode·dead time·스위칭 손실은 별도",
+    "스위칭 모델은 이상 스위치·개루프 전압 인가 (C 수준)",
+    "모터 파라미터·공차·전류 한계는 합성 학습 값"
+   ],
+   "experiments": [
+    {
+     "key": "dq_point",
+     "title": "250 kW 운전점: 전압여유 0.241 V와 shaft·AC·DC 경계",
+     "model_level": "A (+ 독립 abc 재구성)",
+     "presets": [
+      {
+       "key": "nominal",
+       "label": "교재 800 V, i_d = −200 A",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference"
+       ]
+      },
+      {
+       "key": "sag760",
+       "label": "V_dc 760 V (sag)",
+       "values": {
+        "Vdc": 760.0
+       },
+       "tags": [
+        "failure",
+        "reference"
+       ]
+      },
+      {
+       "key": "mtpa",
+       "label": "같은 토크를 MTPA i_d = −219.35 A로",
+       "values": {
+        "id": -219.35
+       },
+       "tags": [
+        "variant",
+        "reference"
+       ]
+      },
+      {
+       "key": "sag_fw",
+       "label": "760 V에서 i_d = −252.5 A (요구 여유 2 % 확보)",
+       "values": {
+        "Vdc": 760.0,
+        "id": -252.5
+       },
+       "tags": [
+        "variant"
+       ]
+      },
+      {
+       "key": "hot",
+       "label": "R_s +40 % (고온 구리 21 mΩ)",
+       "values": {
+        "Rs": 0.021
+       },
+       "tags": [
+        "corner"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "nominal",
+      "sag760",
+      "mtpa"
+     ],
+     "status_of_reference": "MARGINAL",
+     "claim_limit": "선형 dq 정상상태(A). 포화·철손·전류제어 과도·반도체 손실 전체는 주장하지 않는다."
+    },
+    {
+     "key": "dq_plane",
+     "title": "i_d–i_q 평면: 토크 곡선·전압 한계·전류 원·MTPA",
+     "model_level": "A",
+     "presets": [
+      {
+       "key": "nominal",
+       "label": "6,000 rpm, 800/760 V",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference"
+       ]
+      },
+      {
+       "key": "fast",
+       "label": "8,000 rpm (같은 250 kW)",
+       "values": {
+        "rpm": 8000.0
+       },
+       "tags": [
+        "variant",
+        "reference"
+       ]
+      },
+      {
+       "key": "imax600",
+       "label": "전류 한계 600 A",
+       "values": {
+        "Imax": 600.0
+       },
+       "tags": [
+        "variant"
+       ]
+      },
+      {
+       "key": "slow",
+       "label": "2,000 rpm, 100 kW",
+       "values": {
+        "rpm": 2000.0,
+        "P_shaft": 100000.0
+       },
+       "tags": [
+        "corner"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "nominal",
+      "fast"
+     ],
+     "status_of_reference": "MARGINAL",
+     "claim_limit": "선형 정상상태 평면(A). 포화·열 한계·과변조는 주장하지 않는다."
+    },
+    {
+     "key": "inverter_switching",
+     "title": "짧은 인버터 스위칭: PWM이 만든 평균 전압·리플·DC-link 전류",
+     "model_level": "C (이상 스위치)",
+     "presets": [
+      {
+       "key": "nominal",
+       "label": "natural SVPWM, N = 25 (10 kHz)",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference"
+       ]
+      },
+      {
+       "key": "N27",
+       "label": "N = 27 (3의 배수)",
+       "values": {
+        "N": 27
+       },
+       "tags": [
+        "variant",
+        "reference"
+       ]
+      },
+      {
+       "key": "regular",
+       "label": "regular 샘플링 (지연 보상 없음)",
+       "values": {
+        "pwm": "regular"
+       },
+       "tags": [
+        "variant"
+       ]
+      },
+      {
+       "key": "regular_comp",
+       "label": "regular 샘플링 (지연 보상)",
+       "values": {
+        "pwm": "regular_comp"
+       },
+       "tags": [
+        "variant"
+       ]
+      },
+      {
+       "key": "spwm",
+       "label": "정현 PWM (영상분 주입 없음)",
+       "values": {
+        "zs": "none"
+       },
+       "tags": [
+        "failure",
+        "reference"
+       ]
+      },
+      {
+       "key": "sag760",
+       "label": "V_dc 760 V",
+       "values": {
+        "Vdc": 760.0
+       },
+       "tags": [
+        "failure",
+        "reference"
+       ]
+      },
+      {
+       "key": "N11",
+       "label": "N = 11 (4.4 kHz)",
+       "values": {
+        "N": 11
+       },
+       "tags": [
+        "corner"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "nominal",
+      "N27",
+      "spwm",
+      "sag760"
+     ],
+     "status_of_reference": "PASS_WITHIN_MODEL",
+     "claim_limit": "이상 스위치(C) 파형·평균·리플. dead time·스위칭 손실·EMI·폐루프 성능은 주장하지 않는다."
     }
    ]
   },
@@ -682,6 +1360,202 @@
      ],
      "status_of_reference": "PASS_WITHIN_MODEL",
      "claim_limit": "평형 계통·이상 PLL·평균 변조기의 dq 전류 루프(B). 불평형·약계통·PWM 리플은 주장하지 않는다."
+    }
+   ]
+  },
+  {
+   "id": "FL07",
+   "title": "자성체 — 컨버터 전문가로 가는 실제 관문",
+   "title_en": "Magnetics: integrate the actual winding voltage",
+   "minimum_scope": "flux integrator·L_m/leakage·손실 screen; winding B·0.20 T·pulse bias (교재 19장 표); 0.0064 T/주기, 0.72 µH, 0.209 mm",
+   "claim_limits": [
+    "선형 코어 (포화·히스테리시스 없음)",
+    "Steinmetz 계수는 SYNTHETIC — 정밀 core loss는 MISSING_INPUT",
+    "Dowell 1-D 근사·고립 원형선 screen",
+    "B_sat·L_m·R·C_b는 합성 가정"
+   ],
+   "experiments": [
+    {
+     "key": "winding_flux",
+     "title": "코어는 버스 전압이 아니라 권선 전압을 적분한다 (DAB T-모델)",
+     "model_level": "C (정확 스위칭)",
+     "presets": [
+      {
+       "key": "textbook",
+       "label": "권선 ±1000 V (N_p 50, A_e 250 mm², 100 kHz)",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference"
+       ]
+      },
+      {
+       "key": "fl08",
+       "label": "FL08 800 V ↔ 48 V",
+       "values": {
+        "V1": 800.0,
+        "VL": 48.0
+       },
+       "tags": [
+        "variant",
+        "reference"
+       ]
+      },
+      {
+       "key": "mismatch",
+       "label": "900 V ↔ 36 V (n·V_L = 600 V)",
+       "values": {
+        "V1": 900.0,
+        "VL": 36.0
+       },
+       "tags": [
+        "variant",
+        "reference"
+       ]
+      },
+      {
+       "key": "split",
+       "label": "900/36 V, 직렬 L 반반 (k = 0.5)",
+       "values": {
+        "V1": 900.0,
+        "VL": 36.0,
+        "k_split": 0.5
+       },
+       "tags": [
+        "variant"
+       ]
+      },
+      {
+       "key": "sec_L",
+       "label": "900/36 V, 직렬 L이 2차 쪽 (k = 0.02)",
+       "values": {
+        "V1": 900.0,
+        "VL": 36.0,
+        "k_split": 0.02
+       },
+       "tags": [
+        "corner"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "textbook",
+      "fl08",
+      "mismatch"
+     ],
+     "status_of_reference": "PASS_WITHIN_MODEL",
+     "claim_limit": "선형 코어·이상 bridge의 자속·전류 파형 (C). 포화·코어 손실은 주장하지 않는다."
+    },
+    {
+     "key": "flux_walk",
+     "title": "펄스 비대칭: flux walking, 저항·blocking C, 그리고 측정 오차와 구분하기",
+     "model_level": "C (정확 스위칭)",
+     "presets": [
+      {
+       "key": "textbook",
+       "label": "800 V × 100 ns, 저항 0 (이상)",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference"
+       ]
+      },
+      {
+       "key": "R_only",
+       "label": "R 0.1 Ω만",
+       "values": {
+        "bound": "R"
+       },
+       "tags": [
+        "failure",
+        "reference"
+       ]
+      },
+      {
+       "key": "blocking",
+       "label": "R + C_b 10 µF",
+       "values": {
+        "bound": "Cb"
+       },
+       "tags": [
+        "variant",
+        "reference"
+       ]
+      },
+      {
+       "key": "symmetric",
+       "label": "대칭 구동 (Δt = 0)",
+       "values": {
+        "dt": 0.0
+       },
+       "tags": [
+        "variant"
+       ]
+      },
+      {
+       "key": "even_sampling",
+       "label": "표본화 16 MS/s (T·f_s = 160)",
+       "values": {
+        "f_samp": 16000000.0
+       },
+       "tags": [
+        "variant"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "textbook",
+      "R_only",
+      "blocking"
+     ],
+     "status_of_reference": "FAIL_CONSTRAINT",
+     "claim_limit": "선형 코어의 자속 이동과 측정 오차 신호 (C). 포화 후 전류·제어 성능은 주장하지 않는다."
+    },
+    {
+     "key": "loss_screen",
+     "title": "L_m·누설·환산과 손실 screen: 합성 계수로는 정밀 core loss를 만들지 않는다",
+     "model_level": "A (+ C 환산 검증)",
+     "presets": [
+      {
+       "key": "nominal",
+       "label": "FL08 DAB, 4층 0.1 mm foil",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference"
+       ]
+      },
+      {
+       "key": "split",
+       "label": "4준위 자속 (k = 0.5, 900/36 V)",
+       "values": {
+        "k_split": 0.5,
+        "V1": 900.0,
+        "VL": 36.0
+       },
+       "tags": [
+        "variant",
+        "reference"
+       ]
+      },
+      {
+       "key": "thick",
+       "label": "foil 0.3 mm, 8층",
+       "values": {
+        "h_foil": 0.0003,
+        "layers": 8
+       },
+       "tags": [
+        "corner"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "nominal",
+      "split"
+     ],
+     "status_of_reference": "PASS_WITHIN_MODEL",
+     "claim_limit": "환산 규칙·skin/Dowell·합성 core-loss screen (A). 정밀 core loss·R_ac는 MISSING_INPUT."
     }
    ]
   },
@@ -1282,6 +2156,274 @@
      "claim_limit": "이상 스위칭·강한 전압원 모델의 전력·RMS. 손실·ZVS 보증·기동 없음."
     }
    ]
+  },
+  {
+   "id": "FL11",
+   "title": "PSFB·HV-LV·12 V 확장 — 선택의 이유를 설명하기",
+   "title_en": "PSFB, HV-LV conversion and the 12 V extension",
+   "minimum_scope": "PSFB waveforms·SR·duty loss; D_eff·LV RMS·DAB 비교 (교재 19장 표); 12 V 대전류 손실·배선 (지침 5절)",
+   "claim_limits": [
+    "PSFB는 이상 스위치(C) 모델: ZVS는 NOT_EVALUABLE, 전환 전류 표는 SCREEN_ONLY",
+    "자화전류·2차 링잉·SR 타이밍 오차·스위칭 손실은 계산하지 않음",
+    "n = 12·V_in 800 V·D_eff 0.72의 48 V는 합성 seed; L_k·L_o·C_o·경로 저항은 ASSUMED",
+    "DAB 비교는 교재 11장 모듈의 닫힌 식·PWL (FL08의 전체 실험 대체 아님)",
+    "12 V budget은 합성 부품값의 A 수준; 특정 소자·layout 손실 아님"
+   ],
+   "experiments": [
+    {
+     "key": "psfb_duty_loss",
+     "title": "PSFB: 명령 phase가 그대로 출력 duty가 되지 않는다 (duty loss와 SR 전류)",
+     "model_level": "C (+A 손계산·PWL)",
+     "presets": [
+      {
+       "key": "nominal",
+       "label": "800 V·n 12·φ 129.6°·L_k 20 µH·1.5 kW",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference"
+       ]
+      },
+      {
+       "key": "seed_ideal",
+       "label": "L_k → 10 nH (이상 seed 한계)",
+       "values": {
+        "Lk": 1e-08
+       },
+       "tags": [
+        "reference",
+        "variant"
+       ]
+      },
+      {
+       "key": "regulate48",
+       "label": "48 V 유지 (느린 전압 루프)",
+       "values": {
+        "ctrl": "regulate"
+       },
+       "tags": [
+        "reference",
+        "variant"
+       ]
+      },
+      {
+       "key": "lossy_sr",
+       "label": "SR 2 mΩ·2차 권선 1 mΩ·1차 150 mΩ·출력 경로 1 mΩ",
+       "values": {
+        "R_sr": 0.002,
+        "R_w": 0.001,
+        "R_pri": 0.15,
+        "R_Lo": 0.001
+       },
+       "tags": [
+        "reference",
+        "variant"
+       ]
+      },
+      {
+       "key": "ct",
+       "label": "center-tap 정류 (같은 손실값)",
+       "values": {
+        "rect": "ct",
+        "R_sr": 0.002,
+        "R_w": 0.001,
+        "R_pri": 0.15,
+        "R_Lo": 0.001
+       },
+       "tags": [
+        "variant"
+       ]
+      },
+      {
+       "key": "diode",
+       "label": "다이오드 정류 (V_f 0.7 V, 5 mΩ)",
+       "values": {
+        "rect_dev": "diode",
+        "R_sr": 0.005
+       },
+       "tags": [
+        "variant"
+       ]
+      },
+      {
+       "key": "light",
+       "label": "경부하 100 W",
+       "values": {
+        "P": 100.0
+       },
+       "tags": [
+        "corner"
+       ]
+      },
+      {
+       "key": "low_line",
+       "label": "V_in 550 V corner에서 48 V 유지",
+       "values": {
+        "Vin": 550.0,
+        "ctrl": "regulate"
+       },
+       "tags": [
+        "failure",
+        "reference"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "nominal",
+      "seed_ideal",
+      "regulate48",
+      "lossy_sr",
+      "low_line"
+     ],
+     "status_of_reference": "PASS_WITHIN_MODEL",
+     "claim_limit": "이상 스위치 수준(C)의 duty loss·SR 전류·RMS. ZVS·링잉·스위칭 손실·자화전류는 주장하지 않는다."
+    },
+    {
+     "key": "lk_tradeoff",
+     "title": "L_k를 키우면 lagging leg ZVS 범위가 넓어지지만 무엇을 내주나",
+     "model_level": "C + A (screen)",
+     "presets": [
+      {
+       "key": "nominal",
+       "label": "C_node 200 pF, dead time 100 ns, 1.5 kW",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference"
+       ]
+      },
+      {
+       "key": "cnode100",
+       "label": "C_node 100 pF",
+       "values": {
+        "C_node": 1e-10
+       },
+       "tags": [
+        "variant"
+       ]
+      },
+      {
+       "key": "vin650",
+       "label": "저전압 corner 650 V",
+       "values": {
+        "Vin_min": 650.0
+       },
+       "tags": [
+        "corner"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "nominal"
+     ],
+     "status_of_reference": "PASS_WITHIN_MODEL",
+     "claim_limit": "duty loss·전류는 C, ZVS는 선형 C_node screen (SCREEN_ONLY). ZVS 보증 아님."
+    },
+    {
+     "key": "psfb_vs_dab",
+     "title": "같은 800→48 V·1.5 kW: PSFB와 DAB는 무엇이 다른가",
+     "model_level": "C (PSFB) + A/PWL (DAB)",
+     "presets": [
+      {
+       "key": "nominal",
+       "label": "교재 조건 800→48 V·1.5 kW",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference"
+       ]
+      },
+      {
+       "key": "dab_L150",
+       "label": "DAB L = 150 µH",
+       "values": {
+        "L_dab": 0.00015
+       },
+       "tags": [
+        "variant"
+       ]
+      },
+      {
+       "key": "psfb_ct",
+       "label": "PSFB center-tap 정류",
+       "values": {
+        "rect": "ct"
+       },
+       "tags": [
+        "variant"
+       ]
+      },
+      {
+       "key": "psfb_lk40",
+       "label": "PSFB L_k 40 µH",
+       "values": {
+        "Lk": 4e-05
+       },
+       "tags": [
+        "variant"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "nominal"
+     ],
+     "status_of_reference": "PASS_WITHIN_MODEL",
+     "claim_limit": "같은 전력의 전류·전압 파형 비교. 효율 순위·ZVS 판정은 주장하지 않는다."
+    },
+    {
+     "key": "lv12_extension",
+     "title": "12 V 확장: 전류 4배, 같은 저항 손실 16배 — 소자만 병렬로 늘리면 되나",
+     "model_level": "A (budget) + C (검산)",
+     "presets": [
+      {
+       "key": "nominal",
+       "label": "교재 3 kW·48/12 V·1 mΩ + 합성 12 V budget",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference"
+       ]
+      },
+      {
+       "key": "fb_rect",
+       "label": "12 V를 full-bridge 정류로",
+       "values": {
+        "rect": "fb"
+       },
+       "tags": [
+        "variant"
+       ]
+      },
+      {
+       "key": "more_par",
+       "label": "SR 병렬 12개",
+       "values": {
+        "N_par": 12
+       },
+       "tags": [
+        "variant"
+       ]
+      },
+      {
+       "key": "stray_fail",
+       "label": "2차 배선 L_σ 30 nH",
+       "values": {
+        "L_sig": 3e-08
+       },
+       "tags": [
+        "failure",
+        "reference"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "nominal",
+      "stray_fail"
+     ],
+     "status_of_reference": "PASS_WITHIN_MODEL",
+     "claim_limit": "합성 저항·전하값의 A 수준 budget + 결합 스위칭 검산. 특정 부품·layout의 손실·온도는 주장하지 않는다."
+    }
+   ]
   }
  ],
  "expert_labs": [
@@ -1481,6 +2623,499 @@
      ],
      "status_of_reference": "SCREEN_ONLY",
      "claim_limit": "합성 event 격자 (SCREEN_ONLY)."
+    }
+   ]
+  },
+  {
+   "id": "EX03",
+   "title": "병렬 SiC·gate loop·DPT 계측",
+   "title_en": "Parallel SiC, gate loop and double-pulse metrology",
+   "minimum_scope": "static sharing, deskew sensitivity, dynamic model 범위 (E13 표); 110.553/99.497/99.497/90.452 A; 533.333 µJ, +41.99 %/−33.01 %; L_s·di/dt 4 V, 10 ns × 2 kA/µs = 20 A",
+   "claim_limits": [
+    "정적 분담은 저항 모델 — 동적 분담과 따로 검증",
+    "DPT 민감도는 교재 합성 선형 파형 — 실제 probe·scope 오차 아님",
+    "동적 분담은 실제 상태·inductance·gate 결합을 가진 bounded synthetic equivalent (D) — vendor fidelity 아님",
+    "식별 불가 상호결합은 범위로만 보고",
+    "branch 전류 예측·제조 수율을 주장하지 않음"
+   ],
+   "experiments": [
+    {
+     "key": "static_sharing",
+     "title": "정적 4-branch 분담: 평균 100 A가 가리는 110.55 A",
+     "model_level": "A (정적 저항 + 전열)",
+     "presets": [
+      {
+       "key": "textbook",
+       "label": "교재 R, 400 A, α 0.004/K",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference"
+       ]
+      },
+      {
+       "key": "no_tempco",
+       "label": "온도계수 0 (등온)",
+       "values": {
+        "alpha_R": 0.0
+       },
+       "tags": [
+        "variant",
+        "reference"
+       ]
+      },
+      {
+       "key": "bad_tim",
+       "label": "branch 1 R_th 0.8 K/W (TIM 불량)",
+       "values": {
+        "Rth1": 0.8
+       },
+       "tags": [
+        "corner"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "textbook",
+      "no_tempco"
+     ],
+     "status_of_reference": "PASS_WITHIN_MODEL",
+     "claim_limit": "정적 저항·branch별 열 경로의 분담. 동적 분담·수율 추정은 주장하지 않는다."
+    },
+    {
+     "key": "dpt_deskew",
+     "title": "DPT 계측: 5 ns 어긋남이 E를 −33 %~+42 % 바꾼다",
+     "model_level": "A (합성 선형 overlap) + D (FL02 셀 참조면)",
+     "presets": [
+      {
+       "key": "textbook",
+       "label": "정렬, 넓은 창, deskew ±0.5 ns",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference"
+       ]
+      },
+      {
+       "key": "skew_m5",
+       "label": "전류 채널 −5 ns",
+       "values": {
+        "skew": -5e-09
+       },
+       "tags": [
+        "variant",
+        "reference"
+       ]
+      },
+      {
+       "key": "narrow_m5",
+       "label": "−5 ns + 좁은 창",
+       "values": {
+        "skew": -5e-09,
+        "window": "narrow"
+       },
+       "tags": [
+        "failure"
+       ]
+      },
+      {
+       "key": "poor_deskew",
+       "label": "deskew 불확도 ±5 ns",
+       "values": {
+        "skew_unc": 5e-09
+       },
+       "tags": [
+        "failure",
+        "reference"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "textbook",
+      "skew_m5",
+      "poor_deskew"
+     ],
+     "status_of_reference": "PASS_WITHIN_MODEL",
+     "claim_limit": "합성 선형 파형의 측정 민감도와 합성 셀의 참조면. 실제 probe·scope 오차를 주장하지 않는다."
+    },
+    {
+     "key": "dynamic_sharing",
+     "title": "동적 분담: 4 branch gate loop·common-source·skew·결합 (합성 D)",
+     "model_level": "D (합성 4-branch commutation cell)",
+     "presets": [
+      {
+       "key": "nominal",
+       "label": "공통 드라이버, branch L_s 2 nH, R_g 12 Ω",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference"
+       ]
+      },
+      {
+       "key": "skew10",
+       "label": "branch 4 드라이버 10 ns 지연",
+       "values": {
+        "d4": 1e-08
+       },
+       "tags": [
+        "variant",
+        "reference"
+       ]
+      },
+      {
+       "key": "vth",
+       "label": "V_th 분산 ±0.3 V (branch 1 −, 4 +)",
+       "values": {
+        "dVth1": -0.3,
+        "dVth4": 0.3
+       },
+       "tags": [
+        "variant"
+       ]
+      },
+      {
+       "key": "layout",
+       "label": "branch 4 L_d +2 nH",
+       "values": {
+        "dLd4": 2e-09
+       },
+       "tags": [
+        "corner"
+       ]
+      },
+      {
+       "key": "kelvin",
+       "label": "Kelvin star 반환",
+       "values": {
+        "topology": "common_kelvin_star"
+       },
+       "tags": [
+        "variant",
+        "reference"
+       ]
+      },
+      {
+       "key": "low_rg",
+       "label": "R_g 2 Ω (빠른 구동)",
+       "values": {
+        "Rg": 2.0
+       },
+       "tags": [
+        "failure"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "nominal",
+      "skew10",
+      "kelvin"
+     ],
+     "status_of_reference": "PASS_WITHIN_MODEL",
+     "claim_limit": "bounded synthetic equivalent (D). vendor 소자·모듈의 branch 전류 예측·수율을 주장하지 않는다."
+    }
+   ]
+  },
+  {
+   "id": "EX04",
+   "title": "transformer 설계 closure — 전기적으로 가능한 n·L을 실제 부품으로",
+   "title_en": "Transformer design closure: from an electrical n·L to a real part",
+   "minimum_scope": "n 후보 3개 이상, core/geometry 가정, B/window screening, loss breakdown, L_m/L_σ/C_ps/R_ac source status, 공차 민감도, 공급사 질문 (E04 산출물); window 168.329 mm² (정확 168.3235), 2.60 W vs 2.26 W, 142.857/157.895/150.188 kHz",
+   "claim_limits": [
+    "코어·권선·절연 값은 합성 가정 — 최종 transformer 선정 아님",
+    "정밀 core loss는 MISSING_INPUT",
+    "CLLC 결과는 FHA(A) 후보 — 스위칭 검증은 EX05",
+    "R_ac는 합성 Dowell, 식별 회로는 집중 capacitance 근사"
+   ],
+   "experiments": [
+    {
+     "key": "turns_window",
+     "title": "정수 권선·B·window·구리: DAB 50:3을 부품으로 옮기기",
+     "model_level": "A (screen) + C (검산)",
+     "presets": [
+      {
+       "key": "textbook",
+       "label": "교재 50:3 (J 4 A/mm², k_u 0.3)",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference"
+       ]
+      },
+      {
+       "key": "insulation",
+       "label": "window의 25 %를 절연에 사용",
+       "values": {
+        "ins_frac": 25.0
+       },
+       "tags": [
+        "failure",
+        "reference"
+       ]
+      },
+      {
+       "key": "worst_current",
+       "label": "최악 corner 전류로 window",
+       "values": {
+        "I_basis": "worst"
+       },
+       "tags": [
+        "corner"
+       ]
+      },
+      {
+       "key": "big_window",
+       "label": "window 260 mm² (큰 합성 코어)",
+       "values": {
+        "Aw": 260.0
+       },
+       "tags": [
+        "variant"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "textbook",
+      "insulation"
+     ],
+     "status_of_reference": "MISSING_INPUT",
+     "claim_limit": "B·window·DC 구리 screen (A)과 이상 SPS 전류 (C). 최종 transformer 선정·절연·열·core loss는 주장하지 않는다."
+    },
+    {
+     "key": "cllc_turns",
+     "title": "CLLC n = 0.93을 정수 권선으로: 운전점 지도가 n의 허용 범위를 정한다",
+     "model_level": "A (FHA)",
+     "presets": [
+      {
+       "key": "nominal",
+       "label": "13:14, 2차 L/C 유지",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference"
+       ]
+      },
+      {
+       "key": "retune",
+       "label": "13:14, 2차 L/C 재선정",
+       "values": {
+        "tank2": "retune"
+       },
+       "tags": [
+        "variant",
+        "reference"
+       ]
+      },
+      {
+       "key": "n_high",
+       "label": "기준 후보 15:16 (n +0.8 %)",
+       "values": {
+        "Np_ref": 15,
+        "Ns_ref": 16
+       },
+       "tags": [
+        "failure"
+       ]
+      },
+      {
+       "key": "small_core",
+       "label": "A_e 500 mm², B_allow 0.15 T",
+       "values": {
+        "Ae": 500.0,
+        "B_allow": 0.15
+       },
+       "tags": [
+        "corner"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "nominal",
+      "retune"
+     ],
+     "status_of_reference": "CANDIDATE_FHA_ONLY",
+     "claim_limit": "FHA 정상 이득(A)과 합성 코어 screen. 스위칭 운전점·ZVS·최종 권선 선정은 주장하지 않는다."
+    },
+    {
+     "key": "harmonic_copper",
+     "title": "비정현파 권선 손실: 고조파별 R_ac vs R_dc만",
+     "model_level": "A (정확 Fourier)",
+     "presets": [
+      {
+       "key": "textbook",
+       "label": "교재 [10, 3, 2] A · [20, 40, 60] mΩ",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference"
+       ]
+      },
+      {
+       "key": "dab",
+       "label": "FL08 DAB 전류, 4층 0.1 mm",
+       "values": {
+        "wave": "dab"
+       },
+       "tags": [
+        "variant",
+        "reference"
+       ]
+      },
+      {
+       "key": "dab_thick",
+       "label": "DAB, foil 0.3 mm·8층 (R_dc 고정 비교)",
+       "values": {
+        "wave": "dab",
+        "h_cond": 0.0003,
+        "layers": 8
+       },
+       "tags": [
+        "corner"
+       ]
+      },
+      {
+       "key": "dab_mismatch",
+       "label": "DAB 900 V ↔ 600 V (1차 환산)",
+       "values": {
+        "wave": "dab",
+        "V1": 900.0,
+        "V2": 600.0
+       },
+       "tags": [
+        "variant"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "textbook",
+      "dab"
+     ],
+     "status_of_reference": "PASS_WITHIN_MODEL",
+     "claim_limit": "선형 R_ac 모델의 권선 손실 합 (A). R_ac는 합성, core loss는 MISSING_INPUT."
+    },
+    {
+     "key": "tolerance_map",
+     "title": "L·C ±5 %와 상관관계: f_r 이동과 운전점 지도",
+     "model_level": "A (FHA + MC)",
+     "presets": [
+      {
+       "key": "textbook",
+       "label": "교재 ±5 %, ρ = 0, L_m ±15 %",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference"
+       ]
+      },
+      {
+       "key": "correlated",
+       "label": "같은 방향 드리프트 (ρ = +1)",
+       "values": {
+        "rho": 1.0
+       },
+       "tags": [
+        "variant",
+        "reference"
+       ]
+      },
+      {
+       "key": "anti",
+       "label": "반대 방향 (ρ = −1)",
+       "values": {
+        "rho": -1.0
+       },
+       "tags": [
+        "variant"
+       ]
+      },
+      {
+       "key": "wide",
+       "label": "L·C ±10 %, L_m ±30 %",
+       "values": {
+        "tol_L": 10.0,
+        "tol_C": 10.0,
+        "tol_Lm": 30.0
+       },
+       "tags": [
+        "failure"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "textbook",
+      "correlated"
+     ],
+     "status_of_reference": "CANDIDATE_FHA_ONLY",
+     "claim_limit": "FHA 운전점과 가정 분포의 Monte Carlo (A). 양산 수율·스위칭 운전점은 주장하지 않는다."
+    },
+    {
+     "key": "identification",
+     "title": "L_m·누설·capacitance·R_ac 식별 계획: 측정 조건이 값을 바꾼다",
+     "model_level": "C + A",
+     "presets": [
+      {
+       "key": "nominal",
+       "label": "개방 시험 10 kHz, 2차 floating",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference"
+       ]
+      },
+      {
+       "key": "near_srf",
+       "label": "개방 100 kHz, 2차 접지",
+       "values": {
+        "f_test": 100000.0,
+        "conn": "grounded"
+       },
+       "tags": [
+        "failure"
+       ]
+      },
+      {
+       "key": "sc_lv_short",
+       "label": "단락: 1차 측정, 2차 strap 단락",
+       "values": {
+        "test": "SC",
+        "f_test": 100000.0
+       },
+       "tags": [
+        "failure"
+       ]
+      },
+      {
+       "key": "sc_hv_short",
+       "label": "단락: 2차 측정, 1차 단락",
+       "values": {
+        "test": "SC",
+        "port": "secondary",
+        "f_test": 100000.0
+       },
+       "tags": [
+        "variant",
+        "reference"
+       ]
+      },
+      {
+       "key": "sc_low_f",
+       "label": "단락 2 kHz (Q 부족)",
+       "values": {
+        "test": "SC",
+        "port": "secondary",
+        "f_test": 2000.0
+       },
+       "tags": [
+        "corner"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "nominal",
+      "sc_hv_short"
+     ],
+     "status_of_reference": "PASS_WITHIN_MODEL",
+     "claim_limit": "합성 등가회로의 측정 조건 영향 (C·A). 실제 transformer 값·측정기 정확도는 주장하지 않는다."
     }
    ]
   },
@@ -2145,6 +3780,934 @@
      ],
      "status_of_reference": "PASS_WITHIN_MODEL",
      "claim_limit": "평형 계통·이상 PLL의 샘플링 dq 루프(B). 과변조·보호 하드웨어 타이밍은 주장하지 않는다."
+    }
+   ]
+  },
+  {
+   "id": "EX08",
+   "title": "전열 연성·mission — 최고온도 한 점에서 mission으로",
+   "title_en": "Electro-thermal coupling and mission",
+   "minimum_scope": "coupled temperature와 calibrated lifetime 한계 (E13 표): fixed 24/25 K, coupled 26.569592/27.751513 K, spectral radius 0.09789; 동적 self/cross physical boundary; mission/coolant/parameter spread; loss-only·uncoupled·coupled 비교",
+   "claim_limits": [
+    "열 행렬·α는 합성 예 — 실제 모듈 값이 아님",
+    "Foster 내부 노드를 실제 package 층으로 취급하지 않음",
+    "발산(ρ ≥ 1)은 단순 모델의 결과이며 실물 열폭주 확정이 아님",
+    "lifetime 데이터가 없으므로 온도 사이클 histogram과 상대 proxy만 — calibrated 수명(년) 생성하지 않음",
+    "MC 분포·상관은 가정 (seed 명시)"
+   ],
+   "experiments": [
+    {
+     "key": "thermal_matrix",
+     "title": "열 행렬: 고정 24/25 K → 연성 26.57/27.75 K, spectral radius 0.098",
+     "model_level": "A (정상상태 열 행렬)",
+     "presets": [
+      {
+       "key": "textbook",
+       "label": "교재 Z·P₀·α",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference"
+       ]
+      },
+      {
+       "key": "near",
+       "label": "α 0.035/K (ρ ≈ 0.86)",
+       "values": {
+        "alpha": 0.035
+       },
+       "tags": [
+        "corner",
+        "reference"
+       ]
+      },
+      {
+       "key": "diverge",
+       "label": "α 0.05/K (ρ ≈ 1.22)",
+       "values": {
+        "alpha": 0.05
+       },
+       "tags": [
+        "failure",
+        "reference"
+       ]
+      },
+      {
+       "key": "no_cross",
+       "label": "Z₁₂ = 0 (결합 없음)",
+       "values": {
+        "Z12": 0.0
+       },
+       "tags": [
+        "variant"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "textbook",
+      "near",
+      "diverge"
+     ],
+     "status_of_reference": "PASS_WITHIN_MODEL",
+     "claim_limit": "정상상태 열 행렬·선형 온도계수. 실제 모듈 열 행렬·파손온도를 주장하지 않는다."
+    },
+    {
+     "key": "dynamic_network",
+     "title": "동적 self/cross 열망: 물리 경계와 Foster 함정",
+     "model_level": "B (물리 multiport 열망)",
+     "presets": [
+      {
+       "key": "nominal",
+       "label": "교재 Z, baseplate 30 J/K, 방열판 200 J/K",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference"
+       ]
+      },
+      {
+       "key": "light_sink",
+       "label": "방열판 20 J/K",
+       "values": {
+        "Ch": 20.0
+       },
+       "tags": [
+        "variant",
+        "reference"
+       ]
+      },
+      {
+       "key": "fit3",
+       "label": "Foster 3항",
+       "values": {
+        "n_fit": 3
+       },
+       "tags": [
+        "variant"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "nominal",
+      "light_sink"
+     ],
+     "status_of_reference": "PASS_WITHIN_MODEL",
+     "claim_limit": "합성 층값의 물리 multiport 열망. 실제 모듈의 cross 경로·계면 값을 주장하지 않는다."
+    },
+    {
+     "key": "mission",
+     "title": "mission·냉각수·분산: 온도 사이클 histogram과 상대 손상 proxy",
+     "model_level": "B (정확 선형 열망) + 사이클 계수 (상대 proxy)",
+     "presets": [
+      {
+       "key": "nominal",
+       "label": "합성 mission, α 0.004/K, MC 30개 (seed 2026)",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference"
+       ]
+      },
+      {
+       "key": "hot_hill",
+       "label": "등판 중 냉각수 +20 K",
+       "values": {
+        "dTc_hill": 20.0
+       },
+       "tags": [
+        "corner",
+        "reference"
+       ]
+      },
+      {
+       "key": "strong_alpha",
+       "label": "α 0.012/K",
+       "values": {
+        "alpha": 0.012
+       },
+       "tags": [
+        "variant"
+       ]
+      },
+      {
+       "key": "wide_spread",
+       "label": "분산 2배 (σ_R 0.1, σ_α 0.2)",
+       "values": {
+        "sig_R": 0.1,
+        "sig_alpha": 0.2
+       },
+       "tags": [
+        "variant"
+       ]
+      },
+      {
+       "key": "runaway",
+       "label": "α 0.03/K: 고부하 구간 되먹임 불안정",
+       "values": {
+        "alpha": 0.03
+       },
+       "tags": [
+        "failure",
+        "reference"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "nominal",
+      "hot_hill"
+     ],
+     "status_of_reference": "PASS_WITHIN_MODEL",
+     "claim_limit": "합성 mission의 온도 사이클과 상대 손상 proxy. 수명(년)·보증을 주장하지 않는다."
+    }
+   ]
+  },
+  {
+   "id": "EX09",
+   "title": "EMI: noise source, 경로, victim을 같이 본다",
+   "title_en": "EMI: noise source, path and victim together",
+   "minimum_scope": "CM/DM source–path–victim lumped network와 spectrum proxy; 5 A·50.329 MHz·0.158965 mA; gate 속도·경로 C·snubber 변화와 손실 (지침 10절)",
+   "claim_limits": [
+    "relative conducted-noise proxy — receiver·규격 LISN이 없어 EMI compliance는 NOT_EVALUABLE, PASS를 만들지 않음",
+    "합성 lumped 경로와 합성 채널 전류 모델 (vendor 소자·실제 PCB 아님)",
+    "누설전류 계산은 단일 이상 경로 (규격 시험 아님)",
+    "3-level NPC midpoint 확장은 구현하지 않음 (지침상 선택 사항)"
+   ],
+   "experiments": [
+    {
+     "key": "hand_screens",
+     "title": "손계산 screen: C·dv/dt = 5 A, 50.329 MHz, 0.158965 mA — 그리고 단위 함정",
+     "model_level": "A (screen) + C (검산)",
+     "presets": [
+      {
+       "key": "textbook",
+       "label": "교재 세 숫자",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference"
+       ]
+      },
+      {
+       "key": "slow_edge",
+       "label": "dv/dt 10 kV/µs",
+       "values": {
+        "dvdt": 10000.0
+       },
+       "tags": [
+        "variant"
+       ]
+      },
+      {
+       "key": "meas_path",
+       "label": "경로 50 Ω·1 µH",
+       "values": {
+        "L_path2": 1e-06
+       },
+       "tags": [
+        "variant"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "textbook"
+     ],
+     "status_of_reference": "SCREEN_ONLY",
+     "claim_limit": "screen 수치와 그 시간영역 검산. EMI·누설전류 합격 판정이 아니다."
+    },
+    {
+     "key": "source_path_victim",
+     "title": "Source → Path → Victim: 스위칭 edge에서 측정 port까지의 CM/DM proxy spectrum",
+     "model_level": "C + A",
+     "presets": [
+      {
+       "key": "nominal",
+       "label": "800 V·50 A·100 kHz, C_par 100 pF, loop 10 nH, C_node 1 nF",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference"
+       ]
+      },
+      {
+       "key": "light",
+       "label": "부하전류 10 A",
+       "values": {
+        "I_L": 10.0
+       },
+       "tags": [
+        "variant"
+       ]
+      },
+      {
+       "key": "ycap",
+       "label": "Y 커패시터 2.2 nF",
+       "values": {
+        "C_Y": 2.2e-09
+       },
+       "tags": [
+        "variant"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "nominal"
+     ],
+     "status_of_reference": "NOT_EVALUABLE",
+     "claim_limit": "합성 lumped 경로의 relative conducted-noise proxy. EMI compliance PASS를 만들지 않는다."
+    },
+    {
+     "key": "mitigation",
+     "title": "gate 속도·경로 C·snubber·Y를 하나씩 바꾸고 잡음과 손실을 같이 본다",
+     "model_level": "C + A",
+     "presets": [
+      {
+       "key": "nominal",
+       "label": "기준 + 네 가지 변경",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference"
+       ]
+      },
+      {
+       "key": "big_snubber",
+       "label": "snubber C_s 1 nF",
+       "values": {
+        "C_s": 1e-09
+       },
+       "tags": [
+        "variant"
+       ]
+      },
+      {
+       "key": "slow_gate4",
+       "label": "gate ×4 느리게",
+       "values": {
+        "gate_factor": 4.0
+       },
+       "tags": [
+        "variant"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "nominal"
+     ],
+     "status_of_reference": "NOT_EVALUABLE",
+     "claim_limit": "relative proxy의 대역별 변화와 합성 모델의 손실·열 비용. 필터·대책의 규격 합격을 주장하지 않는다."
+    }
+   ]
+  },
+  {
+   "id": "EX10",
+   "title": "고장: gate를 꺼도 에너지는 남아 있다",
+   "title_en": "Fault energy: gate-off does not remove stored energy",
+   "minimum_scope": "fault 종류별 source/path/stored-energy/timing 표, detection uncertainty, turn-off overshoot tradeoff, discharge dimensioning, energy residual (E10); 320 J·4370.344 A @ 120.919958 µs·772.121 Ω·828.885 W·318.2 J",
+   "claim_limits": [
+    "SC survival·fuse clearing·안전 qualification이 아니다",
+    "보호 단계 시간·SC 내량·포화 전류는 합성 학습 값",
+    "freewheel은 비돌극 근사 (임계속도는 정확)",
+    "ISO 26262·ASIL 적합성을 주장하지 않는다"
+   ],
+   "experiments": [
+    {
+     "key": "rlc_fault",
+     "title": "DC-link 단락: 320 J이 수동 RLC로 방전된다",
+     "model_level": "A + C + 독립 ODE",
+     "presets": [
+      {
+       "key": "textbook",
+       "label": "교재 800 V · 1 mF · 10 µH · 0.1 Ω",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference"
+       ]
+      },
+      {
+       "key": "clamp",
+       "label": "브리지 diode가 역전을 clamp",
+       "values": {
+        "clamp": "diode",
+        "t_end": 0.0008
+       },
+       "tags": [
+        "variant",
+        "reference"
+       ]
+      },
+      {
+       "key": "low_L",
+       "label": "경로 L 1 µH",
+       "values": {
+        "L": 1e-06
+       },
+       "tags": [
+        "corner"
+       ]
+      },
+      {
+       "key": "over",
+       "label": "경로 R 0.3 Ω (과감쇠)",
+       "values": {
+        "R": 0.3
+       },
+       "tags": [
+        "variant",
+        "reference"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "textbook",
+      "clamp",
+      "over"
+     ],
+     "status_of_reference": "PASS_WITHIN_MODEL",
+     "claim_limit": "수동 RLC 사고 실험 (A+C). SC survival·fuse clearing·안전 적합성은 주장하지 않는다."
+    },
+    {
+     "key": "protection_timeline",
+     "title": "보호 timeline: 더하지 말고 그린다 (DESAT·과전류·시스템 경로)",
+     "model_level": "A",
+     "presets": [
+      {
+       "key": "textbook",
+       "label": "type I, FL02 교재 단계 (합 1.8 µs)",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference"
+       ]
+      },
+      {
+       "key": "type2",
+       "label": "type II (도통 중 단락)",
+       "values": {
+        "ftype": "type2"
+       },
+       "tags": [
+        "variant",
+        "reference"
+       ]
+      },
+      {
+       "key": "soft_short",
+       "label": "L_f 2 µH (연한 단락)",
+       "values": {
+        "Lf": 2e-06
+       },
+       "tags": [
+        "failure",
+        "reference"
+       ]
+      },
+      {
+       "key": "fast_off",
+       "label": "soft-off 0.1 µs (빠른 차단)",
+       "values": {
+        "t_soft": 1e-07
+       },
+       "tags": [
+        "failure",
+        "reference"
+       ]
+      },
+      {
+       "key": "long_blank",
+       "label": "blanking 1.5 µs",
+       "values": {
+        "t_blank": 1.5e-06
+       },
+       "tags": [
+        "variant"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "textbook",
+      "type2",
+      "soft_short",
+      "fast_off"
+     ],
+     "status_of_reference": "SCREEN_ONLY",
+     "claim_limit": "합성 timing budget screen (SCREEN_ONLY). 소자 qualification·SC survival·ISO 26262는 주장하지 않는다."
+    },
+    {
+     "key": "discharge_resistor",
+     "title": "방전저항: 평균 전력이 아니라 펄스 에너지로 고른다",
+     "model_level": "A + C",
+     "presets": [
+      {
+       "key": "textbook",
+       "label": "교재 800 → 60 V / 2 s, 공칭 설계",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference"
+       ]
+      },
+      {
+       "key": "worst_case",
+       "label": "공차 worst-case로 R 설계",
+       "values": {
+        "basis": "worst_case"
+       },
+       "tags": [
+        "variant",
+        "reference"
+       ]
+      },
+      {
+       "key": "two_res",
+       "label": "직렬 2개",
+       "values": {
+        "N_ser": 2
+       },
+       "tags": [
+        "failure"
+       ]
+      },
+      {
+       "key": "tight",
+       "label": "공차 R ±1 %, C ±2 %",
+       "values": {
+        "tol_R": 1.0,
+        "tol_C": 2.0
+       },
+       "tags": [
+        "variant"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "textbook",
+      "worst_case"
+     ],
+     "status_of_reference": "FAIL_CONSTRAINT",
+     "claim_limit": "이상 RC 치수화와 공차 corner (A+C). 부품 선정 확정·안전 요구 적합성은 주장하지 않는다."
+    },
+    {
+     "key": "safe_state",
+     "title": "ASC vs freewheel: 속도·역기전력·DC bus·드라이버 전원이 정한다",
+     "model_level": "B/C",
+     "presets": [
+      {
+       "key": "nominal",
+       "label": "6,000 rpm · 250 kW에서 고장, 배터리 연결",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference"
+       ]
+      },
+      {
+       "key": "open",
+       "label": "6,000 rpm, 배터리 분리",
+       "values": {
+        "battery": "disconnected"
+       },
+       "tags": [
+        "variant",
+        "reference"
+       ]
+      },
+      {
+       "key": "overspeed",
+       "label": "12,000 rpm coast, 배터리 연결",
+       "values": {
+        "rpm": 12000.0,
+        "P_shaft": 0.0
+       },
+       "tags": [
+        "variant",
+        "reference"
+       ]
+      },
+      {
+       "key": "overspeed_open",
+       "label": "12,000 rpm coast, 배터리 분리",
+       "values": {
+        "rpm": 12000.0,
+        "P_shaft": 0.0,
+        "battery": "disconnected"
+       },
+       "tags": [
+        "failure",
+        "reference"
+       ]
+      },
+      {
+       "key": "low_speed",
+       "label": "1,500 rpm coast",
+       "values": {
+        "rpm": 1500.0,
+        "P_shaft": 0.0
+       },
+       "tags": [
+        "corner"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "nominal",
+      "open",
+      "overspeed",
+      "overspeed_open"
+     ],
+     "status_of_reference": "CUSTOMER_DECISION_REQUIRED",
+     "claim_limit": "조건부 비교 (B/C). 차량 안전상태 결정·감자 판정·ISO 26262/ASIL은 주장하지 않는다."
+    }
+   ]
+  },
+  {
+   "id": "EX11",
+   "title": "모델을 믿을 수 있는 범위: 검증·식별·불확도",
+   "title_en": "How far the model can be trusted: verification, identification, uncertainty",
+   "minimum_scope": "uncertainty budget, calibration/holdout 구분, identifiability 예제, test independence map, model card (교재 E11); 15.40157 W·4.87487 W·0.2991 %",
+   "claim_limits": [
+    "모든 입력은 합성·가정 (seed 명시); 실제 계측기·부품 분포 자료는 MISSING_INPUT",
+    "통계 상한은 IID 가정 조건부 — 결정적 grid에는 붙이지 않음 (NOT_EVALUABLE)",
+    "test-independence 표는 verification 경로의 지도이며 hardware validation이 아님"
+   ],
+   "experiments": [
+    {
+     "key": "loss_uncertainty",
+     "title": "11 kW에서 손실 220 W의 불확도: 15.40 W, 상관 0.9면 4.87 W — 그 상관의 근거는?",
+     "model_level": "A + MC",
+     "presets": [
+      {
+       "key": "textbook",
+       "label": "교재: 각 0.1 % 독립",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference"
+       ]
+      },
+      {
+       "key": "rho09_nobasis",
+       "label": "ρ = 0.9, 근거 없음",
+       "values": {
+        "rho": 0.9
+       },
+       "tags": [
+        "reference",
+        "failure"
+       ]
+      },
+      {
+       "key": "rho09_basis",
+       "label": "ρ = 0.9, 같은 분석기 동시 취득",
+       "values": {
+        "rho": 0.9,
+        "rho_basis": "same_meter"
+       },
+       "tags": [
+        "variant"
+       ]
+      },
+      {
+       "key": "rect",
+       "label": "±0.1 %가 한계(직사각)",
+       "values": {
+        "spec_type": "rect_limit"
+       },
+       "tags": [
+        "variant"
+       ]
+      },
+      {
+       "key": "paired",
+       "label": "같은 setup 교대 측정 (ρ_AB = 0.995)",
+       "values": {
+        "rho_AB": 0.995
+       },
+       "tags": [
+        "variant"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "textbook",
+      "rho09_nobasis"
+     ],
+     "status_of_reference": "UNRESOLVED_RANKING",
+     "claim_limit": "1차 GUM 전파와 MC의 합성 예. 실제 계측기 사양 해석·교정 자료는 MISSING_INPUT."
+    },
+    {
+     "key": "binomial_bounds",
+     "title": "0 fail / 1000 IID의 95 % 상한 0.2991 % — 그리고 결정적 grid에는 bound를 붙이지 않는다",
+     "model_level": "A",
+     "presets": [
+      {
+       "key": "textbook",
+       "label": "0 / 1000, 95 %",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference"
+       ]
+      },
+      {
+       "key": "k2",
+       "label": "2 / 1000",
+       "values": {
+        "k_fail": 2
+       },
+       "tags": [
+        "variant"
+       ]
+      },
+      {
+       "key": "grid",
+       "label": "결정적 grid 1000점",
+       "values": {
+        "sampling": "grid"
+       },
+       "tags": [
+        "failure",
+        "reference"
+       ]
+      },
+      {
+       "key": "million",
+       "label": "0 / 1 000 000",
+       "values": {
+        "n_trials": 1000000
+       },
+       "tags": [
+        "corner"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "textbook",
+      "grid"
+     ],
+     "status_of_reference": "PASS_WITHIN_MODEL",
+     "claim_limit": "IID Bernoulli 가정의 통계 상한. 양산 불량률 보증이 아니다."
+    },
+    {
+     "key": "identifiability",
+     "title": "ringing 하나로는 L과 C를 따로 알 수 없다 — 식별 가능성과 calibration/holdout",
+     "model_level": "A + C",
+     "presets": [
+      {
+       "key": "nominal",
+       "label": "10 nH·1 nF 합성 ringing, 잡음 1 %",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference"
+       ]
+      },
+      {
+       "key": "low_noise",
+       "label": "잡음 0.1 %",
+       "values": {
+        "noise": 0.001
+       },
+       "tags": [
+        "variant"
+       ]
+      },
+      {
+       "key": "c_bias",
+       "label": "독립 C 측정이 +10 % 편향",
+       "values": {
+        "C_meas_bias": 0.1
+       },
+       "tags": [
+        "variant"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "nominal"
+     ],
+     "status_of_reference": "OUT_OF_VALIDITY",
+     "claim_limit": "합성 데이터로 보인 식별 가능성·holdout 원리. 실측 parameter 추출이나 validation이 아니다."
+    },
+    {
+     "key": "monte_carlo",
+     "title": "Monte Carlo 보고: 분포·상관·seed·N·수렴, 모델 편향은 따로",
+     "model_level": "A + MC",
+     "presets": [
+      {
+       "key": "nominal",
+       "label": "σ 2.5 %, ρ 0, 사양 ±4 %",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference"
+       ]
+      },
+      {
+       "key": "corr_pos",
+       "label": "ρ = +0.8",
+       "values": {
+        "rho_LC": 0.8
+       },
+       "tags": [
+        "variant"
+       ]
+      },
+      {
+       "key": "corr_neg",
+       "label": "ρ = −0.8",
+       "values": {
+        "rho_LC": -0.8
+       },
+       "tags": [
+        "variant"
+       ]
+      },
+      {
+       "key": "small_n",
+       "label": "N = 500",
+       "values": {
+        "mc_n": 500
+       },
+       "tags": [
+        "corner"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "nominal",
+      "corr_pos"
+     ],
+     "status_of_reference": "PASS_WITHIN_MODEL",
+     "claim_limit": "가정 분포 조건부 수율. 양산 수율 보증이 아니다."
+    },
+    {
+     "key": "test_independence",
+     "title": "이 저장소의 검증은 어떤 경로로 독립인가: test-independence 표와 모델 카드",
+     "model_level": "메타",
+     "presets": [
+      {
+       "key": "nominal",
+       "label": "예산 8 s",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference"
+       ]
+      },
+      {
+       "key": "full",
+       "label": "예산 600 s (전부 실행)",
+       "values": {
+        "budget_s": 600.0
+       },
+       "tags": [
+        "variant"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "nominal"
+     ],
+     "status_of_reference": "PASS_WITHIN_MODEL",
+     "claim_limit": "저장소 자체의 verification 경로 지도. 실물 validation·의미 판정은 포함하지 않는다."
+    }
+   ]
+  },
+  {
+   "id": "EX12",
+   "title": "설계 리뷰를 통과하는 답변 — 세 개의 통합 사례",
+   "title_en": "Answers that pass a design review: three integrated cases",
+   "minimum_scope": "E12: 3개 customer case decision memo를 실제 simulation run으로 생성 (요구/경계·지배제약·후보·수치증거·측정불확도·권고조건·다음 분별시험); root cause UNRESOLVED 허용; 답변은 rubric",
+   "claim_limits": [
+    "메모의 수치는 합성 모델의 실제 실행 결과",
+    "model PASS ≠ 사용자 숙련",
+    "root cause를 시뮬레이션으로 확정하지 않음"
+   ],
+   "experiments": [
+    {
+     "key": "capstone_a",
+     "title": "Capstone A · 11 kW OBC의 high-battery 충전 불가",
+     "model_level": "통합",
+     "presets": [
+      {
+       "key": "textbook",
+       "label": "교재 Capstone A",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference"
+       ]
+      },
+      {
+       "key": "limit20",
+       "label": "입력 한계 20 A (합의된 경우)",
+       "values": {
+        "I_lim": 20.0
+       },
+       "tags": [
+        "variant"
+       ]
+      },
+      {
+       "key": "quick",
+       "label": "FHA·입력만 (빠름)",
+       "values": {
+        "with_switching": false,
+        "with_dynamics": false
+       },
+       "tags": [
+        "variant"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "textbook"
+     ],
+     "status_of_reference": "FAIL_CONSTRAINT",
+     "claim_limit": "합성 교육 사양의 결정 메모. 실제 제품·경쟁사 정격 비교 아님."
+    },
+    {
+     "key": "capstone_b",
+     "title": "Capstone B · 900 V ↔ 저전압 DAB의 순환전류와 ZVS",
+     "model_level": "통합",
+     "presets": [
+      {
+       "key": "textbook",
+       "label": "교재 Capstone B",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "textbook"
+     ],
+     "status_of_reference": "UNRESOLVED_RANKING",
+     "claim_limit": "합성 교육 사양의 결정 메모. 효율 개선 주장 없음."
+    },
+    {
+     "key": "capstone_c",
+     "title": "Capstone C · 병렬 SiC 인버터의 한 branch 과열과 보호 동작",
+     "model_level": "통합",
+     "presets": [
+      {
+       "key": "textbook",
+       "label": "교재 Capstone C",
+       "values": {},
+       "tags": [
+        "nominal",
+        "reference"
+       ]
+      }
+     ],
+     "reference_presets": [
+      "textbook"
+     ],
+     "status_of_reference": "UNRESOLVED_ROOT_CAUSE",
+     "claim_limit": "합성 교육 사양의 결정 메모. root cause 확정 없음."
     }
    ]
   }

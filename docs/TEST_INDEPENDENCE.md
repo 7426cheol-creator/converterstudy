@@ -1,6 +1,6 @@
 # 테스트 독립성 지도 (Test independence map)
 
-생성: `tools/gen_docs.py` · run-all 2026-09-30T19:46:57
+생성: `tools/gen_docs.py` · run-all 2026-09-30T23:59:39
 
 **독립** = 서로 다른 식/적분기/표현으로 계산한 두 경로의 비교 (`Check.independent = True`). **회귀** = 같은 코드 경로의 재현성 확인. 교재 기준값은 테스트 파일에 숫자로 직접 적혀 있다 (`reference/` 모듈을 다시 부르지 않는다).
 
@@ -34,6 +34,144 @@
 
 - [PASS] (nominal) RHP zero 부호: duty 증가 직후 출력 감소 — 스위칭 모델 주기평균(C)과 평균모델(B)이 모두 초기 역응답을 보이는지
 - [PASS] (light) RHP zero 부호: duty 증가 직후 출력 감소 — 스위칭 모델 주기평균(C)과 평균모델(B)이 모두 초기 역응답을 보이는지
+
+## FL02 · Si·SiC·GaN과 데이터시트, Gate drive·DPT·보호
+
+
+**loss_ab** — 독립 9 · 회귀 0
+
+- [PASS] (textbook) A 손실: 식 vs PWL 파형 적분 + edge 계수 — 사각 스위치 전류(같은 RMS)의 ∫i²R dt 정확 적분과 on/off 쌍 계수 vs I²R + E·f_s
+- [PASS] (textbook) B 손실: 식 vs PWL 파형 적분 + edge 계수 — 같은 독립 경로
+- [PASS] (textbook) 교차 주파수: 닫힌 식 vs 파형 경로의 근 찾기 — PWL 파형 손실 차이의 brentq 근 vs I²ΔR/ΔE
+- [PASS] (f20k) A 손실: 식 vs PWL 파형 적분 + edge 계수 — 사각 스위치 전류(같은 RMS)의 ∫i²R dt 정확 적분과 on/off 쌍 계수 vs I²R + E·f_s
+- [PASS] (f20k) B 손실: 식 vs PWL 파형 적분 + edge 계수 — 같은 독립 경로
+- [PASS] (f20k) 교차 주파수: 닫힌 식 vs 파형 경로의 근 찾기 — PWL 파형 손실 차이의 brentq 근 vs I²ΔR/ΔE
+- [PASS] (coss_unknown_20k) A 손실: 식 vs PWL 파형 적분 + edge 계수 — 사각 스위치 전류(같은 RMS)의 ∫i²R dt 정확 적분과 on/off 쌍 계수 vs I²R + E·f_s
+- [PASS] (coss_unknown_20k) B 손실: 식 vs PWL 파형 적분 + edge 계수 — 같은 독립 경로
+- [PASS] (coss_unknown_20k) 교차 주파수: 닫힌 식 vs 파형 경로의 근 찾기 — PWL 파형 손실 차이의 brentq 근 vs I²ΔR/ΔE
+
+**gate_protect** — 독립 4 · 회귀 2
+
+- [PASS] (textbook) plateau 시간: event ODE vs Q_gd/I_g — piecewise Q–v 모델 ODE(DOP853)의 event 시각 차 vs 닫힌 식
+- [PASS] (textbook) plateau 도달: event ODE vs R·C₁·ln(ΔV₀/ΔV₁) — ODE event vs RC 충전 닫힌 식
+- [PASS] (blank_long) plateau 시간: event ODE vs Q_gd/I_g — piecewise Q–v 모델 ODE(DOP853)의 event 시각 차 vs 닫힌 식
+- [PASS] (blank_long) plateau 도달: event ODE vs R·C₁·ln(ΔV₀/ΔV₁) — ODE event vs RC 충전 닫힌 식
+- [회귀 PASS] (textbook) 보호 체인 산술 (회귀)
+- [회귀 PASS] (blank_long) 보호 체인 산술 (회귀)
+
+**dpt_cell** — 독립 11 · 회귀 0
+
+- [PASS] (nominal) gate 전하 보존: ∫i_G dt vs Q_gate(v) 닫힌 식 — solver가 적분한 gate 전류 vs C_gs·v_gs − Q_gd(v_dg)의 해석 적분식 (Miller 구간)
+- [PASS] (nominal) 에너지 잔차 (source + drivers − load − 소산 − ΔW) — V_bus·∫i, 드라이버 ∫v·i_G, 부하 ∫v_PM·I_L, 저항·채널·diode 소산, ½Li² + 비선형 C 에너지식 — 상태식과 독립적으로 정의한 항
+- [PASS] (nominal) 표본 적분 vs solver 적분 (turn-on 단자 에너지) — dense output 표본의 사다리꼴 적분 vs 적분상태 ∫v_DS·i_D
+- [PASS] (nominal) 허용오차 강화 수렴 (rtol 1e-6 → 1e-8) — 같은 셀을 더 엄격한 허용오차로 다시 적분: E_on·E_off·v_DS peak 변화
+- [PASS] (fast) 에너지 잔차 (source + drivers − load − 소산 − ΔW) — V_bus·∫i, 드라이버 ∫v·i_G, 부하 ∫v_PM·I_L, 저항·채널·diode 소산, ½Li² + 비선형 C 에너지식 — 상태식과 독립적으로 정의한 항
+- [PASS] (fast) 표본 적분 vs solver 적분 (turn-on 단자 에너지) — dense output 표본의 사다리꼴 적분 vs 적분상태 ∫v_DS·i_D
+- [PASS] (fast) 허용오차 강화 수렴 (rtol 1e-6 → 1e-8) — 같은 셀을 더 엄격한 허용오차로 다시 적분: E_on·E_off·v_DS peak 변화
+- [PASS] (no_kelvin) gate 전하 보존: ∫i_G dt vs Q_gate(v) 닫힌 식 — solver가 적분한 gate 전류 vs C_gs·v_gs − Q_gd(v_dg)의 해석 적분식 (Miller 구간)
+- [PASS] (no_kelvin) 에너지 잔차 (source + drivers − load − 소산 − ΔW) — V_bus·∫i, 드라이버 ∫v·i_G, 부하 ∫v_PM·I_L, 저항·채널·diode 소산, ½Li² + 비선형 C 에너지식 — 상태식과 독립적으로 정의한 항
+- [PASS] (no_kelvin) 표본 적분 vs solver 적분 (turn-on 단자 에너지) — dense output 표본의 사다리꼴 적분 vs 적분상태 ∫v_DS·i_D
+- [PASS] (no_kelvin) 허용오차 강화 수렴 (rtol 1e-6 → 1e-8) — 같은 셀을 더 엄격한 허용오차로 다시 적분: E_on·E_off·v_DS peak 변화
+
+**vgs_spike** — 독립 6 · 회귀 0
+
+- [PASS] (artifact) 겉보기 전압 = L_sH·max(di_HS/dt) (측정 정의 일관성) — 출력식의 L_sH·(선형계에서 푼 di/dt) vs 표본 전류의 수치 미분
+- [PASS] (artifact) 에너지 잔차 (turn-on 사건) — 포트·소산·저장에너지 원장 (상태식과 독립 정의)
+- [PASS] (real) 겉보기 전압 = L_sH·max(di_HS/dt) (측정 정의 일관성) — 출력식의 L_sH·(선형계에서 푼 di/dt) vs 표본 전류의 수치 미분
+- [PASS] (real) 에너지 잔차 (turn-on 사건) — 포트·소산·저장에너지 원장 (상태식과 독립 정의)
+- [PASS] (clamp) 겉보기 전압 = L_sH·max(di_HS/dt) (측정 정의 일관성) — 출력식의 L_sH·(선형계에서 푼 di/dt) vs 표본 전류의 수치 미분
+- [PASS] (clamp) 에너지 잔차 (turn-on 사건) — 포트·소산·저장에너지 원장 (상태식과 독립 정의)
+
+## FL03 · 손실·온도·수명 — 숫자가 서로 맞아야 한다
+
+
+**rc_step** — 독립 3 · 회귀 0
+
+- [PASS] (textbook) 독립 경로: 손으로 쓴 RK4 (h 반감) — RK4 스칼라 적분(h = t/20, t/40, t/80) vs 행렬지수 정확 해
+- [PASS] (textbook) 해석해 vs 정확 적분 — 닫힌 식 T_b + PR(1 − e^(−t/τ)) vs 엔진 expm
+- [PASS] (textbook) 에너지 잔차 (E_in − E_out − E_loss − ΔW) — 포트 에너지·저항 손실·저장에너지를 같은 구간에서 정확 적분 (상태식과 독립적으로 정의한 포트 전력)
+
+**electrothermal** — 독립 10 · 회귀 0
+
+- [PASS] (nominal) 고정점: 반복 수렴값 vs 닫힌 식 — 단순 대입 반복(40회) vs (T_b − T_ref + R·P₀)/(1 − g) + T_ref
+- [PASS] (nominal) 고정점: 정확 과도의 장시간 값 vs 닫힌 식 — 행렬지수 과도를 60τ_eff 적분한 끝값 vs 닫힌 식
+- [PASS] (nominal) 독립 경로: RK4(h = 0.02 s) vs 정확 과도 끝값 — 구간별 RK4 스칼라 적분 vs 구간별 행렬지수
+- [PASS] (nominal) 에너지 잔차 (E_in − E_out − E_loss − ΔW) — 포트 에너지·저항 손실·저장에너지를 같은 구간에서 정확 적분 (상태식과 독립적으로 정의한 포트 전력)
+- [PASS] (sensitive) 고정점: 반복 수렴값 vs 닫힌 식 — 단순 대입 반복(40회) vs (T_b − T_ref + R·P₀)/(1 − g) + T_ref
+- [PASS] (sensitive) 고정점: 정확 과도의 장시간 값 vs 닫힌 식 — 행렬지수 과도를 60τ_eff 적분한 끝값 vs 닫힌 식
+- [PASS] (sensitive) 독립 경로: RK4(h = 0.02 s) vs 정확 과도 끝값 — 구간별 RK4 스칼라 적분 vs 구간별 행렬지수
+- [PASS] (sensitive) 에너지 잔차 (E_in − E_out − E_loss − ΔW) — 포트 에너지·저항 손실·저장에너지를 같은 구간에서 정확 적분 (상태식과 독립적으로 정의한 포트 전력)
+- [PASS] (runaway) 독립 경로: RK4(h = 0.02 s) vs 정확 과도 끝값 — 구간별 RK4 스칼라 적분 vs 구간별 행렬지수
+- [PASS] (runaway) 에너지 잔차 (E_in − E_out − E_loss − ΔW) — 포트 에너지·저항 손실·저장에너지를 같은 구간에서 정확 적분 (상태식과 독립적으로 정의한 포트 전력)
+
+**loss_map** — 독립 6 · 회귀 2
+
+- [PASS] (nominal) 한계 경우: 사건 합 전도(forward) vs 정현 PWM 닫힌 식 — N개 스위칭 주기 합(선형 E·상수 R·dead time 0) vs I²R(1/8 + m·cosφ/3π)
+- [PASS] (nominal) 한계 경우: 사건 합 전도(reverse) vs 닫힌 식 — 같은 합 vs I²R(1/8 − m·cosφ/3π)
+- [PASS] (nominal) 한계 경우: 사건 합 스위칭 vs f_s·k·I_pk/π — E = k\|i\| 사건 합 vs 닫힌 식
+- [PASS] (over_I) 한계 경우: 사건 합 전도(forward) vs 정현 PWM 닫힌 식 — N개 스위칭 주기 합(선형 E·상수 R·dead time 0) vs I²R(1/8 + m·cosφ/3π)
+- [PASS] (over_I) 한계 경우: 사건 합 전도(reverse) vs 닫힌 식 — 같은 합 vs I²R(1/8 − m·cosφ/3π)
+- [PASS] (over_I) 한계 경우: 사건 합 스위칭 vs f_s·k·I_pk/π — E = k\|i\| 사건 합 vs 닫힌 식
+- [회귀 PASS] (nominal) map 보간이 격자점을 그대로 재현 (회귀)
+- [회귀 PASS] (over_I) map 보간이 격자점을 그대로 재현 (회귀)
+
+**foster_cauer** — 독립 8 · 회귀 0
+
+- [PASS] (nominal) Foster(고유값 분해) vs 사다리 과도 (Z_jc(t)) — 일반화 고유값 G·v = λ·C·v로 만든 Foster 합 vs 행렬지수로 푼 사다리 과도
+- [PASS] (nominal) Cauer → Foster → Cauer 왕복 (연분수 전개) — 고유값 분해의 Foster를 연분수로 다시 Cauer로: 원래 R·C 복원
+- [PASS] (nominal) 변환된 Cauer 연결 ≈ 물리 사다리 연결 — Foster 피팅 → 연분수 Cauer → 방열판 연결 vs 원래 물리 사다리 + 방열판
+- [PASS] (nominal) 에너지 잔차 (E_in − E_out − E_loss − ΔW) — 포트 에너지·저항 손실·저장에너지를 같은 구간에서 정확 적분 (상태식과 독립적으로 정의한 포트 전력)
+- [PASS] (small_sink) Foster(고유값 분해) vs 사다리 과도 (Z_jc(t)) — 일반화 고유값 G·v = λ·C·v로 만든 Foster 합 vs 행렬지수로 푼 사다리 과도
+- [PASS] (small_sink) Cauer → Foster → Cauer 왕복 (연분수 전개) — 고유값 분해의 Foster를 연분수로 다시 Cauer로: 원래 R·C 복원
+- [PASS] (small_sink) 변환된 Cauer 연결 ≈ 물리 사다리 연결 — Foster 피팅 → 연분수 Cauer → 방열판 연결 vs 원래 물리 사다리 + 방열판
+- [PASS] (small_sink) 에너지 잔차 (E_in − E_out − E_loss − ΔW) — 포트 에너지·저항 손실·저장에너지를 같은 구간에서 정확 적분 (상태식과 독립적으로 정의한 포트 전력)
+
+## FL04 · 인버터 — 알고 있는 것을 더 날카롭게 증명하기
+
+
+**dq_point** — 독립 6 · 회귀 3
+
+- [PASS] (nominal) 상전압 peak: abc 시간영역 vs dq 폐형식 — 명시적 돌극 L(θ) 행렬·ψ_abc의 복소 step 미분(Faraday) → v_a(θ) 최대값 vs √(v_d² + v_q²)
+- [PASS] (nominal) 단자 전력: abc Σv·i 평균 vs shaft + 동손 — abc 순시전력 평균 (토크식을 쓰지 않음) vs P_shaft + 1.5R_s\|i\|² (토크식 → i_q)
+- [PASS] (sag760) 상전압 peak: abc 시간영역 vs dq 폐형식 — 명시적 돌극 L(θ) 행렬·ψ_abc의 복소 step 미분(Faraday) → v_a(θ) 최대값 vs √(v_d² + v_q²)
+- [PASS] (sag760) 단자 전력: abc Σv·i 평균 vs shaft + 동손 — abc 순시전력 평균 (토크식을 쓰지 않음) vs P_shaft + 1.5R_s\|i\|² (토크식 → i_q)
+- [PASS] (mtpa) 상전압 peak: abc 시간영역 vs dq 폐형식 — 명시적 돌극 L(θ) 행렬·ψ_abc의 복소 step 미분(Faraday) → v_a(θ) 최대값 vs √(v_d² + v_q²)
+- [PASS] (mtpa) 단자 전력: abc Σv·i 평균 vs shaft + 동손 — abc 순시전력 평균 (토크식을 쓰지 않음) vs P_shaft + 1.5R_s\|i\|² (토크식 → i_q)
+- [회귀 PASS] (nominal) dq 단자전력 1.5(v_d i_d + v_q i_q) vs shaft + 동손
+- [회귀 PASS] (sag760) dq 단자전력 1.5(v_d i_d + v_q i_q) vs shaft + 동손
+- [회귀 PASS] (mtpa) dq 단자전력 1.5(v_d i_d + v_q i_q) vs shaft + 동손
+
+**dq_plane** — 독립 6 · 회귀 0
+
+- [PASS] (nominal) MTPA: 폐형식 vs 같은 토크 곡선 위 최소 \|i\| — ∂T/∂γ = 0 해석식(\|i\| 고정) + 토크 역산 vs 토크 곡선을 따라 \|i\|를 bounded 최소화 (다른 문제 설정)
+- [PASS] (nominal) 토크 곡선 ∩ 전압 한계: 두 경로 — 토크 곡선을 따라 \|v\| = V 풀기 vs 전압 한계 곡선(상측 근)을 따라 T = T* 풀기
+- [PASS] (nominal) 최대 토크 @ 800 V: 격자+정제 vs SLSQP — i_d 격자에서 가능한 최대 i_q → bounded 정제 vs 부등식 제약 SLSQP (다른 알고리즘)
+- [PASS] (fast) MTPA: 폐형식 vs 같은 토크 곡선 위 최소 \|i\| — ∂T/∂γ = 0 해석식(\|i\| 고정) + 토크 역산 vs 토크 곡선을 따라 \|i\|를 bounded 최소화 (다른 문제 설정)
+- [PASS] (fast) 토크 곡선 ∩ 전압 한계: 두 경로 — 토크 곡선을 따라 \|v\| = V 풀기 vs 전압 한계 곡선(상측 근)을 따라 T = T* 풀기
+- [PASS] (fast) 최대 토크 @ 800 V: 격자+정제 vs SLSQP — i_d 격자에서 가능한 최대 i_q → bounded 정제 vs 부등식 제약 SLSQP (다른 알고리즘)
+
+**inverter_switching** — 독립 8 · 회귀 12
+
+- [PASS] (nominal) 독립 solver: 손으로 쓴 dq ODE (RK45, cos/sin(ω_e t) 직접) — 2상태 비자율 ODE + 스위칭 상태별 v_αβ를 RK45로 rtol 1e-7 → 1e-9 적분한 한 주기 끝 전류 vs 정확 해(4상태 자율 LTI, 행렬지수)
+- [PASS] (nominal) 에너지 잔차 (E_in − E_out − E_loss − ΔW) — 포트 에너지·저항 손실·저장에너지를 같은 구간에서 정확 적분 (상태식과 독립적으로 정의한 포트 전력)
+- [PASS] (N27) 독립 solver: 손으로 쓴 dq ODE (RK45, cos/sin(ω_e t) 직접) — 2상태 비자율 ODE + 스위칭 상태별 v_αβ를 RK45로 rtol 1e-7 → 1e-9 적분한 한 주기 끝 전류 vs 정확 해(4상태 자율 LTI, 행렬지수)
+- [PASS] (N27) 에너지 잔차 (E_in − E_out − E_loss − ΔW) — 포트 에너지·저항 손실·저장에너지를 같은 구간에서 정확 적분 (상태식과 독립적으로 정의한 포트 전력)
+- [PASS] (spwm) 독립 solver: 손으로 쓴 dq ODE (RK45, cos/sin(ω_e t) 직접) — 2상태 비자율 ODE + 스위칭 상태별 v_αβ를 RK45로 rtol 1e-7 → 1e-9 적분한 한 주기 끝 전류 vs 정확 해(4상태 자율 LTI, 행렬지수)
+- [PASS] (spwm) 에너지 잔차 (E_in − E_out − E_loss − ΔW) — 포트 에너지·저항 손실·저장에너지를 같은 구간에서 정확 적분 (상태식과 독립적으로 정의한 포트 전력)
+- [PASS] (sag760) 독립 solver: 손으로 쓴 dq ODE (RK45, cos/sin(ω_e t) 직접) — 2상태 비자율 ODE + 스위칭 상태별 v_αβ를 RK45로 rtol 1e-7 → 1e-9 적분한 한 주기 끝 전류 vs 정확 해(4상태 자율 LTI, 행렬지수)
+- [PASS] (sag760) 에너지 잔차 (E_in − E_out − E_loss − ΔW) — 포트 에너지·저항 손실·저장에너지를 같은 구간에서 정확 적분 (상태식과 독립적으로 정의한 포트 전력)
+- [회귀 PASS] (nominal) 정상 주기해 잔차 (한 전기 주기)
+- [회귀 PASS] (nominal) 회전자각 발진기 보존 \|cos²+sin²−1\|
+- [회귀 PASS] (nominal) PWM 기본파 정상분 (펄스 Fourier) vs 스위칭 해 평균 v_d, v_q
+- [회귀 PASS] (N27) 정상 주기해 잔차 (한 전기 주기)
+- [회귀 PASS] (N27) 회전자각 발진기 보존 \|cos²+sin²−1\|
+- [회귀 PASS] (N27) PWM 기본파 정상분 (펄스 Fourier) vs 스위칭 해 평균 v_d, v_q
+- [회귀 PASS] (spwm) 정상 주기해 잔차 (한 전기 주기)
+- [회귀 PASS] (spwm) 회전자각 발진기 보존 \|cos²+sin²−1\|
+- [회귀 PASS] (spwm) PWM 기본파 정상분 (펄스 Fourier) vs 스위칭 해 평균 v_d, v_q
+- [회귀 PASS] (sag760) 정상 주기해 잔차 (한 전기 주기)
+- [회귀 PASS] (sag760) 회전자각 발진기 보존 \|cos²+sin²−1\|
+- [회귀 PASS] (sag760) PWM 기본파 정상분 (펄스 Fourier) vs 스위칭 해 평균 v_d, v_q
 
 ## FL05 · OBC·PFC — 전력품질을 설계 변수로 바꾸기
 
@@ -130,6 +268,55 @@
 - [PASS] (reactive) dq 평균모델 vs 독립 abc 시뮬레이션 — dq 식(±ωL 교차결합)의 정확 이산 map vs 3상 L di/dt = v_g − v_c − R i를 DOP853으로 적분하고 측정 전류를 Park 변환
 - [PASS] (reactive) 순시전력: Σ v_x·i_x (abc) = 1.5 v_d i_d (dq) — abc 상전압·상전류 곱의 합 vs 진폭불변 dq 전력식 (v_q = 0)
 
+## FL07 · 자성체 — 컨버터 전문가로 가는 실제 관문
+
+
+**winding_flux** — 독립 11 · 회귀 3
+
+- [PASS] (textbook) L_m → ∞ 한계: 스위칭 해 I_rms vs FL08 폐형식 — L_m = 1 MH·무손실 T-모델 정확 해 vs I_pk√(1 − 2φ/3π)
+- [PASS] (textbook) B(t): 권선 전압 사다리꼴 적분 vs 자화전류 상태 L_m i_m/(N A_e) — 출력 v_m 표본의 누적 사다리꼴 적분 (Faraday) vs 상태변수 i_m (서로 다른 양)
+- [PASS] (textbook) 에너지 잔차 (E_in − E_out − E_loss − ΔW) — 포트 에너지·저항 손실·저장에너지를 같은 구간에서 정확 적분 (상태식과 독립적으로 정의한 포트 전력)
+- [PASS] (textbook) 독립 solver: (i₁, i₂′) 상태·3×3 선형계 RK45 — 다른 상태 선택(i₁, i₂′)과 매 단계 3×3 해로 쓴 ODE를 RK45 rtol 1e-7 → 1e-9 vs 정확 해 (i₁, i_m)
+- [PASS] (fl08) L_m → ∞ 한계: 스위칭 해 I_rms vs FL08 폐형식 — L_m = 1 MH·무손실 T-모델 정확 해 vs I_pk√(1 − 2φ/3π)
+- [PASS] (fl08) B(t): 권선 전압 사다리꼴 적분 vs 자화전류 상태 L_m i_m/(N A_e) — 출력 v_m 표본의 누적 사다리꼴 적분 (Faraday) vs 상태변수 i_m (서로 다른 양)
+- [PASS] (fl08) 에너지 잔차 (E_in − E_out − E_loss − ΔW) — 포트 에너지·저항 손실·저장에너지를 같은 구간에서 정확 적분 (상태식과 독립적으로 정의한 포트 전력)
+- [PASS] (fl08) 독립 solver: (i₁, i₂′) 상태·3×3 선형계 RK45 — 다른 상태 선택(i₁, i₂′)과 매 단계 3×3 해로 쓴 ODE를 RK45 rtol 1e-7 → 1e-9 vs 정확 해 (i₁, i_m)
+- [PASS] (mismatch) B(t): 권선 전압 사다리꼴 적분 vs 자화전류 상태 L_m i_m/(N A_e) — 출력 v_m 표본의 누적 사다리꼴 적분 (Faraday) vs 상태변수 i_m (서로 다른 양)
+- [PASS] (mismatch) 에너지 잔차 (E_in − E_out − E_loss − ΔW) — 포트 에너지·저항 손실·저장에너지를 같은 구간에서 정확 적분 (상태식과 독립적으로 정의한 포트 전력)
+- [PASS] (mismatch) 독립 solver: (i₁, i₂′) 상태·3×3 선형계 RK45 — 다른 상태 선택(i₁, i₂′)과 매 단계 3×3 해로 쓴 ODE를 RK45 rtol 1e-7 → 1e-9 vs 정확 해 (i₁, i_m)
+- [회귀 PASS] (textbook) zero-DC 주기해 잔차 (한 주기)
+- [회귀 PASS] (fl08) zero-DC 주기해 잔차 (한 주기)
+- [회귀 PASS] (mismatch) zero-DC 주기해 잔차 (한 주기)
+
+**flux_walk** — 독립 10 · 회귀 2
+
+- [PASS] (textbook) 주기당 자속 이동: 정확 해 vs volt-second 식 — 행렬지수 적분의 B(T) − B(0) vs V·Δt/(N A_e)
+- [PASS] (textbook) B: 권선 전압 적분 vs 자화전류 상태 — v_w 표본 누적 사다리꼴 적분 vs L_m i_m/(N A_e)
+- [PASS] (textbook) 에너지 잔차 (E_in − E_out − E_loss − ΔW) — 포트 에너지·저항 손실·저장에너지를 같은 구간에서 정확 적분 (상태식과 독립적으로 정의한 포트 전력)
+- [PASS] (textbook) 동기 표본 적분 drift: 수치 vs 사다리꼴 edge 오차식 — 표본 파형의 누적 사다리꼴 적분 기울기 vs 반 표본 어긋난 두 edge의 오차 합 V·Δt_s/(N A_e)
+- [PASS] (R_only) B: 권선 전압 적분 vs 자화전류 상태 — v_w 표본 누적 사다리꼴 적분 vs L_m i_m/(N A_e)
+- [PASS] (R_only) 에너지 잔차 (E_in − E_out − E_loss − ΔW) — 포트 에너지·저항 손실·저장에너지를 같은 구간에서 정확 적분 (상태식과 독립적으로 정의한 포트 전력)
+- [PASS] (R_only) 동기 표본 적분 drift: 수치 vs 사다리꼴 edge 오차식 — 표본 파형의 누적 사다리꼴 적분 기울기 vs 반 표본 어긋난 두 edge의 오차 합 V·Δt_s/(N A_e)
+- [PASS] (blocking) B: 권선 전압 적분 vs 자화전류 상태 — v_w 표본 누적 사다리꼴 적분 vs L_m i_m/(N A_e)
+- [PASS] (blocking) 에너지 잔차 (E_in − E_out − E_loss − ΔW) — 포트 에너지·저항 손실·저장에너지를 같은 구간에서 정확 적분 (상태식과 독립적으로 정의한 포트 전력)
+- [PASS] (blocking) 동기 표본 적분 drift: 수치 vs 사다리꼴 edge 오차식 — 표본 파형의 누적 사다리꼴 적분 기울기 vs 반 표본 어긋난 두 edge의 오차 합 V·Δt_s/(N A_e)
+- [회귀 INFO] (R_only) 주기당 자속 이동 (R 있음)
+- [회귀 INFO] (blocking) 주기당 자속 이동 (R 있음)
+
+**loss_screen** — 독립 11 · 회귀 0
+
+- [PASS] (nominal) 환산 규칙: 두 회로의 저장에너지 파형 — L′ = n²L, C′ = C/n², R′ = n²R로 만든 1차 환산 회로 vs 2차 실제 값 회로 (둘 다 정확 해) — 한 주기 9개 시각의 ½Li² + ½Cv²
+- [PASS] (nominal) skin depth: 폐형식 vs 1-D 확산 유한차분 — d²H/dx² = jωμσH를 중앙차분(6000 격자)으로 풀고 ln\|H\| 기울기로 감쇠 길이 추정 vs √(ρ/(πfμ))
+- [PASS] (nominal) 원형선 R_ac/R_dc: Bessel 정확식 vs 저주파 전개 1 + (a/δ)⁴/48 — 복소 Bessel J₀/J₁ vs 급수 전개 (a = 0.2δ)
+- [PASS] (nominal) Dowell 1층: 정확식 vs 저주파 전개 1 + (5m²−1)Δ⁴/45 — 쌍곡·삼각 함수식 vs 급수 전개 (Δ = 0.2)
+- [PASS] (nominal) Dowell 4층: 정확식 vs 저주파 전개 1 + (5m²−1)Δ⁴/45 — 쌍곡·삼각 함수식 vs 급수 전개 (Δ = 0.2)
+- [PASS] (nominal) iGSE: 삼각 자속 폐형식 vs 실제 파형 수치 적분 — k_i(4B_pk f)^α(2B_pk)^{β−α} vs 권선 전압 표본의 ∫\|dB/dt\|^α dt (R₂′ 강하만큼 차이)
+- [PASS] (split) 환산 규칙: 두 회로의 저장에너지 파형 — L′ = n²L, C′ = C/n², R′ = n²R로 만든 1차 환산 회로 vs 2차 실제 값 회로 (둘 다 정확 해) — 한 주기 9개 시각의 ½Li² + ½Cv²
+- [PASS] (split) skin depth: 폐형식 vs 1-D 확산 유한차분 — d²H/dx² = jωμσH를 중앙차분(6000 격자)으로 풀고 ln\|H\| 기울기로 감쇠 길이 추정 vs √(ρ/(πfμ))
+- [PASS] (split) 원형선 R_ac/R_dc: Bessel 정확식 vs 저주파 전개 1 + (a/δ)⁴/48 — 복소 Bessel J₀/J₁ vs 급수 전개 (a = 0.2δ)
+- [PASS] (split) Dowell 1층: 정확식 vs 저주파 전개 1 + (5m²−1)Δ⁴/45 — 쌍곡·삼각 함수식 vs 급수 전개 (Δ = 0.2)
+- [PASS] (split) Dowell 4층: 정확식 vs 저주파 전개 1 + (5m²−1)Δ⁴/45 — 쌍곡·삼각 함수식 vs 급수 전개 (Δ = 0.2)
+
 ## FL08 · DAB — 식에서 파형, 파형에서 설계 판단으로
 
 
@@ -179,13 +366,15 @@
 ## FL09 · LLC — 공진을 말로 설명하고 식으로 확인하기
 
 
-**fha_gain** — 독립 8 · 회귀 0
+**fha_gain** — 독립 10 · 회귀 0
 
 - [PASS] (textbook) 교재 정규화식 vs 페이저 절점해석 — 1/H = 1 + (1−F⁻²)/k + jQ(F−1/F) (reference) vs 절점 전압 방정식 (Z_r, Z_m, R_ac)
+- [PASS] (textbook) ∠Z_in 경계: 닫힌 식 vs 페이저 Im Z_in의 근 — k²Q²y² + (1+k−k²Q²)y − 1 = 0 (y = F²) vs brentq(Im Z_in(F)) on the nodal phasor
 - [PASS] (textbook) FHA 회로의 시간영역 주기해 vs 페이저 — 사인파 전원(발진기 상태)·R_ac 부하 회로를 행렬지수로 풀어 v_load 진폭 비교
 - [PASS] (textbook) 극한: F = 1에서 모든 Q의 \|H\| = 1 — 직렬 공진에서 Z_r = 0
 - [PASS] (textbook) 극한: Q → 0 (무부하) \|H\| = 1/\|1 + (1−F⁻²)/k\| — L_r·C_r·L_m 분압만 남는다
 - [PASS] (hb) 교재 정규화식 vs 페이저 절점해석 — 1/H = 1 + (1−F⁻²)/k + jQ(F−1/F) (reference) vs 절점 전압 방정식 (Z_r, Z_m, R_ac)
+- [PASS] (hb) ∠Z_in 경계: 닫힌 식 vs 페이저 Im Z_in의 근 — k²Q²y² + (1+k−k²Q²)y − 1 = 0 (y = F²) vs brentq(Im Z_in(F)) on the nodal phasor
 - [PASS] (hb) FHA 회로의 시간영역 주기해 vs 페이저 — 사인파 전원(발진기 상태)·R_ac 부하 회로를 행렬지수로 풀어 v_load 진폭 비교
 - [PASS] (hb) 극한: F = 1에서 모든 Q의 \|H\| = 1 — 직렬 공진에서 Z_r = 0
 - [PASS] (hb) 극한: Q → 0 (무부하) \|H\| = 1/\|1 + (1−F⁻²)/k\| — L_r·C_r·L_m 분압만 남는다
@@ -256,6 +445,74 @@
 - [PASS] (textbook) 독립 경로: 고조파 중첩 (정류 연속 도통) 136.099 kHz — 홀수 고조파 3999차까지 선형 회로 해 + 정류 전압 edge = i₂ 영점 조건 (주파수 영역) vs 시간영역 주기해
 - [PASS] (textbook) 독립 경로: 고조파 중첩 (정류 연속 도통) 147.061 kHz — 홀수 고조파 3999차까지 선형 회로 해 + 정류 전압 edge = i₂ 영점 조건 (주파수 영역) vs 시간영역 주기해
 
+## FL11 · PSFB·HV-LV·12 V 확장 — 선택의 이유를 설명하기
+
+
+**psfb_duty_loss** — 독립 30 · 회귀 11
+
+- [PASS] (nominal) 에너지 잔차 (E_in − E_out − E_loss − ΔW) — 포트 에너지·저항 손실·저장에너지를 같은 구간에서 정확 적분 (상태식과 독립적으로 정의한 포트 전력)
+- [PASS] (nominal) PWL 독립 경로: V_o (C_o→∞ 상수 출력 가정) — 구간별 직선 대수 + load line (reference/psfb.py) vs 정확 스위칭 해
+- [PASS] (nominal) PWL 독립 경로: commutation 시간 t_c — t_c = 2I_0/(nV_in/L_k + V_o/L_o) vs 사건 위치
+- [PASS] (nominal) PWL 독립 경로: 1차 RMS — PWL 정확 적분 vs Kronecker 모멘트 적분
+- [PASS] (nominal) PWL 독립 경로: SR RMS — PWL 정확 적분 vs Kronecker 모멘트 적분
+- [PASS] (nominal) L_k volt-second 항등식: ΔD = 4L_k f_s I_0/(n V_in) — 반주기 L_k 전압 적분(손유도) vs 시뮬레이션 평균 V_o
+- [PASS] (nominal) 독립 solver: 손으로 쓴 ODE + RK45 사건 (20주기 과도) — 스칼라 식·별도 전환 규칙·solve_ivp 사건 vs 행렬지수 정확 해 (주기해의 0.8배에서 시작한 20주기 과도)
+- [PASS] (seed_ideal) 에너지 잔차 (E_in − E_out − E_loss − ΔW) — 포트 에너지·저항 손실·저장에너지를 같은 구간에서 정확 적분 (상태식과 독립적으로 정의한 포트 전력)
+- [PASS] (seed_ideal) PWL 독립 경로: V_o (C_o→∞ 상수 출력 가정) — 구간별 직선 대수 + load line (reference/psfb.py) vs 정확 스위칭 해
+- [PASS] (seed_ideal) PWL 독립 경로: commutation 시간 t_c — t_c = 2I_0/(nV_in/L_k + V_o/L_o) vs 사건 위치
+- [PASS] (seed_ideal) PWL 독립 경로: 1차 RMS — PWL 정확 적분 vs Kronecker 모멘트 적분
+- [PASS] (seed_ideal) PWL 독립 경로: SR RMS — PWL 정확 적분 vs Kronecker 모멘트 적분
+- [PASS] (seed_ideal) L_k volt-second 항등식: ΔD = 4L_k f_s I_0/(n V_in) — 반주기 L_k 전압 적분(손유도) vs 시뮬레이션 평균 V_o
+- [PASS] (seed_ideal) 독립 solver: 손으로 쓴 ODE + RK45 사건 (20주기 과도) — 스칼라 식·별도 전환 규칙·solve_ivp 사건 vs 행렬지수 정확 해 (주기해의 0.8배에서 시작한 20주기 과도)
+- [PASS] (regulate48) 에너지 잔차 (E_in − E_out − E_loss − ΔW) — 포트 에너지·저항 손실·저장에너지를 같은 구간에서 정확 적분 (상태식과 독립적으로 정의한 포트 전력)
+- [PASS] (regulate48) PWL 독립 경로: V_o (C_o→∞ 상수 출력 가정) — 구간별 직선 대수 + load line (reference/psfb.py) vs 정확 스위칭 해
+- [PASS] (regulate48) PWL 독립 경로: commutation 시간 t_c — t_c = 2I_0/(nV_in/L_k + V_o/L_o) vs 사건 위치
+- [PASS] (regulate48) PWL 독립 경로: 1차 RMS — PWL 정확 적분 vs Kronecker 모멘트 적분
+- [PASS] (regulate48) PWL 독립 경로: SR RMS — PWL 정확 적분 vs Kronecker 모멘트 적분
+- [PASS] (regulate48) L_k volt-second 항등식: ΔD = 4L_k f_s I_0/(n V_in) — 반주기 L_k 전압 적분(손유도) vs 시뮬레이션 평균 V_o
+- [PASS] (regulate48) 독립 solver: 손으로 쓴 ODE + RK45 사건 (20주기 과도) — 스칼라 식·별도 전환 규칙·solve_ivp 사건 vs 행렬지수 정확 해 (주기해의 0.8배에서 시작한 20주기 과도)
+- [PASS] (lossy_sr) 에너지 잔차 (E_in − E_out − E_loss − ΔW) — 포트 에너지·저항 손실·저장에너지를 같은 구간에서 정확 적분 (상태식과 독립적으로 정의한 포트 전력)
+- [PASS] (lossy_sr) 독립 solver: 손으로 쓴 ODE + RK45 사건 (20주기 과도) — 스칼라 식·별도 전환 규칙·solve_ivp 사건 vs 행렬지수 정확 해 (주기해의 0.8배에서 시작한 20주기 과도)
+- [PASS] (low_line) 에너지 잔차 (E_in − E_out − E_loss − ΔW) — 포트 에너지·저항 손실·저장에너지를 같은 구간에서 정확 적분 (상태식과 독립적으로 정의한 포트 전력)
+- [PASS] (low_line) PWL 독립 경로: V_o (C_o→∞ 상수 출력 가정) — 구간별 직선 대수 + load line (reference/psfb.py) vs 정확 스위칭 해
+- [PASS] (low_line) PWL 독립 경로: commutation 시간 t_c — t_c = 2I_0/(nV_in/L_k + V_o/L_o) vs 사건 위치
+- [PASS] (low_line) PWL 독립 경로: 1차 RMS — PWL 정확 적분 vs Kronecker 모멘트 적분
+- [PASS] (low_line) PWL 독립 경로: SR RMS — PWL 정확 적분 vs Kronecker 모멘트 적분
+- [PASS] (low_line) L_k volt-second 항등식: ΔD = 4L_k f_s I_0/(n V_in) — 반주기 L_k 전압 적분(손유도) vs 시뮬레이션 평균 V_o
+- [PASS] (low_line) 독립 solver: 손으로 쓴 ODE + RK45 사건 (20주기 과도) — 스칼라 식·별도 전환 규칙·solve_ivp 사건 vs 행렬지수 정확 해 (주기해의 0.8배에서 시작한 20주기 과도)
+- [회귀 PASS] (nominal) shooting 주기해 잔차
+- [회귀 INFO] (nominal) 주기별 정상상태 기준 (상태변화 < 1e-6, \|ΔW\|/E_ref < 1e-6, 3주기 연속)
+- [회귀 PASS] (seed_ideal) shooting 주기해 잔차
+- [회귀 INFO] (seed_ideal) 주기별 정상상태 기준 (상태변화 < 1e-6, \|ΔW\|/E_ref < 1e-6, 3주기 연속)
+- [회귀 PASS] (regulate48) shooting 주기해 잔차
+- [회귀 INFO] (regulate48) 주기별 정상상태 기준 (상태변화 < 1e-6, \|ΔW\|/E_ref < 1e-6, 3주기 연속)
+- [회귀 PASS] (lossy_sr) shooting 주기해 잔차
+- [회귀 NOT_RUN] (lossy_sr) PWL 독립 경로 / L_k 항등식
+- [회귀 INFO] (lossy_sr) 주기별 정상상태 기준 (상태변화 < 1e-6, \|ΔW\|/E_ref < 1e-6, 3주기 연속)
+- [회귀 PASS] (low_line) shooting 주기해 잔차
+- [회귀 INFO] (low_line) 주기별 정상상태 기준 (상태변화 < 1e-6, \|ΔW\|/E_ref < 1e-6, 3주기 연속)
+
+**lk_tradeoff** — 독립 1 · 회귀 1
+
+- [PASS] (nominal) 선형 외삽 검증: 예측 최소 부하에서 직접 스위칭 해 — I_min = n·i_req + (I_o − I_0) 외삽 vs 그 부하로 다시 푼 정확 스위칭 해의 lagging 전환 전류
+- [회귀 INFO] (nominal) duty loss 선형성: ΔD/L_k 기울기 vs 4 f_s I_0/(n V_in)
+
+**psfb_vs_dab** — 독립 6 · 회귀 0
+
+- [PASS] (nominal) DAB φ: 닫힌 식 vs PWL 전력 적분 근 — P = V1V2φ(1−φ/π)/(ωL) 역산 vs 4구간 PWL의 ∫v2'·i 적분을 brentq로 푼 φ
+- [PASS] (nominal) DAB RMS: 닫힌 식 vs PWL — i_0·i_φ 식의 두 직선 RMS vs PWL.rms()
+- [PASS] (nominal) DAB 입력·출력 전력 일치 (무손실) — ∫v1·i vs ∫v2'·i (PWL)
+- [PASS] (nominal) DAB zero-DC 기준해: 전류 평균 0 — 반주기 반대칭 초기조건 → 주기 평균
+- [PASS] (nominal) PSFB: PWL 독립 경로 1차 RMS — PWL 정확 적분 vs 정확 스위칭 해
+- [PASS] (nominal) 에너지 잔차 (E_in − E_out − E_loss − ΔW) — 포트 에너지·저항 손실·저장에너지를 같은 구간에서 정확 적분 (상태식과 독립적으로 정의한 포트 전력)
+
+**lv12_extension** — 독립 4 · 회귀 0
+
+- [PASS] (nominal) 병렬 최적 N: 연속 해 vs 정수 sweep — dP/dN = 0 해석해 vs 정수 N 전수 계산
+- [PASS] (nominal) 에너지 잔차 (E_in − E_out − E_loss − ΔW) — 포트 에너지·저항 손실·저장에너지를 같은 구간에서 정확 적분 (상태식과 독립적으로 정의한 포트 전력)
+- [PASS] (stray_fail) 병렬 최적 N: 연속 해 vs 정수 sweep — dP/dN = 0 해석해 vs 정수 N 전수 계산
+- [PASS] (stray_fail) 에너지 잔차 (E_in − E_out − E_loss − ΔW) — 포트 에너지·저항 손실·저장에너지를 같은 구간에서 정확 적분 (상태식과 독립적으로 정의한 포트 전력)
+
 ## EX02 · 비선형 Coss·dead time·ZVS — 에너지식 하나로 판정하지 않기
 
 
@@ -283,6 +540,106 @@
 
 **deadtime_window** — 독립 0 · 회귀 0
 
+
+## EX03 · 병렬 SiC·gate loop·DPT 계측
+
+
+**static_sharing** — 독립 4 · 회귀 2
+
+- [PASS] (textbook) KCL 절점 풀이 vs 전류분배식 — 공통 단자전압 V를 KCL로 풀고 V/R_k (절점법) vs I·G_k/ΣG
+- [PASS] (textbook) 전열 해: 고정점 반복 vs Newton (hybr) — 감쇠 없는 대입 반복 vs 다변수 Newton 계열 해법
+- [PASS] (no_tempco) KCL 절점 풀이 vs 전류분배식 — 공통 단자전압 V를 KCL로 풀고 V/R_k (절점법) vs I·G_k/ΣG
+- [PASS] (no_tempco) 전열 해: 고정점 반복 vs Newton (hybr) — 감쇠 없는 대입 반복 vs 다변수 Newton 계열 해법
+- [회귀 PASS] (textbook) 전류 합 = I_total (KCL)
+- [회귀 PASS] (no_tempco) 전류 합 = I_total (KCL)
+
+**dpt_deskew** — 독립 18 · 회귀 0
+
+- [PASS] (textbook) skew -5 ns: PWL 정확 적분 vs 손계산 닫힌 식 — 구간별 선형 곱의 정확 적분 vs 손으로 유도한 다항식 (넓은 창)
+- [PASS] (textbook) skew +0 ns: PWL 정확 적분 vs 손계산 닫힌 식 — 구간별 선형 곱의 정확 적분 vs 손으로 유도한 다항식 (넓은 창)
+- [PASS] (textbook) skew +5 ns: PWL 정확 적분 vs 손계산 닫힌 식 — 구간별 선형 곱의 정확 적분 vs 손으로 유도한 다항식 (넓은 창)
+- [PASS] (textbook) skew −5 ns: PWL 정확 적분 vs 촘촘한 표본 사다리꼴 — 20 001점 균일 표본의 사다리꼴 적분 vs PWL 정확 적분
+- [PASS] (textbook) 대역 제한 모델: 정확 ramp 중첩 vs scipy lsim (FOH) — 1차 저역통과의 해석 ramp 응답 합 vs 상태공간 이산화 시뮬레이션 (끝값)
+- [PASS] (textbook) 참조면 표의 셀 에너지 원장 — FL02 합성 셀의 포트·소산·저장에너지 원장
+- [PASS] (skew_m5) skew -5 ns: PWL 정확 적분 vs 손계산 닫힌 식 — 구간별 선형 곱의 정확 적분 vs 손으로 유도한 다항식 (넓은 창)
+- [PASS] (skew_m5) skew +0 ns: PWL 정확 적분 vs 손계산 닫힌 식 — 구간별 선형 곱의 정확 적분 vs 손으로 유도한 다항식 (넓은 창)
+- [PASS] (skew_m5) skew +5 ns: PWL 정확 적분 vs 손계산 닫힌 식 — 구간별 선형 곱의 정확 적분 vs 손으로 유도한 다항식 (넓은 창)
+- [PASS] (skew_m5) skew −5 ns: PWL 정확 적분 vs 촘촘한 표본 사다리꼴 — 20 001점 균일 표본의 사다리꼴 적분 vs PWL 정확 적분
+- [PASS] (skew_m5) 대역 제한 모델: 정확 ramp 중첩 vs scipy lsim (FOH) — 1차 저역통과의 해석 ramp 응답 합 vs 상태공간 이산화 시뮬레이션 (끝값)
+- [PASS] (skew_m5) 참조면 표의 셀 에너지 원장 — FL02 합성 셀의 포트·소산·저장에너지 원장
+- [PASS] (poor_deskew) skew -5 ns: PWL 정확 적분 vs 손계산 닫힌 식 — 구간별 선형 곱의 정확 적분 vs 손으로 유도한 다항식 (넓은 창)
+- [PASS] (poor_deskew) skew +0 ns: PWL 정확 적분 vs 손계산 닫힌 식 — 구간별 선형 곱의 정확 적분 vs 손으로 유도한 다항식 (넓은 창)
+- [PASS] (poor_deskew) skew +5 ns: PWL 정확 적분 vs 손계산 닫힌 식 — 구간별 선형 곱의 정확 적분 vs 손으로 유도한 다항식 (넓은 창)
+- [PASS] (poor_deskew) skew −5 ns: PWL 정확 적분 vs 촘촘한 표본 사다리꼴 — 20 001점 균일 표본의 사다리꼴 적분 vs PWL 정확 적분
+- [PASS] (poor_deskew) 대역 제한 모델: 정확 ramp 중첩 vs scipy lsim (FOH) — 1차 저역통과의 해석 ramp 응답 합 vs 상태공간 이산화 시뮬레이션 (끝값)
+- [PASS] (poor_deskew) 참조면 표의 셀 에너지 원장 — FL02 합성 셀의 포트·소산·저장에너지 원장
+
+**dynamic_sharing** — 독립 9 · 회귀 0
+
+- [PASS] (nominal) 에너지 잔차 (4 branch 셀 전체) — V_bus·∫i_dc + 드라이버 − 부하 − (채널·diode·저항 소산) − ΔW; 상태식과 독립 정의
+- [PASS] (nominal) 허용오차 강화 수렴 (rtol 1e-6 → 1e-8) — 같은 셀 재적분: branch peak·branch E_on 변화
+- [PASS] (nominal) 한계 경우: 동일·비결합 4 branch = 4배 die 단일 소자의 1/4 — 4-branch 상태식(20+ 상태) vs L·R을 1/4로 환산한 단일 소자 셀(다른 행렬·차원)
+- [PASS] (skew10) 에너지 잔차 (4 branch 셀 전체) — V_bus·∫i_dc + 드라이버 − 부하 − (채널·diode·저항 소산) − ΔW; 상태식과 독립 정의
+- [PASS] (skew10) 허용오차 강화 수렴 (rtol 1e-6 → 1e-8) — 같은 셀 재적분: branch peak·branch E_on 변화
+- [PASS] (skew10) 한계 경우: 동일·비결합 4 branch = 4배 die 단일 소자의 1/4 — 4-branch 상태식(20+ 상태) vs L·R을 1/4로 환산한 단일 소자 셀(다른 행렬·차원)
+- [PASS] (kelvin) 에너지 잔차 (4 branch 셀 전체) — V_bus·∫i_dc + 드라이버 − 부하 − (채널·diode·저항 소산) − ΔW; 상태식과 독립 정의
+- [PASS] (kelvin) 허용오차 강화 수렴 (rtol 1e-6 → 1e-8) — 같은 셀 재적분: branch peak·branch E_on 변화
+- [PASS] (kelvin) 한계 경우: 동일·비결합 4 branch = 4배 die 단일 소자의 1/4 — 4-branch 상태식(20+ 상태) vs L·R을 1/4로 환산한 단일 소자 셀(다른 행렬·차원)
+
+## EX04 · transformer 설계 closure — 전기적으로 가능한 n·L을 실제 부품으로
+
+
+**turns_window** — 독립 10 · 회귀 0
+
+- [PASS] (textbook) I_p: 정확 PWL 적분 vs FL08 폐형식 — 구간 끝점 대수 ∫i²dt vs I_pk√(1 − 2φ/3π) (정합 n)
+- [PASS] (textbook) I_p (50:3): 정확 스위칭 해 vs PWL 대수 — 행렬지수 전파(엔진, L_m = 1 GH 한계) vs 교재 4구간 끝점 식으로 만든 PWL
+- [PASS] (textbook) I_p (49:3): 정확 스위칭 해 vs PWL 대수 — 행렬지수 전파(엔진, L_m = 1 GH 한계) vs 교재 4구간 끝점 식으로 만든 PWL
+- [PASS] (textbook) B_pk: 권선 전압 적분(정확 해) vs n·V_L/(4 f N_p A_e) — 자화전류 상태 L_m·i_m/(N A_e)의 peak-to-peak/2 vs 사각파 폐형식 (R = 0, k = 1)
+- [PASS] (textbook) 에너지 잔차 (E_in − E_out − E_loss − ΔW) — 포트 에너지·저항 손실·저장에너지를 같은 구간에서 정확 적분 (상태식과 독립적으로 정의한 포트 전력)
+- [PASS] (insulation) I_p: 정확 PWL 적분 vs FL08 폐형식 — 구간 끝점 대수 ∫i²dt vs I_pk√(1 − 2φ/3π) (정합 n)
+- [PASS] (insulation) I_p (50:3): 정확 스위칭 해 vs PWL 대수 — 행렬지수 전파(엔진, L_m = 1 GH 한계) vs 교재 4구간 끝점 식으로 만든 PWL
+- [PASS] (insulation) I_p (49:3): 정확 스위칭 해 vs PWL 대수 — 행렬지수 전파(엔진, L_m = 1 GH 한계) vs 교재 4구간 끝점 식으로 만든 PWL
+- [PASS] (insulation) B_pk: 권선 전압 적분(정확 해) vs n·V_L/(4 f N_p A_e) — 자화전류 상태 L_m·i_m/(N A_e)의 peak-to-peak/2 vs 사각파 폐형식 (R = 0, k = 1)
+- [PASS] (insulation) 에너지 잔차 (E_in − E_out − E_loss − ΔW) — 포트 에너지·저항 손실·저장에너지를 같은 구간에서 정확 적분 (상태식과 독립적으로 정의한 포트 전력)
+
+**cllc_turns** — 독립 6 · 회귀 0
+
+- [PASS] (nominal) FHA 해: 벡터화 이분법 vs brentq — 격자 부호변화 + 전 후보 동시 이분법 vs 조밀 격자 + scipy brentq (서로 다른 root solver)
+- [PASS] (nominal) FHA 전력 항등식: \|I₁\|²Re Z_in = \|I₂′\|²R_ac′ = P — 해에서 입력 임피던스로 계산한 입력 전력과 전류분배로 계산한 R_ac′ 전력 vs 정격 P (무손실 tank)
+- [PASS] (nominal) 대칭 tank의 부하 무관점 \|H(f_r)\| = 1 — 환산 대칭(L_r2′ = L_r1, C_r2′ = C_r1)이면 f_r에서 Z_r = 0 → H = 1 (n·부하와 무관) — FHA 구현의 물리 항등식
+- [PASS] (retune) FHA 해: 벡터화 이분법 vs brentq — 격자 부호변화 + 전 후보 동시 이분법 vs 조밀 격자 + scipy brentq (서로 다른 root solver)
+- [PASS] (retune) FHA 전력 항등식: \|I₁\|²Re Z_in = \|I₂′\|²R_ac′ = P — 해에서 입력 임피던스로 계산한 입력 전력과 전류분배로 계산한 R_ac′ 전력 vs 정격 P (무손실 tank)
+- [PASS] (retune) 대칭 tank의 부하 무관점 \|H(f_r)\| = 1 — 환산 대칭(L_r2′ = L_r1, C_r2′ = C_r1)이면 f_r에서 Z_r = 0 → H = 1 (n·부하와 무관) — FHA 구현의 물리 항등식
+
+**harmonic_copper** — 독립 6 · 회귀 0
+
+- [PASS] (textbook) Parseval: 시간영역 RMS (합성 파형, 임의 위상) vs √ΣI_h² — 차수 1·3·5와 임의 위상으로 만든 파형의 수치 적분 vs 성분 합
+- [PASS] (dab) Parseval: Σ\|I_h\|² (h ≤ 399) vs 정확 PWL ∫i²dt — 구간별 닫힌 형태 Fourier 계수의 제곱합 vs 시간영역 구간 끝점 대수 (서로 다른 경로)
+- [PASS] (dab) FFT (2¹⁴ 표본) vs 닫힌 형태 계수 (h = 1…15) — 균일 표본의 이산 Fourier 변환 vs 구간 적분식
+- [PASS] (dab) 기울기 점프 공식 vs 구간 적분식 (h = 1…399) — 두 번 부분적분한 c_h = ΣΔs_k e^{−jhωt_k}/(T(jhω)²) vs 구간별 ∫(y₀+sτ)e^{−jhωτ}dτ (서로 다른 유도)
+- [PASS] (dab) I_rms: PWL vs FL08 폐형식 — 구간 대수 vs I_pk√(1 − 2φ/3π)
+- [PASS] (dab) Dowell 저주파 한계 F_R(Δ → 0) → 1 — 쌍곡·삼각 함수식의 극한
+
+**tolerance_map** — 독립 8 · 회귀 0
+
+- [PASS] (textbook) FHA 해: 벡터화 이분법 (MC 경로) vs brentq — Monte Carlo에 쓰는 격자·동시 이분법 vs 조밀 격자 + brentq, corner 5개 × 운전점 3개 (해 개수 포함)
+- [PASS] (textbook) FHA 전력 항등식 (모든 corner의 해) — \|I₁\|²Re Z_in = \|I₂′\|²R_ac′ = P (무손실 tank의 에너지 보존)
+- [PASS] (textbook) 각 corner의 \|H(f_r)\| = 1 (대칭 tank, 부하 무관) — f_r에서 Z_r = 0이면 H = Z_p/Z_p·R_ac′/R_ac′ = 1 — corner의 f_r 폐형식과 FHA 이득식이 같은 점을 가리키는지
+- [PASS] (textbook) MC σ(ln f_r) vs 해석식 — 난수 표본의 표준편차 vs ln f_r = −½(ln L + ln C) + 상수의 분산식 (4 표준오차 이내)
+- [PASS] (correlated) FHA 해: 벡터화 이분법 (MC 경로) vs brentq — Monte Carlo에 쓰는 격자·동시 이분법 vs 조밀 격자 + brentq, corner 5개 × 운전점 3개 (해 개수 포함)
+- [PASS] (correlated) FHA 전력 항등식 (모든 corner의 해) — \|I₁\|²Re Z_in = \|I₂′\|²R_ac′ = P (무손실 tank의 에너지 보존)
+- [PASS] (correlated) 각 corner의 \|H(f_r)\| = 1 (대칭 tank, 부하 무관) — f_r에서 Z_r = 0이면 H = Z_p/Z_p·R_ac′/R_ac′ = 1 — corner의 f_r 폐형식과 FHA 이득식이 같은 점을 가리키는지
+- [PASS] (correlated) MC σ(ln f_r) vs 해석식 — 난수 표본의 표준편차 vs ln f_r = −½(ln L + ln C) + 상수의 분산식 (4 표준오차 이내)
+
+**identification** — 독립 5 · 회귀 2
+
+- [PASS] (nominal) 임피던스: 정확 시간영역 해(Fourier 사영) vs phasor ladder — 사인 전원을 진동자 상태로 둔 상태방정식의 주기해(행렬지수)에서 전류의 cos·sin 성분을 정확 적분 vs 복소 ladder 식
+- [PASS] (nominal) 에너지 잔차 (E_in − E_out − E_loss − ΔW) — 포트 에너지·저항 손실·저장에너지를 같은 구간에서 정확 적분 (상태식과 독립적으로 정의한 포트 전력)
+- [PASS] (nominal) SRF: 수치 해 vs 근사식 1/(2π√(L_eff·C)) — ladder의 Im Z = 0 근 vs 집중 LC 근사 (R·C 분배 무시 → 5 % 허용)
+- [PASS] (sc_hv_short) 임피던스: 정확 시간영역 해(Fourier 사영) vs phasor ladder — 사인 전원을 진동자 상태로 둔 상태방정식의 주기해(행렬지수)에서 전류의 cos·sin 성분을 정확 적분 vs 복소 ladder 식
+- [PASS] (sc_hv_short) 에너지 잔차 (E_in − E_out − E_loss − ΔW) — 포트 에너지·저항 손실·저장에너지를 같은 구간에서 정확 적분 (상태식과 독립적으로 정의한 포트 전력)
+- [회귀 PASS] (nominal) 주기해 잔차 (한 주기)
+- [회귀 PASS] (sc_hv_short) 주기해 잔차 (한 주기)
 
 ## EX05 · CLLC — gain 곡선에서 실제 동역학으로
 
@@ -414,3 +771,182 @@
 - [PASS] (circle) dq 포화 궤적: dq 모델 vs 같은 인가 전압의 abc 적분 — 포화된 dq 전압을 3상으로 되돌려 DOP853 적분 후 Park 변환 vs dq 정확 map
 - [회귀 PASS] (axis) bumpless: 복귀 순간 명령 연속
 - [회귀 PASS] (circle) bumpless: 복귀 순간 명령 연속
+
+## EX08 · 전열 연성·mission — 최고온도 한 점에서 mission으로
+
+
+**thermal_matrix** — 독립 12 · 회귀 0
+
+- [PASS] (textbook) 고정점 반복 수렴값 vs 선형 풀이 — ΔT_(k+1) = Z(P₀ + diag(αP₀)ΔT_k) 60회 vs (I − Z·diag(αP₀))⁻¹Z·P₀
+- [PASS] (textbook) 물리 망의 port 행렬 = Z (정상상태) — 8노드 Cauer 망의 컨덕턴스 행렬 풀이 vs 입력 Z
+- [PASS] (textbook) 연성 상승: 2×2 행렬 풀이 vs 8노드 물리 망 정상상태 — junction 손실 되먹임을 넣은 망의 평형점 −A⁻¹b vs (I − Z·D)⁻¹Z·P₀
+- [PASS] (textbook) 연성 상승 ΔT₂: 행렬 vs 물리 망 — 같은 두 경로
+- [PASS] (textbook) 물리 망 과도의 끝값 (30/\|λ_max\| 뒤) vs 연성 정상해 — 증강 행렬지수 정확 적분 (냉간 시작, 강성 망의 긴 구간) vs (I − Z·D)⁻¹Z·P₀
+- [PASS] (near) 고정점 반복 수렴값 vs 선형 풀이 — ΔT_(k+1) = Z(P₀ + diag(αP₀)ΔT_k) 182회 vs (I − Z·diag(αP₀))⁻¹Z·P₀
+- [PASS] (near) 물리 망의 port 행렬 = Z (정상상태) — 8노드 Cauer 망의 컨덕턴스 행렬 풀이 vs 입력 Z
+- [PASS] (near) 연성 상승: 2×2 행렬 풀이 vs 8노드 물리 망 정상상태 — junction 손실 되먹임을 넣은 망의 평형점 −A⁻¹b vs (I − Z·D)⁻¹Z·P₀
+- [PASS] (near) 연성 상승 ΔT₂: 행렬 vs 물리 망 — 같은 두 경로
+- [PASS] (near) 물리 망 과도의 끝값 (30/\|λ_max\| 뒤) vs 연성 정상해 — 증강 행렬지수 정확 적분 (냉간 시작, 강성 망의 긴 구간) vs (I − Z·D)⁻¹Z·P₀
+- [PASS] (diverge) 물리 망의 port 행렬 = Z (정상상태) — 8노드 Cauer 망의 컨덕턴스 행렬 풀이 vs 입력 Z
+- [PASS] (diverge) 발산 속도: 과도 적분의 ln\|T − T_lin\| 기울기 vs 최대 고유값 — 정확 적분 궤적 (3/λ ~ 5/λ 구간) vs 고유값 분해
+
+**dynamic_network** — 독립 8 · 회귀 0
+
+- [PASS] (nominal) 상반성 (reciprocity): Z₁₂(t) = Z₂₁(t) — P₂ 계단 → T_j1과 P₁ 계단 → T_j2를 따로 적분해 비교 (수동 RC 망의 성질)
+- [PASS] (nominal) 정상상태 port 행렬 = Z — 망 컨덕턴스 풀이 vs 입력 열 행렬
+- [PASS] (nominal) 모달(고유벡터) 해석해 vs 엔진 행렬지수 (Z₁₁(t)) — 일반화 고유값 분해의 모달 합 vs 증강 행렬지수
+- [PASS] (nominal) 에너지 잔차 (E_in − E_out − E_loss − ΔW) — 포트 에너지·저항 손실·저장에너지를 같은 구간에서 정확 적분 (상태식과 독립적으로 정의한 포트 전력)
+- [PASS] (light_sink) 상반성 (reciprocity): Z₁₂(t) = Z₂₁(t) — P₂ 계단 → T_j1과 P₁ 계단 → T_j2를 따로 적분해 비교 (수동 RC 망의 성질)
+- [PASS] (light_sink) 정상상태 port 행렬 = Z — 망 컨덕턴스 풀이 vs 입력 열 행렬
+- [PASS] (light_sink) 모달(고유벡터) 해석해 vs 엔진 행렬지수 (Z₁₁(t)) — 일반화 고유값 분해의 모달 합 vs 증강 행렬지수
+- [PASS] (light_sink) 에너지 잔차 (E_in − E_out − E_loss − ΔW) — 포트 에너지·저항 손실·저장에너지를 같은 구간에서 정확 적분 (상태식과 독립적으로 정의한 포트 전력)
+
+**mission** — 독립 4 · 회귀 2
+
+- [PASS] (nominal) rainflow: ASTM E1049 예제 재현 — 표준 예제 [−2, 1, −3, 5, −1, 3, −4, 4, −2] → 범위 3(0.5)·4(1.5)·6(0.5)·8(1.0)·9(0.5)
+- [PASS] (nominal) 에너지 잔차 (E_in − E_out − E_loss − ΔW) — 포트 에너지·저항 손실·저장에너지를 같은 구간에서 정확 적분 (상태식과 독립적으로 정의한 포트 전력)
+- [PASS] (hot_hill) rainflow: ASTM E1049 예제 재현 — 표준 예제 [−2, 1, −3, 5, −1, 3, −4, 4, −2] → 범위 3(0.5)·4(1.5)·6(0.5)·8(1.0)·9(0.5)
+- [PASS] (hot_hill) 에너지 잔차 (E_in − E_out − E_loss − ΔW) — 포트 에너지·저항 손실·저장에너지를 같은 구간에서 정확 적분 (상태식과 독립적으로 정의한 포트 전력)
+- [회귀 PASS] (nominal) 사이클 합 = (반전점 수 − 1)/2 (연성)
+- [회귀 PASS] (hot_hill) 사이클 합 = (반전점 수 − 1)/2 (연성)
+
+## EX09 · EMI: noise source, 경로, victim을 같이 본다
+
+
+**hand_screens** — 독립 3 · 회귀 0
+
+- [PASS] (textbook) 변위전류: 정확 시간영역 (낮은 경로 임피던스) vs C·dv/dt — R–L–C 경로에 dv/dt 램프를 건 행렬지수 해의 램프 끝 전류 vs 곱셈 screen
+- [PASS] (textbook) 링잉 주파수: 정확 RLC 해의 영점 교차 vs 닫힌 식 — 행렬지수 스텝 응답을 조밀 샘플해 선형 보간 영점 교차 → 주파수 vs f_0√(1−ζ²)
+- [PASS] (textbook) line 전류: i = C dv/dt 수치 구적 RMS vs 2πfCV — √2·230 V 정현파의 C dv/dt를 한 주기 수치 적분 (quad) vs phasor 식
+
+**source_path_victim** — 독립 5 · 회귀 1
+
+- [PASS] (nominal) 에너지 잔차 (E_in − E_out − E_loss − ΔW) — 포트 에너지·저항 손실·저장에너지를 같은 구간에서 정확 적분 (상태식과 독립적으로 정의한 포트 전력)
+- [PASS] (nominal) FFT 정규화: 해석 사다리꼴 샘플 FFT vs 닫힌 식 2VD\|sinc(nD)\|\|sinc(n f t_r)\| — numpy FFT(균일 샘플) vs 교과서 Fourier 계수
+- [PASS] (nominal) CM 경로 전달함수: 상태공간 (셀 행렬) vs 임피던스 대수 — C(jωI−A)⁻¹B (시뮬레이션이 쓰는 행렬) vs Z 직병렬 대수 (reference/emi.py)
+- [PASS] (nominal) Parseval: proxy 전압 RMS (시간영역) vs Σ\|V_n H_cm(f_n)\|²/2 — 정확 모멘트 적분 RMS vs 노드 전압 FFT × 임피던스 대수 전달함수의 고조파 합
+- [PASS] (nominal) DM 경로 전달함수: 2-node admittance 해 vs 전류 분배식 — Y 행렬 선형해 vs Z 분배 대수
+- [회귀 PASS] (nominal) 주기별 정상상태 기준 (정규화 상태 변화 < 1e-9)
+
+**mitigation** — 독립 6 · 회귀 0
+
+- [PASS] (nominal) snubber 에너지: R_s 적분 + 채널 증가분 vs C_s V² f_sw — 정확 시간영역 에너지 적분 (R_s·i² + ∫v·i_ch 차이) vs 닫힌 식 (두 edge마다 ½C_sV²)
+- [PASS] (nominal) 에너지 원장: 기준 — 부하 source·DC link·채널·R_loop·R_s·R_par·측정 R 에너지 정확 적분
+- [PASS] (nominal) 에너지 원장: gate 느리게 (×2) — 부하 source·DC link·채널·R_loop·R_s·R_par·측정 R 에너지 정확 적분
+- [PASS] (nominal) 에너지 원장: C_par ×0.5 (두꺼운 절연) — 부하 source·DC link·채널·R_loop·R_s·R_par·측정 R 에너지 정확 적분
+- [PASS] (nominal) 에너지 원장: RC snubber (470 pF, 3.16 Ω) — 부하 source·DC link·채널·R_loop·R_s·R_par·측정 R 에너지 정확 적분
+- [PASS] (nominal) 에너지 원장: Y 커패시터 2.2 nF (선당) — 부하 source·DC link·채널·R_loop·R_s·R_par·측정 R 에너지 정확 적분
+
+## EX10 · 고장: gate를 꺼도 에너지는 남아 있다
+
+
+**rlc_fault** — 독립 12 · 회귀 0
+
+- [PASS] (textbook) 에너지 잔차 W₀ − W(t) − E_R − E_D — ½Li² + ½Cv² (상태) vs 저항·diode 전력의 정확 적분 (2차 모멘트) — 상태식과 따로 정의한 에너지 항
+- [PASS] (textbook) peak 시각: DOP853 event vs 정확 엔진 — 손으로 쓴 ODE + event(di/dt = 0) vs 행렬지수 해
+- [PASS] (textbook) 독립 solver: DOP853 전류 (여러 시각) — 손으로 쓴 RLC ODE (rtol 1e-12, clamp는 terminal event) vs 정확 엔진
+- [PASS] (textbook) E_R: DOP853 적분 상태 vs 정확 2차 모멘트 — ODE에 ∫Ri² 상태를 추가해 적분 vs 행렬지수 2차 모멘트
+- [PASS] (clamp) 에너지 잔차 W₀ − W(t) − E_R − E_D — ½Li² + ½Cv² (상태) vs 저항·diode 전력의 정확 적분 (2차 모멘트) — 상태식과 따로 정의한 에너지 항
+- [PASS] (clamp) peak 시각: DOP853 event vs 정확 엔진 — 손으로 쓴 ODE + event(di/dt = 0) vs 행렬지수 해
+- [PASS] (clamp) 독립 solver: DOP853 전류 (여러 시각) — 손으로 쓴 RLC ODE (rtol 1e-12, clamp는 terminal event) vs 정확 엔진
+- [PASS] (clamp) E_R: DOP853 적분 상태 vs 정확 2차 모멘트 — ODE에 ∫Ri² 상태를 추가해 적분 vs 행렬지수 2차 모멘트
+- [PASS] (over) 에너지 잔차 W₀ − W(t) − E_R − E_D — ½Li² + ½Cv² (상태) vs 저항·diode 전력의 정확 적분 (2차 모멘트) — 상태식과 따로 정의한 에너지 항
+- [PASS] (over) peak 시각: DOP853 event vs 정확 엔진 — 손으로 쓴 ODE + event(di/dt = 0) vs 행렬지수 해
+- [PASS] (over) 독립 solver: DOP853 전류 (여러 시각) — 손으로 쓴 RLC ODE (rtol 1e-12, clamp는 terminal event) vs 정확 엔진
+- [PASS] (over) E_R: DOP853 적분 상태 vs 정확 2차 모멘트 — ODE에 ∫Ri² 상태를 추가해 적분 vs 행렬지수 2차 모멘트
+
+**protection_timeline** — 독립 12 · 회귀 0
+
+- [PASS] (textbook) 소거 시각 (typ): 이산 사건 시계 vs timing 대수 — 0.1 ns 틱으로 검출기 상태기계를 진행 vs max/합 대수식
+- [PASS] (textbook) 소거 시각 (max): 이산 사건 시계 vs timing 대수 — 0.1 ns 틱으로 검출기 상태기계를 진행 vs max/합 대수식
+- [PASS] (textbook) 소자 에너지: 폐형식 vs 수치 적분 — 구간별 폐형식 (plateau + 삼각 fall) vs v_DS·i 파형 사다리꼴 적분 (20001점)
+- [PASS] (type2) 소거 시각 (typ): 이산 사건 시계 vs timing 대수 — 0.1 ns 틱으로 검출기 상태기계를 진행 vs max/합 대수식
+- [PASS] (type2) 소거 시각 (max): 이산 사건 시계 vs timing 대수 — 0.1 ns 틱으로 검출기 상태기계를 진행 vs max/합 대수식
+- [PASS] (type2) 소자 에너지: 폐형식 vs 수치 적분 — 구간별 폐형식 (plateau + 삼각 fall) vs v_DS·i 파형 사다리꼴 적분 (20001점)
+- [PASS] (soft_short) 소거 시각 (typ): 이산 사건 시계 vs timing 대수 — 0.1 ns 틱으로 검출기 상태기계를 진행 vs max/합 대수식
+- [PASS] (soft_short) 소거 시각 (max): 이산 사건 시계 vs timing 대수 — 0.1 ns 틱으로 검출기 상태기계를 진행 vs max/합 대수식
+- [PASS] (soft_short) 소자 에너지: 폐형식 vs 수치 적분 — 구간별 폐형식 (plateau + 삼각 fall) vs v_DS·i 파형 사다리꼴 적분 (20001점)
+- [PASS] (fast_off) 소거 시각 (typ): 이산 사건 시계 vs timing 대수 — 0.1 ns 틱으로 검출기 상태기계를 진행 vs max/합 대수식
+- [PASS] (fast_off) 소거 시각 (max): 이산 사건 시계 vs timing 대수 — 0.1 ns 틱으로 검출기 상태기계를 진행 vs max/합 대수식
+- [PASS] (fast_off) 소자 에너지: 폐형식 vs 수치 적분 — 구간별 폐형식 (plateau + 삼각 fall) vs v_DS·i 파형 사다리꼴 적분 (20001점)
+
+**discharge_resistor** — 독립 6 · 회귀 2
+
+- [PASS] (textbook) 에너지: ∫v²/R dt vs ½C(V₀² − V_f²) — 저항 전력의 정확 적분 (2차 모멘트) vs 저장에너지 차이
+- [PASS] (textbook) 60 V 도달: 정확 엔진 근 vs 폐형식 RC·ln(V₀/V_f) — 행렬지수 해의 v(t) = V_f 근 (brentq) vs 폐형식
+- [PASS] (textbook) 60 V 도달: DOP853 event vs 정확 엔진 — 손으로 쓴 RC ODE + event vs 행렬지수 해
+- [PASS] (worst_case) 에너지: ∫v²/R dt vs ½C(V₀² − V_f²) — 저항 전력의 정확 적분 (2차 모멘트) vs 저장에너지 차이
+- [PASS] (worst_case) 60 V 도달: 정확 엔진 근 vs 폐형식 RC·ln(V₀/V_f) — 행렬지수 해의 v(t) = V_f 근 (brentq) vs 폐형식
+- [PASS] (worst_case) 60 V 도달: DOP853 event vs 정확 엔진 — 손으로 쓴 RC ODE + event vs 행렬지수 해
+- [회귀 PASS] (textbook) 직렬 저항 에너지 합 = 전체
+- [회귀 PASS] (worst_case) 직렬 저항 에너지 합 = 전체
+
+**safe_state** — 독립 16 · 회귀 0
+
+- [PASS] (nominal) ASC 에너지 잔차 (축 기계입력 − 동손 − ΔW) — 전자기 전력·동손의 정확 2차 모멘트 적분 vs 0.75(L_d i_d² + L_q i_q²) 변화
+- [PASS] (nominal) ASC 독립 solver (DOP853) — 손으로 쓴 dq ODE (v = 0) vs 행렬지수 해
+- [PASS] (nominal) freewheel 에너지 잔차 (기계 − DC − 동손 − ΔW) — 역기전력×전류, DC 포트, 동손의 정확 적분 vs 권선(+C) 저장에너지 변화 — diode guard 오프셋(1e-7 A)의 영향 포함
+- [PASS] (nominal) 비제어 정류 임계속도: 폐형식 vs diode 브리지 시뮬레이션 — V_dc/(√3pψ_m) 식 vs 0 A에서 시작한 hybrid 시뮬레이션의 평균 DC 전류 (0.98·n_th / 1.02·n_th)
+- [PASS] (open) ASC 에너지 잔차 (축 기계입력 − 동손 − ΔW) — 전자기 전력·동손의 정확 2차 모멘트 적분 vs 0.75(L_d i_d² + L_q i_q²) 변화
+- [PASS] (open) ASC 독립 solver (DOP853) — 손으로 쓴 dq ODE (v = 0) vs 행렬지수 해
+- [PASS] (open) freewheel 에너지 잔차 (기계 − DC − 동손 − ΔW) — 역기전력×전류, DC 포트, 동손의 정확 적분 vs 권선(+C) 저장에너지 변화 — diode guard 오프셋(1e-7 A)의 영향 포함
+- [PASS] (open) 비제어 정류 임계속도: 폐형식 vs diode 브리지 시뮬레이션 — V_dc/(√3pψ_m) 식 vs 0 A에서 시작한 hybrid 시뮬레이션의 평균 DC 전류 (0.98·n_th / 1.02·n_th)
+- [PASS] (overspeed) ASC 에너지 잔차 (축 기계입력 − 동손 − ΔW) — 전자기 전력·동손의 정확 2차 모멘트 적분 vs 0.75(L_d i_d² + L_q i_q²) 변화
+- [PASS] (overspeed) ASC 독립 solver (DOP853) — 손으로 쓴 dq ODE (v = 0) vs 행렬지수 해
+- [PASS] (overspeed) freewheel 에너지 잔차 (기계 − DC − 동손 − ΔW) — 역기전력×전류, DC 포트, 동손의 정확 적분 vs 권선(+C) 저장에너지 변화 — diode guard 오프셋(1e-7 A)의 영향 포함
+- [PASS] (overspeed) 비제어 정류 임계속도: 폐형식 vs diode 브리지 시뮬레이션 — V_dc/(√3pψ_m) 식 vs 0 A에서 시작한 hybrid 시뮬레이션의 평균 DC 전류 (0.98·n_th / 1.02·n_th)
+- [PASS] (overspeed_open) ASC 에너지 잔차 (축 기계입력 − 동손 − ΔW) — 전자기 전력·동손의 정확 2차 모멘트 적분 vs 0.75(L_d i_d² + L_q i_q²) 변화
+- [PASS] (overspeed_open) ASC 독립 solver (DOP853) — 손으로 쓴 dq ODE (v = 0) vs 행렬지수 해
+- [PASS] (overspeed_open) freewheel 에너지 잔차 (기계 − DC − 동손 − ΔW) — 역기전력×전류, DC 포트, 동손의 정확 적분 vs 권선(+C) 저장에너지 변화 — diode guard 오프셋(1e-7 A)의 영향 포함
+- [PASS] (overspeed_open) 비제어 정류 임계속도: 폐형식 vs diode 브리지 시뮬레이션 — V_dc/(√3pψ_m) 식 vs 0 A에서 시작한 hybrid 시뮬레이션의 평균 DC 전류 (0.98·n_th / 1.02·n_th)
+
+## EX11 · 모델을 믿을 수 있는 범위: 검증·식별·불확도
+
+
+**loss_uncertainty** — 독립 6 · 회귀 0
+
+- [PASS] (textbook) u(loss): Monte Carlo (N = 200000, seed 20260930) vs GUM — 상관 Gaussian 표본(Cholesky)의 표본 표준편차 vs √(u_in² + u_out² − 2ρu_in u_out)
+- [PASS] (textbook) u(η): Monte Carlo vs 1차 GUM (선형화 오차 포함) — P_out/P_in 비율의 표본 표준편차 vs 감도계수 식
+- [PASS] (textbook) η 감도계수: 중앙차분 vs 해석 편미분 — ∂η/∂P 중앙차분으로 다시 조립한 u(η) vs 해석식
+- [PASS] (rho09_nobasis) u(loss): Monte Carlo (N = 200000, seed 20260930) vs GUM — 상관 Gaussian 표본(Cholesky)의 표본 표준편차 vs √(u_in² + u_out² − 2ρu_in u_out)
+- [PASS] (rho09_nobasis) u(η): Monte Carlo vs 1차 GUM (선형화 오차 포함) — P_out/P_in 비율의 표본 표준편차 vs 감도계수 식
+- [PASS] (rho09_nobasis) η 감도계수: 중앙차분 vs 해석 편미분 — ∂η/∂P 중앙차분으로 다시 조립한 u(η) vs 해석식
+
+**binomial_bounds** — 독립 2 · 회귀 0
+
+- [PASS] (textbook) 상한: Beta 분위수 vs 이항 누적합의 근 (brentq) — scipy Beta ppf vs Σ_j≤k C(n,j)p^j(1−p)^(n−j) = 1−conf를 직접 합산해 푼 p
+- [PASS] (textbook) 상한의 의미: p = 상한에서 k 이하 실패가 나올 확률 = 1 − conf (시뮬레이션) — numpy 이항 표본 20000회 (seed 7)
+
+**identifiability** — 독립 4 · 회귀 0
+
+- [PASS] (nominal) 합성 데이터 생성: 정확 엔진 vs 닫힌 식 step 응답 — 행렬지수 RLC 해 vs V(1 − e^{−αt}(cos ω_d t + α/ω_d sin ω_d t))
+- [PASS] (nominal) 식별 가능한 조합: L·C와 R/L은 시작점과 무관 — 서로 다른 시작점의 적합 결과 비교
+- [PASS] (nominal) Jacobian 계수 결손 (한 방향 비식별) — 적합점의 J = ∂잔차/∂log θ 특이값 분해
+- [PASS] (nominal) 공동 적합이 참값을 불확도 안에서 회복 — 합성 참값 vs 공동 적합 (J 공분산의 표준편차 단위)
+
+**monte_carlo** — 독립 2 · 회귀 2
+
+- [PASS] (nominal) MC 수율 vs 해석 수율 (99.9 % CI 포함 여부) — seed 고정 Cholesky 표본 vs ln f 정규 분포의 Φ 식
+- [PASS] (corr_pos) MC 수율 vs 해석 수율 (99.9 % CI 포함 여부) — seed 고정 Cholesky 표본 vs ln f 정규 분포의 Φ 식
+- [회귀 PASS] (nominal) seed 재현성: 같은 seed → 같은 표본
+- [회귀 PASS] (corr_pos) seed 재현성: 같은 seed → 같은 표본
+
+**test_independence** — 독립 0 · 회귀 0
+
+
+## EX12 · 설계 리뷰를 통과하는 답변 — 세 개의 통합 사례
+
+
+**capstone_a** — 독립 1 · 회귀 1
+
+- [PASS] (textbook) 부족분 결론이 불확도보다 큰가 — 부족분 vs 2 × (η·PF·전류 불확도 합성)
+- [회귀 PASS] (textbook) 메모의 모든 수치가 실제 실행에서 왔는가
+
+**capstone_b** — 독립 0 · 회귀 1
+
+- [회귀 PASS] (textbook) 메모의 모든 수치가 실제 실행에서 왔는가
+
+**capstone_c** — 독립 1 · 회귀 1
+
+- [INFO] (textbook) screen 값과 합성 동특성 값이 다르다는 것을 드러냄 — 교재 screen(L·di/dt) vs EX03 합성 branch 모델
+- [회귀 PASS] (textbook) 메모의 모든 수치가 실제 실행에서 왔는가

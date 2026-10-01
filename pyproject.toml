@@ -29,7 +29,3 @@ convlab = ["web/*", "web/**/*", "data/*", "data/**/*"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "-ra"
-markers = [
-    "slow: long-running simulation checks (run in CI and by `convlab verify`)",
-    "octave: needs GNU Octave on PATH",
-]
