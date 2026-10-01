@@ -65,7 +65,8 @@ export function renderResult(host, payload, opts = {}) {
   for (const m of res.metrics) {
     const row = h("tr", { class: hi.has(m.key) ? "hl" : "" });
     row.append(h("td", {}, m.label, m.note ? h("div", { class: "muted small" }, m.note) : null));
-    row.append(h("td", { class: "num" }, typeof m.value === "string" ? m.value : fmtSI(m.value, m.unit, 6)));
+    // text values (e.g. "flux @ 고전압 경부하", a sentence about an unconfirmed datum) wrap; numbers stay on one line
+    row.append(h("td", { class: typeof m.value === "string" ? "text-val" : "num" }, typeof m.value === "string" ? m.value : fmtSI(m.value, m.unit, 6)));
     row.append(h("td", { class: "muted small" }, m.basis || ""));
     row.append(h("td", { class: "num" }, m.ref === null ? "" : fmtSI(m.ref, m.unit, 6), m.ref_label ? h("div", { class: "muted small" }, m.ref_label) : null));
     row.append(h("td", { class: "num" }, m.rel_err === null ? "" : fmtPct(m.rel_err, 3), m.tol ? h("div", { class: "muted small" }, "허용 " + fmtPct(m.tol, 2)) : null));
@@ -107,7 +108,7 @@ export function renderResult(host, payload, opts = {}) {
           h("td", {}, c.name, h("div", { class: "muted small" }, c.detail || "")),
           h("td", { class: "small" }, c.path || ""),
           h("td", {}, c.independent ? "독립" : "회귀"),
-          h("td", { class: "num" }, typeof c.value === "number" ? (c.unit === "rel" ? c.value.toExponential(2) : fmtSI(c.value, c.unit, 5)) : c.value ?? ""),
+          h("td", { class: typeof c.value === "number" ? "num" : "text-val" }, typeof c.value === "number" ? (c.unit === "rel" ? c.value.toExponential(2) : fmtSI(c.value, c.unit, 5)) : c.value ?? ""),
           h("td", { class: "num" }, c.threshold === null || c.threshold === undefined ? "" : typeof c.threshold === "number" ? c.threshold.toExponential(1) : String(c.threshold)),
           h("td", {}, h("span", { class: "chip small " + (CHECK_CLASS[c.status] || "") }, c.status))
         )

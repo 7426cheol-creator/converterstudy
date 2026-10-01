@@ -83,6 +83,14 @@ for (const lab of labs) {
       const nMetrics = await page.locator(".result .metric, .result tr").count();
       if (nPlots + nTables === 0) fail(where, "no plot and no table in the result");
       if (nMetrics === 0) fail(where, "no metrics");
+      // layout: a long text value must not squeeze the metric name column (seen once: 27 px wide, 6000 px tall card)
+      const squeezed = await page.evaluate(() => {
+        const t = document.querySelector(".result table.metrics");
+        if (!t) return null;
+        const first = t.querySelector("tbody tr td");
+        return first && first.getBoundingClientRect().width < 80 ? Math.round(first.getBoundingClientRect().width) : null;
+      });
+      if (squeezed !== null) fail(where, `metric name column squeezed to ${squeezed} px`);
       const err = await page.locator(".err").count();
       if (err) fail(where, "error box: " + (await page.locator(".err").first().textContent()));
       // prediction flow with the suggested change
