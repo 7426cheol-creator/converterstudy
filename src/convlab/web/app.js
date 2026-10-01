@@ -693,7 +693,7 @@ function verifyPage(main) {
       "section",
       { class: "card" },
       h("h3", {}, "외부 도구 (조건부 독립 대조)"),
-      h("ul", {}, h("li", {}, "MATLAB/Simulink/Simscape: ", h("span", { class: "chip tone-blocked" }, m.external_tools.matlab_simulink), " — builder 스크립트와 실행 절차는 matlab/에 있고 실행하지 않았다."), h("li", {}, "PSIM 12.0.2: ", h("span", { class: "chip tone-blocked" }, m.external_tools.psim_12_0_2), " — 수동 재구성용 build sheet는 psim/에 있다."), h("li", {}, "GNU Octave: 교재 식으로 다시 쓴 독립 검산 (matlab/xc_*.m, verification/run_octave_crosscheck.sh, 결과 matlab/results/octave_crosscheck.json). Octave 8.4에서 실행했다; MATLAB에서는 실행하지 않았다."))
+      h("ul", {}, h("li", {}, "MATLAB/Simulink/Simscape: ", h("span", { class: "chip tone-blocked" }, m.external_tools.matlab_simulink), " — builder 스크립트와 실행 절차는 matlab/에 있고 실행하지 않았다."), h("li", {}, "PSIM 12.0.2: ", h("span", { class: "chip tone-blocked" }, m.external_tools.psim_12_0_2), " — 수동 재구성용 build sheet는 psim/에 있다."), h("li", {}, "GNU Octave: 교재 식으로 다시 쓴 독립 검산 (matlab/xc_*.m, verification/run_octave_crosscheck.sh, 결과 matlab/results/octave_crosscheck.json, CI의 octave job도 실행). Octave 8.4에서 실행했다; MATLAB에서는 실행하지 않았다."))
     )
   );
   const man = m.docs && m.docs["run_manifest.json"];

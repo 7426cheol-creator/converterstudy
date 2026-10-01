@@ -28,7 +28,7 @@ jobs:
         run: python verification/independent_reference_check.py --json reference_check.json
       - name: Unit and physics tests
         run: python -m pytest -q
-      - name: Run every reference preset (fails on any failed check)
+      - name: Run every reference preset (fails on a failed check or a plot without its proved / not-yet paragraph)
         run: python -m convlab run-all --out results
       - name: Upload results
         if: always()
@@ -36,7 +36,8 @@ jobs:
         with:
           name: results
           path: |
-            results/
+            results/run_manifest.json
+            results/**/*.html
             reference_check.json
           if-no-files-found: ignore
 
